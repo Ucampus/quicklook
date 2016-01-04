@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">Quicklook</string>
-    <string name="simple_file">Archivo simple</string>
+    <string name="app_name">Demo Quicklook</string>
 </resources>
