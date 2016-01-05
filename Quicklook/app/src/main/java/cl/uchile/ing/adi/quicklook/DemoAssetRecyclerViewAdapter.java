@@ -6,10 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import cl.uchile.ing.adi.quicklook.dummy.DummyContent.DummyItem;
-
-import java.util.List;
-
 public class DemoAssetRecyclerViewAdapter extends RecyclerView.Adapter<DemoAssetRecyclerViewAdapter.ViewHolder> {
 
     private final String[] mValues;
