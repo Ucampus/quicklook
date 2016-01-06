@@ -9,9 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
+import cl.uchile.ing.adi.quicklooklib.fragments.FileItemFragment;
+import cl.uchile.ing.adi.quicklooklib.fragments.FileItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.FragmentManager;
 
-public class QuicklookActivity extends AppCompatActivity {
+public class QuicklookActivity extends AppCompatActivity implements FileItemFragment.OnListFragmentInteractionListener {
     private String url;
 
     @Override
@@ -23,30 +25,41 @@ public class QuicklookActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url.replace("https", "http")));
                 startActivity(i);
             }
         });
 
-        changeFragment(this.url);
+        changeFragment(this.url,false);
     }
 
-    private void changeFragment(String url){
-        Fragment fragment = fragmentForURL(url);
+    public void changeFragment(String url, boolean backstack){
+        Fragment fragment = FragmentManager.newInstance(url);
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.quicklook_fragment, fragment, "QuickLook");
+        if (backstack) t.addToBackStack(null);
         t.commit();
     }
 
-    /**
-     * Returns the fragment which can handle the given URL.
-     *
-     * @param url
-     * @return
-     */
-    private Fragment fragmentForURL(String url){
-        return new DefaultFragment();
+    public void changeFragment(String url) {
+        changeFragment(url, true);
     }
+
+    public void onListFragmentInteraction(FileItem f) {
+        changeFragment(f.getPath());
+
+    }
+
+    public void onListFragmentCreation(FileItem f) {
+        updateActionBar(f);
+    }
+
+    private void updateActionBar(FileItem f) {
+        getSupportActionBar().setTitle(f.getName());
+        getSupportActionBar().setSubtitle(f.getPath());
+    }
+
 }
