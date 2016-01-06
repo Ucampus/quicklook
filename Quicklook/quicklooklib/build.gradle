@@ -25,5 +25,4 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile files('C:/Users/dudu/Downloads/quicklook-master/Quicklook/libs/zip4j_1.3.2.jar')
 }
