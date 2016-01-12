@@ -3,4 +3,7 @@
     <string name="default_file_name_placeholder">Nombre de archivo</string>
     <string name="default_file_type_placeholder">Tipo de Archivo</string>
     <string name="default_file_size_placeholder">Tamaño</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

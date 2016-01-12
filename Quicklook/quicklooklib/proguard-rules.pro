@@ -1,5 +1,5 @@
 # Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
+# By default, the flags in this item are appended to flags specified
 # in /Applications/adt-bundle-mac-x86_64-20140702/sdk/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
 # directive in build.gradle.

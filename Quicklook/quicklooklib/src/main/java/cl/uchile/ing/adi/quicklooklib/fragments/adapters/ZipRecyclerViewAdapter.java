@@ -1,6 +1,7 @@
-package cl.uchile.ing.adi.quicklooklib.fragments;
+package cl.uchile.ing.adi.quicklooklib.fragments.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,20 +9,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cl.uchile.ing.adi.quicklooklib.R;
-import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment.OnListFragmentInteractionListener;
+import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment.OnListFragmentInteractionListener;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.DefaultItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.ZipItem;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link FileItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link DefaultItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  */
-public class MyFileItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFileItemRecyclerViewAdapter.ViewHolder> {
+public class ZipRecyclerViewAdapter extends RecyclerView.Adapter<ZipRecyclerViewAdapter.ViewHolder> {
 
-    private final List<FileItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    protected final List<AbstractItem> mValues;
+    protected final OnListFragmentInteractionListener mListener;
 
-    public MyFileItemRecyclerViewAdapter(List<FileItem> items, OnListFragmentInteractionListener listener) {
+    public ZipRecyclerViewAdapter(List<AbstractItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -37,15 +42,13 @@ public class MyFileItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFileIt
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mTextView.setText(mValues.get(position).getName());
-        holder.mSubTextView.setText(mValues.get(position).getType());
+        holder.mSubTextView.setText(mValues.get(position).getPath());
         holder.mImageView.setImageResource(mValues.get(position).getImage());
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    clickAction(holder);
                 }
             }
         });
@@ -61,7 +64,7 @@ public class MyFileItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFileIt
         public final TextView mTextView;
         public final TextView mSubTextView;
         public final ImageView mImageView;
-        public FileItem mItem;
+        public AbstractItem mItem;
 
         public ViewHolder(View view) {
             super(view);
@@ -74,6 +77,22 @@ public class MyFileItemRecyclerViewAdapter extends RecyclerView.Adapter<MyFileIt
         @Override
         public String toString() {
             return super.toString() + " '" + mTextView.getText() + "'";
+        }
+    }
+
+    public void clickAction(ViewHolder holder) {
+        AbstractItem item = holder.mItem;
+        String name = item.getName();
+        String path = item.getPath();
+        long size = item.getSize();
+        String type = "application/zip";
+        ZipItem newItem = (ZipItem)ItemFactory.getInstance().createItem(path, type, name, size);
+        if (item.isFolder()) {
+            Log.d("ZipRecy", "Es carpeta!");
+            mListener.onListFragmentInteraction(newItem);
+        } else {
+            Log.d("ZipRecy", "NO es carpeta!");
+            mListener.onListFragmentExtraction(newItem);
         }
     }
 

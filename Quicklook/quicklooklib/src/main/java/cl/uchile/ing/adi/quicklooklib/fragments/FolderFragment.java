@@ -10,23 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cl.uchile.ing.adi.quicklooklib.R;
+import cl.uchile.ing.adi.quicklooklib.fragments.adapters.FolderRecyclerViewAdapter;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
 
 /**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
+ * Opens folders and lists the items inside them. There are extensions of this
+ * class for showing elements inside compressed files.
  */
-public class FileItemFragment extends DefaultFragment {
+public class FolderFragment extends AbstractFragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public FileItemFragment() {
+    public FolderFragment() {
     }
 
     @Override
@@ -38,6 +34,9 @@ public class FileItemFragment extends DefaultFragment {
         }
     }
 
+    /**
+     * Defines the list view.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,11 +51,16 @@ public class FileItemFragment extends DefaultFragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyFileItemRecyclerViewAdapter(FileItem.getElements(this.file.getPath()), mListener));
+            recyclerView.setAdapter(getElements());
         }
         return view;
     }
 
-
-
+    /**
+     * Returns the adapter with the elements to show.
+     * @return an adapter with elements.
+     */
+    public RecyclerView.Adapter getElements() {
+        return new FolderRecyclerViewAdapter(((FolderItem)this.item).getElements(), mListener);
+    }
 }

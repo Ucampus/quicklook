@@ -9,11 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import cl.uchile.ing.adi.quicklooklib.fragments.FileItemFragment;
-import cl.uchile.ing.adi.quicklooklib.fragments.FileItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.FragmentManager;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.FolderFragment;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.ZipItem;
 
-public class QuicklookActivity extends AppCompatActivity implements FileItemFragment.OnListFragmentInteractionListener {
+public class QuicklookActivity extends AppCompatActivity implements FolderFragment.OnListFragmentInteractionListener {
     private String url;
 
     @Override
@@ -21,7 +22,7 @@ public class QuicklookActivity extends AppCompatActivity implements FileItemFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quicklook);
 
-        this.url = getIntent().getStringExtra("url");
+        this.url = getIntent().getStringExtra("localurl");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -32,34 +33,66 @@ public class QuicklookActivity extends AppCompatActivity implements FileItemFrag
                 startActivity(i);
             }
         });
-
-        changeFragment(this.url,false);
+        String type = AbstractItem.loadMimeType(this.url);
+        AbstractItem item = ItemFactory.getInstance().createItem(this.url,type);
+        changeFragment(item,false);
     }
 
-    public void changeFragment(String url, boolean backstack){
-        Fragment fragment = FragmentManager.newInstance(url);
+    /**
+     * Manages the transition between the fragments which shows the items.
+     * @param item Item to show.
+     */
+    public void changeFragment(AbstractItem item) {
+        changeFragment(item, true);
+    }
+
+    /**
+     * Manages the transition between the fragments which shows the items.
+     * @param item Item to show.
+     * @param backstack Adds the previous fragment to backstack.
+     */
+    public void changeFragment(AbstractItem item, boolean backstack){
+        Fragment fragment = item.getFragment();
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.quicklook_fragment, fragment, "QuickLook");
         if (backstack) t.addToBackStack(null);
         t.commit();
     }
 
-    public void changeFragment(String url) {
-        changeFragment(url, true);
+    /**
+     * Method called by fragment when item is clicked on list view.
+     * @param item the item which is going to be displayed.
+     */
+    public void onListFragmentInteraction(AbstractItem item) {
+        changeFragment(item);
+
     }
 
-    public void onListFragmentInteraction(FileItem f) {
-        changeFragment(f.getPath());
-
+    /**
+     * Manages the text in Action Bar, with current path in filesystem.
+     * @param item the item which is going to be displayed
+     */
+    public void onListFragmentCreation(AbstractItem item) {
+        updateActionBar(item);
     }
 
-    public void onListFragmentCreation(FileItem f) {
-        updateActionBar(f);
+    /**
+     * Manages the extraction of elements in compressed files.
+     * Also shows them after extraction.
+     * @param item the item which is going to be displayed.
+     */
+    public void onListFragmentExtraction(ZipItem item) {
+        AbstractItem extracted = item.extract(getApplicationContext());
+        changeFragment(extracted);
     }
 
-    private void updateActionBar(FileItem f) {
-        getSupportActionBar().setTitle(f.getName());
-        getSupportActionBar().setSubtitle(f.getPath());
+    /**
+     * Updates... the action bar!
+     * @param item Item with new info for the actionbar.
+     */
+    private void updateActionBar(AbstractItem item) {
+        getSupportActionBar().setTitle(item.getName());
+        getSupportActionBar().setSubtitle(item.getPath());
     }
 
 }
