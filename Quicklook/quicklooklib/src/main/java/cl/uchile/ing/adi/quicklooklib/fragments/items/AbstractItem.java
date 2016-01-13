@@ -3,6 +3,7 @@ package cl.uchile.ing.adi.quicklooklib.fragments.items;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
+import java.io.Serializable;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
 
@@ -10,7 +11,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
  * AbstractItem has most of the methods related with items in the library
  * The items
  */
-public abstract class AbstractItem {
+public abstract class AbstractItem implements Serializable {
 
     protected String name;
     protected String type;
