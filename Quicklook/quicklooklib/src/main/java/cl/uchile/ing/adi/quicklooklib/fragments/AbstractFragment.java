@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ZipItem;
 
 /**
@@ -23,6 +24,12 @@ public abstract class AbstractFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle b = getArguments();
+        if (b!=null) {
+            String path = b.getString(AbstractItem.ITEM_PATH);
+            String type = b.getString(AbstractItem.ITEM_TYPE);
+            item = ItemFactory.getInstance().createItem(path,type);
+        }
     }
 
     @Override

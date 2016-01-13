@@ -1,5 +1,6 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
+import android.os.Bundle;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
@@ -12,6 +13,10 @@ import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
  * The items
  */
 public abstract class AbstractItem implements Serializable {
+
+    public static String ITEM_PATH = "path";
+    public static String ITEM_TYPE = "type";
+
 
     protected String name;
     protected String type;
@@ -103,9 +108,16 @@ public abstract class AbstractItem implements Serializable {
     public AbstractFragment getFragment() {
         if (fragment == null) {
             createFragment();
-            fragment.setItem(this);
+            prepareFragment();
         }
         return fragment;
+    }
+
+    public void prepareFragment() {
+        Bundle b = new Bundle();
+        b.putString(ITEM_PATH,this.getPath());
+        b.putString(ITEM_TYPE,this.getType());
+        fragment.setArguments(b);
     }
 
     /**
