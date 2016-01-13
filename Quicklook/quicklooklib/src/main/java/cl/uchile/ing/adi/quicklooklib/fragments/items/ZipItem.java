@@ -123,7 +123,7 @@ public class ZipItem extends FolderItem {
 
     @Override
     public int getImage() {
-        return R.drawable.sound;
+        return R.drawable.compressed;
     }
 
     @Override
