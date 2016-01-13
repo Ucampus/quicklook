@@ -1,6 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -129,6 +130,15 @@ public class ZipItem extends FolderItem {
     @Override
     protected void createFragment() {
         fragment =  new ZipFragment();
+    }
+
+    @Override
+    public void prepareFragment() {
+        Bundle b = new Bundle();
+        String innerRoute = this.getZipPath().equals("") ? "" : SEP+this.getZipPath();
+        b.putString(ITEM_PATH,this.getPath()+innerRoute);
+        b.putString(ITEM_TYPE,this.getType());
+        fragment.setArguments(b);
     }
 
     /**
