@@ -40,7 +40,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         holder.mItem = mValues.get(position);
         holder.mTextView.setText(mValues.get(position).getName());
         holder.mSubTextView.setText(mValues.get(position).getType()+ " - " +
-                mValues.get(position).getSize() + " bytes");
+                mValues.get(position).getFormattedSize());
         holder.mImageView.setImageResource(mValues.get(position).getImage());
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

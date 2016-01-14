@@ -67,6 +67,9 @@ public abstract class AbstractFragment extends Fragment {
     public void setItem(AbstractItem item) {
         this.item = item;
     }
+    public AbstractItem getItem() {
+        return this.item;
+    }
 
     /**
      * This interface manages the interaction of the fragments and it's implemented
@@ -93,6 +96,5 @@ public abstract class AbstractFragment extends Fragment {
          */
         void onListFragmentExtraction(ZipItem item);
 
-        void onListFragmentPermissions(Runnable run);
     }
 }

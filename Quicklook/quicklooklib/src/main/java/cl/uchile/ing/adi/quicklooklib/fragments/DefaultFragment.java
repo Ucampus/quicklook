@@ -34,16 +34,8 @@ public class DefaultFragment extends AbstractFragment {
         Button filebutton = (Button) v.findViewById(R.id.open_with);
         filename.setText(item.getName());
         filetype.setText(item.getType());
-        filesize.setText("" + item.getSize() + " bytes");
+        filesize.setText(item.getFormattedSize());
         fileimage.setImageResource(item.getImage());
-        filebutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getPath()));
-                intent.setType(item.getType());
-                startActivity(Intent.createChooser(intent, "Open"));
-            }
-        });
         return v;
     }
 
