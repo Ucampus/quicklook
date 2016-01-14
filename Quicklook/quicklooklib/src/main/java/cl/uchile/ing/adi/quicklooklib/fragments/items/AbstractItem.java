@@ -186,4 +186,15 @@ public abstract class AbstractItem implements Serializable {
         return type;
     }
 
+    public String getFormattedSize() {
+        //Folder case
+        if (size==-1) return "";
+        String[] suffixes = {"Bytes","KiB", "MiB", "GiB", "TiB"};
+        long countSize = size;
+        int i;
+        for (i = 0; countSize>1024 && i<suffixes.length; i++) {
+                 countSize/=1024;
+        }
+        return ""+countSize+" "+suffixes[i];
+    }
 }
