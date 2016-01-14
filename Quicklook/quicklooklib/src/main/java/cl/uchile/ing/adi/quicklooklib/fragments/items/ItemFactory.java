@@ -28,7 +28,7 @@ public class ItemFactory {
         // Here we register the types of files:
         register("folder", new FolderItem());
         register("default",new DefaultItem());
-        register("application/pdf", new PdfItem());
+        register("application/pdf", new PDFItem());
         register("application/zip", new ZipItem());
         register("image/jpeg", new WebItem());
         register("image/png", new WebItem());
