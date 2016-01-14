@@ -8,7 +8,16 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="cl.uchile.ing.adi.quicklook.MainActivity">
+    tools:context="cl.uchile.ing.adi.quicklook.MainActivity"
+    android:orientation="vertical">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Abrir Descargas"
+        android:id="@+id/button"
+        android:onClick="openDownloads"
+        android:nestedScrollingEnabled="true" />
 
     <FrameLayout
         android:id="@+id/main_activity_fragment"

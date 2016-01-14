@@ -1,12 +1,19 @@
 package cl.uchile.ing.adi.quicklooklib;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
+import android.util.Log;
 import android.view.View;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
@@ -14,14 +21,20 @@ import cl.uchile.ing.adi.quicklooklib.fragments.FolderFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ZipItem;
 
-public class QuicklookActivity extends AppCompatActivity implements FolderFragment.OnListFragmentInteractionListener {
+public class QuicklookActivity extends AppCompatActivity implements FolderFragment.OnListFragmentInteractionListener,
+        ActivityCompat.OnRequestPermissionsResultCallback {
+
     private String url;
+    private static String TAG = "QuickLookPermissions";
+    private Runnable r;
+    private View coordinator;
+    private static int WRITE_PERMISSIONS = 155;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quicklook);
-
+        coordinator = findViewById(R.id.quicklook_coordinator);
         this.url = getIntent().getStringExtra("localurl");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -34,8 +47,28 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
             }
         });
         String type = AbstractItem.loadMimeType(this.url);
-        AbstractItem item = ItemFactory.getInstance().createItem(this.url,type);
-        changeFragment(item,false);
+        AbstractItem item = ItemFactory.getInstance().createItem(this.url, type);
+        checkPermissionsAndChangeFragment(item);
+    }
+
+    private void checkPermissionsAndChangeFragment(final AbstractItem item) {
+        r = new Runnable(){
+            public void run() {
+                changeFragment(item,false);
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Contacts permissions have not been granted.
+            Log.i(TAG, "Storage permissions has NOT been granted. Requesting permissions.");
+            requestStoragePermissions();
+        } else {
+
+            // Contact permissions have been granted. Show the contacts fragment.
+            Log.i(TAG,
+                    "Contact permissions have already been granted. Displaying contact details.");
+            r.run();
+        }
     }
 
     /**
@@ -56,7 +89,7 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.quicklook_fragment, fragment, "QuickLook");
         if (backstack) t.addToBackStack(null);
-        t.commit();
+        t.commitAllowingStateLoss();
     }
 
     /**
@@ -81,9 +114,8 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
      * Also shows them after extraction.
      * @param item the item which is going to be displayed.
      */
-    public void onListFragmentExtraction(ZipItem item) {
-        AbstractItem extracted = item.extract(getApplicationContext());
-        changeFragment(extracted);
+    public void onListFragmentExtraction(final ZipItem item) {
+
     }
 
     /**
@@ -93,6 +125,42 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
     private void updateActionBar(AbstractItem item) {
         getSupportActionBar().setTitle(item.getName());
         getSupportActionBar().setSubtitle(item.getPath());
+    }
+
+    private void requestStoragePermissions() {
+
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                WRITE_PERMISSIONS);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        if (requestCode == WRITE_PERMISSIONS) {
+            // BEGIN_INCLUDE(permission_result)
+            // Received permission result for storage permission.
+            Log.i(TAG, "Received response for storage permission request.");
+
+            // Check if the only required permission has been granted
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // storage permission has been granted, preview can be displayed
+                Log.i(TAG, "STORAGE permission has now been granted. Showing preview.");
+                r.run();
+            } else {
+                Log.i(TAG, "STORAGE permission was NOT granted.");
+                Snackbar.make(coordinator, "Permission error. Can't show files.",
+                        Snackbar.LENGTH_SHORT).show();
+
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    public void onListFragmentPermissions(Runnable run) {
+        r = run;
+        requestStoragePermissions();
     }
 
 }

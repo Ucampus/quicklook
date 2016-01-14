@@ -180,6 +180,8 @@ public abstract class AbstractItem implements Serializable {
         String extension = MimeTypeMap.getFileExtensionFromUrl(path);
         if (extension != null) {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        } else {
+            type = "unknown";
         }
         return type;
     }

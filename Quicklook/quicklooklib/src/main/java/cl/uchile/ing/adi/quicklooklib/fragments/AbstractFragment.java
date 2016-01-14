@@ -92,5 +92,7 @@ public abstract class AbstractFragment extends Fragment {
          * @param item the item which is going to be displayed.
          */
         void onListFragmentExtraction(ZipItem item);
+
+        void onListFragmentPermissions(Runnable run);
     }
 }
