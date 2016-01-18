@@ -1,7 +1,6 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -14,8 +13,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import cl.uchile.ing.adi.quicklooklib.R;
 
 /**
  * Represents a zip file in the filesystem.
@@ -24,6 +24,7 @@ public class TarItem extends VirtualItem {
 
     public TarItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
+        image = R.drawable.compressed;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class TarItem extends VirtualItem {
                 String name = getNameFromPath(path);
                 long size = tae.getSize();
                 String type = this.loadTarGzMimeType(tae);
-                itemList.add(addToList(path,type,name,size));
+                itemList.add(createForList(path, type, name, size));
             }
         } catch (Exception e) { e.printStackTrace();}
         return itemList;
@@ -88,7 +89,7 @@ public class TarItem extends VirtualItem {
         return null;
     }
 
-    public String loadTarGzMimeType(TarArchiveEntry tar) {
+    private static String loadTarGzMimeType(TarArchiveEntry tar) {
         if (tar.isDirectory()) {
             return "folder";
         }
@@ -106,9 +107,5 @@ public class TarItem extends VirtualItem {
     @Override
     public String getFormattedType() {
         return "Tar Compressed File";
-    }
-
-    public boolean isFolder() {
-        return false;
     }
 }

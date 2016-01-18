@@ -10,11 +10,7 @@ public class PowerpointItem extends DefaultItem {
 
     public PowerpointItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
-    }
-
-    @Override
-    public int getImage() {
-        return R.drawable.powerpoint;
+        image = R.drawable.powerpoint;
     }
 
     @Override

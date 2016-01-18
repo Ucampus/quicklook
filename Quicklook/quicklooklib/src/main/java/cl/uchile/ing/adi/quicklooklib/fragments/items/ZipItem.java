@@ -1,7 +1,6 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
-import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import java.io.FileOutputStream;
@@ -10,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
+import cl.uchile.ing.adi.quicklooklib.R;
 
 /**
  * Created by dudu on 15-01-2016.
@@ -25,6 +26,7 @@ public class ZipItem extends VirtualItem {
      */
     public ZipItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
+        image = R.drawable.compressed;
     }
 
     /**
@@ -101,7 +103,7 @@ public class ZipItem extends VirtualItem {
                 String name = getNameFromPath(path);
                 long size = ze.getSize();
                 String type = this.LoadZipMimeType(path);
-                AbstractItem newItem = addToList(path, type,name, size);
+                AbstractItem newItem = createForList(path, type, name, size);
                 itemList.add(newItem);
             }
         } catch (Exception e) {

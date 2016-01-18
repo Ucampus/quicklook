@@ -14,11 +14,7 @@ public class FolderItem extends ListItem {
 
     public FolderItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
-    }
-
-    @Override
-    public int getImage() {
-        return R.drawable.folder;
+        image = R.drawable.folder;
     }
 
     @Override
@@ -48,10 +44,7 @@ public class FolderItem extends ListItem {
         return files;
     }
 
-    public String getTitle() {
-        return this.getName();
-    }
-
+    @Override
     public String getSubTitle() {
         return this.getPath();
     }

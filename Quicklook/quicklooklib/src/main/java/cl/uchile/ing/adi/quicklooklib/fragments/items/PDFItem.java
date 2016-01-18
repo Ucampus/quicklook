@@ -10,11 +10,7 @@ public class PDFItem extends DefaultItem {
 
     public PDFItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
-    }
-
-    @Override
-    public int getImage() {
-        return R.drawable.pdf;
+        image = R.drawable.pdf;
     }
 
     @Override

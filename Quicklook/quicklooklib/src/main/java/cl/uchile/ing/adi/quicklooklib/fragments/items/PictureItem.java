@@ -10,11 +10,7 @@ public class PictureItem extends DefaultItem {
 
     public PictureItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
-    }
-
-    @Override
-    public int getImage() {
-        return R.drawable.image;
+        image = R.drawable.image;
     }
 
     @Override

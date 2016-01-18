@@ -11,11 +11,7 @@ public class WordItem extends DefaultItem {
 
     public WordItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
-    }
-
-    @Override
-    public int getImage() {
-        return R.drawable.word;
+        image = R.drawable.word;
     }
 
     @Override

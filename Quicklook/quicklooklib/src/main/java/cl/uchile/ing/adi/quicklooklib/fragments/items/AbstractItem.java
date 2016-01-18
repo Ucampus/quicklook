@@ -6,6 +6,7 @@ import android.webkit.MimeTypeMap;
 import java.io.File;
 import java.io.Serializable;
 
+import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
 
 /**
@@ -24,7 +25,7 @@ public abstract class AbstractItem {
     protected String path;
     protected AbstractFragment fragment;
     private String virtualPath;
-
+    protected int image;
 
     /**
      * Constructor of the class, metadata is inserted manually.
@@ -38,15 +39,8 @@ public abstract class AbstractItem {
         this.name = name;
         this.size = size;
         this.type = mimetype;
-        this.name = getNameFromPath(path);
-    }
-
-    /**
-     * Uses Java Files API and obtains size of file.
-     */
-    public static long getSizeFromPath(String path) {
-        File file = new File(path);
-        return file.length();
+        //Image for item.
+        this.image = R.drawable.document;
     }
 
     /**
@@ -57,6 +51,14 @@ public abstract class AbstractItem {
     public static String getNameFromPath(String path) {
         String[] splitPath = path.split("/");
         return splitPath[splitPath.length-1];
+    }
+
+    /**
+     * Uses Java Files API and obtains size of file.
+     */
+    public static long getSizeFromPath(String path) {
+        File file = new File(path);
+        return file.length();
     }
 
     /**
@@ -101,8 +103,6 @@ public abstract class AbstractItem {
         return this.type;
     }
 
-    public abstract String getFormattedType();
-
     /**
      * Returns the size of file.
      * @return the size of file.
@@ -120,18 +120,43 @@ public abstract class AbstractItem {
     }
 
     /**
+     * Each implementation defines a image for its item.
+     * @return the resource id of the image.
+     */
+    public  int getImage() {
+        return this.image;
+    }
+
+    /**
+     * Returns human-readable string with file type.
+     * @return String with file type.
+     */
+    public abstract String getFormattedType();
+
+
+    /**
+     * Returns human-readable expression of file size
+     * @return Strinw with file size
+     */
+    public String getFormattedSize() {
+        //Folder case
+        if (size==-1) return "";
+        String[] suffixes = {"Bytes","KiB", "MiB", "GiB", "TiB"};
+        long countSize = size;
+        int i;
+        for (i = 0; countSize>1024 && i<suffixes.length; i++) {
+            countSize/=1024;
+        }
+        return ""+countSize+" "+suffixes[i];
+    }
+
+    /**
      * Evaluates if item is a folder (Virtual or real one).
      * @return true if item is a folder.
      */
     public boolean isFolder() {
         return false;
     }
-
-    /**
-     * Each implementation defines a image for its item.
-     * @return the resource id of the image.
-     */
-    public abstract int getImage();
 
     /**
      * Static helper method. Gets the mimetype of file using the extension.
@@ -143,7 +168,7 @@ public abstract class AbstractItem {
         if (f.isDirectory()) {
             return "folder";
         }
-        String type= null;
+        String type ;
         String extension = MimeTypeMap.getFileExtensionFromUrl(path).replace(" ","_");
         if (extension != null) {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
@@ -153,26 +178,10 @@ public abstract class AbstractItem {
         return type;
     }
 
-    public String getFormattedSize() {
-        //Folder case
-        if (size==-1) return "";
-        String[] suffixes = {"Bytes","KiB", "MiB", "GiB", "TiB"};
-        long countSize = size;
-        int i;
-        for (i = 0; countSize>1024 && i<suffixes.length; i++) {
-                 countSize/=1024;
-        }
-        return ""+countSize+" "+suffixes[i];
-    }
-
-    public String getTitle() {
-        return this.getName();
-    }
-
-    public String getSubTitle() {
-        return this.getFormattedType();
-    }
-
+    /**
+     * For debug purposes
+     * @return String
+     */
     public String toString() {
         return "Item:"+
                 "\nName: "+getName()+
@@ -181,19 +190,42 @@ public abstract class AbstractItem {
                 "\nSize: "+getFormattedSize()+"\n";
     }
 
-    public void clickAction(AbstractFragment.OnListFragmentInteractionListener f) {
-        f.onListFragmentInteraction(this);
-    }
-
+    /**
+     * Sets virtual path value
+     * @param virtualPath
+     */
     public void setVirtualPath(String virtualPath) {
         this.virtualPath = virtualPath;
     }
 
+    /** Sets Name value
+     *
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Sets size value
+     * @param size
+     */
     public void setSize(long size) {
         this.size = size;
+    }
+
+    /**
+     * Sets the title for activity when item is shown.
+     * @return String with title
+     */
+    public String getTitle() {
+        return this.getName();
+    }
+
+    /** Sets the subtitle for activity when item is shown.
+     * @return String with subtitle
+     */
+    public String getSubTitle() {
+        return this.getFormattedType();
     }
 }

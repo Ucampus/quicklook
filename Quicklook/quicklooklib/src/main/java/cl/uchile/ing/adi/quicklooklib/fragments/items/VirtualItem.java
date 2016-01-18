@@ -52,12 +52,10 @@ public abstract class VirtualItem extends ListItem {
                 approvedElements.add(elem);
             }
         }
-        Log.d("getElements: ", "El filtro es "+getVirtualPath());
+        Log.d("getElements: ", "El filtro es " + getVirtualPath());
         Log.d("getElements: ", approvedElements.toString());
         return approvedElements;
     }
-
-    public abstract AbstractItem retrieve(Context context);
 
     /**
      * Returns the inner zip path.
@@ -65,11 +63,6 @@ public abstract class VirtualItem extends ListItem {
      */
     public String getVirtualPath() {
         return this.virtualPath;
-    }
-
-    @Override
-    public int getImage() {
-        return R.drawable.compressed;
     }
 
     @Override
@@ -144,17 +137,26 @@ public abstract class VirtualItem extends ListItem {
         return "Virtual File";
     }
 
-    public String toString() {
-        return super.toString()+
-                "Virtual Path: "+this.getVirtualPath()+"\n";
-    }
-
-    public AbstractItem addToList(String path, String type, String name, long size) {
+    /**
+     * Creates an item for the list of items.
+     * @param path Path of the item
+     * @param type Type of the item
+     * @param name Name of the item
+     * @param size Size of the item
+     * @return item
+     */
+    public AbstractItem createForList(String path, String type, String name, long size) {
         AbstractItem preItem = ItemFactory.getInstance().createItem(this.path + SEP + path, type, name, size);
         String anotherSep = preItem instanceof VirtualItem ? SEP : "";
         return ItemFactory.getInstance().createItem(this.path + SEP + path + anotherSep, type, name, size);
     }
 
+    /**
+     * Defines an action to do when a virtual item is clicked. The action could be enter to a folder,
+     * or retrieve a item from the folder.
+     * @param mListener
+     * @param item
+     */
     public static void onClick(AbstractFragment.OnListFragmentInteractionListener mListener, AbstractItem item) {
         String name = item.getName();
         String path = item.getPath();
@@ -168,5 +170,17 @@ public abstract class VirtualItem extends ListItem {
         }
     }
 
+    /**
+     * Preapares the item list with all the items inside the virtual object
+     * @return ArrayList with all the items inside virtual object.
+     */
     public abstract ArrayList<AbstractItem> getItemList();
+
+    /**
+     * Gets an specific item from the virtual object and copies it to memory.
+     * @param context Current application context
+     * @return Abstract item with object
+     */
+    public abstract AbstractItem retrieve(Context context);
+
 }

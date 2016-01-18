@@ -10,11 +10,7 @@ public class TxtItem extends DefaultItem {
 
     public TxtItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
-    }
-
-    @Override
-    public int getImage() {
-        return R.drawable.txt;
+        image = R.drawable.txt;
     }
 
     @Override

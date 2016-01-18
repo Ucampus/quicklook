@@ -11,11 +11,7 @@ public class DefaultItem extends AbstractItem {
 
     public DefaultItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
-    }
-
-    @Override
-    public int getImage() {
-        return R.drawable.document;
+        image =  R.drawable.document;
     }
 
     @Override
