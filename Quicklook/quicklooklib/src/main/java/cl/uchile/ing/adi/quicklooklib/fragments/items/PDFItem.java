@@ -6,27 +6,27 @@ import cl.uchile.ing.adi.quicklooklib.fragments.PdfFragment;
 /**
  * Represents a PDF file in the filesystem.
  */
-public class PdfItem extends DefaultItem {
+public class PDFItem extends DefaultItem {
 
-    public PdfItem() {
+    public PDFItem() {
     }
 
-    public PdfItem(String path,String mimetype) {
+    public PDFItem(String path, String mimetype) {
         super(path,mimetype);
     }
 
-    public PdfItem(String path, String mimetype, String name, long size) {
+    public PDFItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
     }
 
     @Override
     public AbstractItem create(String path,String mimetype) {
-        return new PdfItem(path,mimetype);
+        return new PDFItem(path,mimetype);
     }
 
     @Override
     public AbstractItem create(String path, String mimetype, String name, long size) {
-        return new PdfItem(path,mimetype,name,size);
+        return new PDFItem(path,mimetype,name,size);
     }
 
     @Override
