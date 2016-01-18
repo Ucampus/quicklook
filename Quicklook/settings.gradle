@@ -1,1 +1,1 @@
-include ':app', ':quicklooklib', ':android-pdfview'
+include ':app', ':quicklooklib'

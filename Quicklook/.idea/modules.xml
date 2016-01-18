@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Quicklook.iml" filepath="$PROJECT_DIR$/Quicklook.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android-pdfview/android-pdfview.iml" filepath="$PROJECT_DIR$/android-pdfview/android-pdfview.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/quicklooklib/quicklooklib.iml" filepath="$PROJECT_DIR$/quicklooklib/quicklooklib.iml" />
     </modules>

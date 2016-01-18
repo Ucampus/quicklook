@@ -26,22 +26,20 @@ import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
+import com.joanzapata.pdfview.util.Constants;
+import com.joanzapata.pdfview.util.FileUtils;
 import com.joanzapata.pdfview.exception.FileNotFoundException;
 import com.joanzapata.pdfview.listener.OnDrawListener;
 import com.joanzapata.pdfview.listener.OnLoadCompleteListener;
 import com.joanzapata.pdfview.listener.OnPageChangeListener;
 import com.joanzapata.pdfview.model.PagePart;
 import com.joanzapata.pdfview.util.ArrayUtils;
-import com.joanzapata.pdfview.util.Constants;
-import com.joanzapata.pdfview.util.FileUtils;
 import com.joanzapata.pdfview.util.NumberUtils;
 
 import org.vudroid.core.DecodeService;
 
 import java.io.File;
 import java.io.IOException;
-
-import static com.joanzapata.pdfview.util.Constants.Cache.CACHE_SIZE;
 
 /**
  * @author Joan Zapata
@@ -491,10 +489,10 @@ public class PDFView extends SurfaceView {
         // Loop through the pages like [...][4][2][0][1][3][...]
         // loading as many parts as it can.
         int parts = 0;
-        for (int i = 0; i <= Constants.LOADED_SIZE / 2 && parts < CACHE_SIZE; i++) {
-            parts += loadPage(index + i, CACHE_SIZE - parts);
-            if (i != 0 && parts < CACHE_SIZE) {
-                parts += loadPage(index - i, CACHE_SIZE - parts);
+        for (int i = 0; i <= Constants.LOADED_SIZE / 2 && parts < Constants.Cache.CACHE_SIZE; i++) {
+            parts += loadPage(index + i, Constants.Cache.CACHE_SIZE - parts);
+            if (i != 0 && parts < Constants.Cache.CACHE_SIZE) {
+                parts += loadPage(index - i, Constants.Cache.CACHE_SIZE - parts);
             }
         }
 

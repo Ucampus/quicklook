@@ -20,20 +20,15 @@ package com.joanzapata.pdfview;
 
 import android.graphics.PointF;
 
-import com.joanzapata.pdfview.PDFView;
+import com.joanzapata.pdfview.util.Constants;
 import com.joanzapata.pdfview.util.DragPinchListener;
-import com.joanzapata.pdfview.util.DragPinchListener.OnDoubleTapListener;
-import com.joanzapata.pdfview.util.DragPinchListener.OnDragListener;
-import com.joanzapata.pdfview.util.DragPinchListener.OnPinchListener;
-
-import static com.joanzapata.pdfview.util.Constants.Pinch.*;
 
 /**
  * @author Joan Zapata
  *         This Manager takes care of moving the PDFView,
  *         set its zoom track user actions.
  */
-class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapListener {
+class DragPinchManager implements DragPinchListener.OnDragListener, DragPinchListener.OnPinchListener, DragPinchListener.OnDoubleTapListener {
 
     private PDFView pdfView;
 
@@ -70,10 +65,10 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
     @Override
     public void onPinch(float dr, PointF pivot) {
         float wantedZoom = pdfView.getZoom() * dr;
-        if (wantedZoom < MINIMUM_ZOOM) {
-            dr = MINIMUM_ZOOM / pdfView.getZoom();
-        } else if (wantedZoom > MAXIMUM_ZOOM) {
-            dr = MAXIMUM_ZOOM / pdfView.getZoom();
+        if (wantedZoom < Constants.Pinch.MINIMUM_ZOOM) {
+            dr = Constants.Pinch.MINIMUM_ZOOM / pdfView.getZoom();
+        } else if (wantedZoom > Constants.Pinch.MAXIMUM_ZOOM) {
+            dr = Constants.Pinch.MAXIMUM_ZOOM / pdfView.getZoom();
         }
         pdfView.zoomCenteredRelativeTo(dr, pivot);
     }
@@ -125,8 +120,8 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
     }
 
     private boolean isQuickMove(float dx, long dt) {
-        return Math.abs(dx) >= QUICK_MOVE_THRESHOLD_DISTANCE && //
-                dt <= QUICK_MOVE_THRESHOLD_TIME;
+        return Math.abs(dx) >= Constants.Pinch.QUICK_MOVE_THRESHOLD_DISTANCE && //
+                dt <= Constants.Pinch.QUICK_MOVE_THRESHOLD_TIME;
     }
 
     public void setSwipeEnabled(boolean isSwipeEnabled) {

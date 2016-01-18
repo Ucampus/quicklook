@@ -21,8 +21,6 @@ package com.joanzapata.pdfview;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import com.joanzapata.pdfview.PDFView;
-
 import org.vudroid.core.DecodeService;
 import org.vudroid.core.DecodeServiceBase;
 import org.vudroid.pdfdroid.codec.PdfContext;
