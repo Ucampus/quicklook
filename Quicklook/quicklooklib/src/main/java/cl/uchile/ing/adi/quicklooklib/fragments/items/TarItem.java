@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -25,7 +26,7 @@ public class TarItem extends VirtualItem {
     }
 
     public TarItem(String path, String mimetype, String virtualPath) {
-        super(path, mimetype,virtualPath);
+        super(path, mimetype, virtualPath);
     }
 
     public TarItem(String path, String mimetype, String name, long size, String virtualPath) {
@@ -33,8 +34,8 @@ public class TarItem extends VirtualItem {
     }
 
     @Override
-    public ArrayList<AbstractItem> getElements() {
-        ArrayList<AbstractItem> elements = new ArrayList<>();
+    public ArrayList<AbstractItem> getItemList() {
+        ArrayList<AbstractItem>itemList = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(getPath());
             InputStream bis = new BufferedInputStream(fis);
@@ -45,20 +46,17 @@ public class TarItem extends VirtualItem {
             TarArchiveInputStream tais = new TarArchiveInputStream(bis);
             TarArchiveEntry tae;
             while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null)  {
-                if (startsWith(tae.getName(), getVirtualPath())) {
-                    String path = tae.getName();
-                    String name = getNameFromPath(path);
-                    long size = tae.getSize();
-                    String type = this.loadTarGzMimeType(tae);
-                    elements.add(addToList(path,name,type,size));
-                }
+                String path = tae.getName();
+                String name = getNameFromPath(path);
+                long size = tae.getSize();
+                String type = this.loadTarGzMimeType(tae);
+                itemList.add(addToList(path,type,name,size));
             }
         } catch (Exception e) { e.printStackTrace();}
-        Log.d("getElements: ", elements.toString() );
-        return elements;
+        return itemList;
     }
 
-    public AbstractItem extract(Context context) {
+    public AbstractItem retrieve(Context context) {
         FileOutputStream extFile;
         BufferedOutputStream extracted;
         int buffersize = 2048;

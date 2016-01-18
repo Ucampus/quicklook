@@ -125,7 +125,7 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
      * @param item the item which is going to be displayed.
      */
     public void onListFragmentExtraction(final VirtualItem item) {
-        AbstractItem extracted = item.extract(getApplicationContext());
+        AbstractItem extracted = item.retrieve(getApplicationContext());
         changeFragment(extracted);
     }
 

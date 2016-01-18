@@ -6,6 +6,7 @@ import java.util.List;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment.OnListFragmentInteractionListener;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.DefaultItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
@@ -21,17 +22,7 @@ public class VirtualRecyclerViewAdapter extends FolderRecyclerViewAdapter {
     }
 
     public void clickAction(ViewHolder holder) {
-        AbstractItem item = holder.mItem;
-        String name = item.getName();
-        String path = item.getPath();
-        long size = item.getSize();
-        String type = mListener.getFragment().getItem().getType();
-        VirtualItem newItem = (VirtualItem)ItemFactory.getInstance().createItem(path, type, name, size);
-        if (item.isFolder()) {
-            mListener.onListFragmentInteraction(newItem);
-        } else {
-            mListener.onListFragmentExtraction(newItem);
-        }
+        VirtualItem.onClick(mListener, holder.mItem);
     }
 
 }

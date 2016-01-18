@@ -23,6 +23,7 @@ public abstract class AbstractItem {
     protected long size;
     protected String path;
     protected AbstractFragment fragment;
+    private String virtualPath;
 
     /**
      * Default constructor. Used with "create" methods.
@@ -210,10 +211,26 @@ public abstract class AbstractItem {
     }
 
     public String toString() {
-        return "Item:\n"+
-                "Name: "+getName()+
+        return "Item:"+
+                "\nName: "+getName()+
                 "\nType: "+getType()+
                 "\nPath: "+getPath()+
                 "\nSize: "+getFormattedSize()+"\n";
+    }
+
+    public void clickAction(AbstractFragment.OnListFragmentInteractionListener f) {
+        f.onListFragmentInteraction(this);
+    }
+
+    public void setVirtualPath(String virtualPath) {
+        this.virtualPath = virtualPath;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
     }
 }

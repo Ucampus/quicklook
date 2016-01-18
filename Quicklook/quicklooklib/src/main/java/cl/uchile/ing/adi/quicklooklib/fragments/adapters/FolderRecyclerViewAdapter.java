@@ -11,6 +11,7 @@ import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment.OnListFragmentInteractionListener;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.DefaultItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
 
 import java.util.List;
 
@@ -80,7 +81,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
     }
 
     public void clickAction(ViewHolder holder) {
-        mListener.onListFragmentInteraction(holder.mItem);
+        FolderItem.onClick(mListener,holder.mItem);
     }
 
 }

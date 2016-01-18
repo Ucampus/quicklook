@@ -34,5 +34,4 @@ public abstract class ListItem extends AbstractItem {
     public abstract ArrayList<AbstractItem> getElements();
     public abstract String getTitle();
     public abstract String getSubTitle();
-
     }

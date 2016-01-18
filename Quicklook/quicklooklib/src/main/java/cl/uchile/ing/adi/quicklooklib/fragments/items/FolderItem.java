@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import cl.uchile.ing.adi.quicklooklib.R;
+import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.FolderFragment;
 
 /**
@@ -73,5 +74,9 @@ public class FolderItem extends ListItem {
     @Override
     public String getFormattedType() {
         return "Folder";
+    }
+
+    public static void onClick(AbstractFragment.OnListFragmentInteractionListener mListener,AbstractItem mItem) {
+        mListener.onListFragmentInteraction(mItem);
     }
 }

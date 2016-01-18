@@ -45,31 +45,6 @@ public class ZipItem extends VirtualItem {
     }
 
 
-    /**
-     * Similar to Files method, but it uses Java's Zip API.
-     * @return an ArrayList of items.
-     */
-    @Override
-    public ArrayList<AbstractItem> getElements() {
-        ArrayList<AbstractItem> elements = new ArrayList<>();
-        try {
-            ZipFile zipfile = new ZipFile(this.path);
-            for (Enumeration<? extends ZipEntry> e = zipfile.entries();
-                 e.hasMoreElements();) {
-                ZipEntry ze = e.nextElement();
-                if (startsWith(ze.getName(), getVirtualPath())) {
-                    String path = ze.getName();
-                    String name = getNameFromPath(path);
-                    long size = ze.getSize();
-                    String type = this.LoadZipMimeType(path);
-                    elements.add(addToList(path,name,type,size));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return elements;
-    }
 
     @Override
     public AbstractItem create(String path,String mimetype) {
@@ -115,7 +90,7 @@ public class ZipItem extends VirtualItem {
      * @param context The context of the app
      * @return an item.
      */
-    public AbstractItem extract(Context context) {
+    public AbstractItem retrieve(Context context) {
         try {
             ZipFile zf = new ZipFile(this.getPath());
             ZipEntry ze = zf.getEntry(this.getVirtualPath());
@@ -143,5 +118,25 @@ public class ZipItem extends VirtualItem {
 
     public boolean isFolder() {
         return false;
+    }
+
+    public ArrayList<AbstractItem> getItemList() {
+        ArrayList<AbstractItem> itemList = new ArrayList<>();
+        try {
+            ZipFile zipfile = new ZipFile(this.path);
+            for (Enumeration<? extends ZipEntry> e = zipfile.entries();
+                 e.hasMoreElements();) {
+                ZipEntry ze = e.nextElement();
+                String path = ze.getName();
+                String name = getNameFromPath(path);
+                long size = ze.getSize();
+                String type = this.LoadZipMimeType(path);
+                AbstractItem newItem = addToList(path, type,name, size);
+                itemList.add(newItem);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return itemList;
     }
 }

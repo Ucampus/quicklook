@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import cl.uchile.ing.adi.quicklooklib.R;
+import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.VirtualFragment;
 
 /**
@@ -21,6 +22,8 @@ public abstract class VirtualItem extends ListItem {
 
     // Extra properties (inner path)
     protected String virtualPath;
+
+    protected ArrayList<AbstractItem> itemList;
 
     public VirtualItem() {
     }
@@ -71,8 +74,23 @@ public abstract class VirtualItem extends ListItem {
      * Gets elements inside a VirtualItem Folder.
      * @return An arraylist with the virtual elements of folder.
      */
-    public abstract ArrayList<AbstractItem> getElements();
-    public abstract AbstractItem extract(Context context);
+    @Override
+    public ArrayList<AbstractItem> getElements() {
+        if (itemList==null) {
+            itemList = getItemList();
+        }
+        ArrayList<AbstractItem> approvedElements = new ArrayList<>();
+        for (AbstractItem elem:itemList) {
+            if (startsWith(splitVirtualPath(elem.getPath())[1], this.getVirtualPath())) {
+                approvedElements.add(elem);
+            }
+        }
+        Log.d("getElements: ", "El filtro es "+getVirtualPath());
+        Log.d("getElements: ", approvedElements.toString());
+        return approvedElements;
+    }
+
+    public abstract AbstractItem retrieve(Context context);
 
     /**
      * Returns the inner zip path.
@@ -165,23 +183,24 @@ public abstract class VirtualItem extends ListItem {
                 "Virtual Path: "+this.getVirtualPath()+"\n";
     }
 
-    @Override
-    public AbstractItem create(String path,String mimetype) {
-        //The path can be compound (Zip path + inner zip path, separated by SEP).
-        String[] newpath = splitVirtualPath(path);
-        return new ZipItem(newpath[0],mimetype,newpath[1]);
-    }
-
-    @Override
-    public AbstractItem create(String path, String mimetype, String name, long size) {
-        //The path can be compound (Zip path + inner zip path, separated by SEP).
-        String[] newpath = splitVirtualPath(path);
-        return new ZipItem(newpath[0],mimetype,name,size,newpath[1]);
-    }
-
-    public AbstractItem addToList(String path, String name, String type, long size) {
+    public AbstractItem addToList(String path, String type, String name, long size) {
         AbstractItem preItem = ItemFactory.getInstance().createItem(this.path + SEP + path, type, name, size);
         String anotherSep = preItem instanceof VirtualItem ? SEP : "";
         return ItemFactory.getInstance().createItem(this.path + SEP + path + anotherSep, type, name, size);
     }
+
+    public static void onClick(AbstractFragment.OnListFragmentInteractionListener mListener, AbstractItem item) {
+        String name = item.getName();
+        String path = item.getPath();
+        long size = item.getSize();
+        String type = mListener.getFragment().getItem().getType();
+        VirtualItem newItem = (VirtualItem)ItemFactory.getInstance().createItem(path, type, name, size);
+        if (item.isFolder()) {
+            mListener.onListFragmentInteraction(newItem);
+        } else {
+            mListener.onListFragmentExtraction(newItem);
+        }
+    }
+
+    public abstract ArrayList<AbstractItem> getItemList();
 }
