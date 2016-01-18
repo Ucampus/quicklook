@@ -25,7 +25,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 public class QuicklookActivity extends AppCompatActivity implements FolderFragment.OnListFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private String url;
+    private String path;
     private static String TAG = "QuickLookPermissions";
     private Runnable r;
     private View coordinator;
@@ -38,7 +38,7 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
-        this.url = getIntent().getStringExtra("localurl");
+        this.path = getIntent().getStringExtra("localurl");
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -53,8 +53,10 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
             }
         });
         if (savedInstanceState==null) {
-            String type = AbstractItem.loadMimeType(this.url);
-            AbstractItem item = ItemFactory.getInstance().createItem(this.url, type);
+            String name = AbstractItem.getNameFromPath(this.path);
+            long size = AbstractItem.getSizeFromPath(this.path);
+            String type = AbstractItem.loadMimeType(this.path);
+            AbstractItem item = ItemFactory.getInstance().createItem(this.path, type,name,size);
             checkPermissionsAndChangeFragment(item);
         }
     }

@@ -59,12 +59,11 @@ public abstract class AbstractItem {
     }
 
     /**
-     * Uses Java Files API and obtains name and size of file.
+     * Uses Java Files API and obtains size of file.
      */
-    protected void getDataFromFile() {
-        File file = new File(this.path);
-        name = file.getName();
-        size = file.length();
+    public static long getSizeFromPath(String path) {
+        File file = new File(path);
+        return file.length();
     }
 
     /**
@@ -72,7 +71,7 @@ public abstract class AbstractItem {
      * @param path path of file
      * @return name of file
      */
-    protected static String getNameFromPath(String path) {
+    public static String getNameFromPath(String path) {
         String[] splitPath = path.split("/");
         return splitPath[splitPath.length-1];
     }

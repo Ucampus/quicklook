@@ -104,7 +104,10 @@ public class ZipItem extends VirtualItem {
             }
             extracted.close();
             String path = context.getFilesDir()+"/"+filename;
-            return ItemFactory.getInstance().createItem(path, AbstractItem.loadMimeType(path));
+            String type = loadMimeType(path);
+            long size = AbstractItem.getSizeFromPath(path);
+            String name = AbstractItem.getNameFromPath(path);
+            return ItemFactory.getInstance().createItem(path, type,name,size);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

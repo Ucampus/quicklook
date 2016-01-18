@@ -58,7 +58,9 @@ public class FolderItem extends ListItem {
         for (File elem : elements) {
             String path = elem.getAbsolutePath();
             String mimetype = loadMimeType(path);
-            files.add(ItemFactory.getInstance().createItem(path,mimetype));
+            long size = AbstractItem.getSizeFromPath(path);
+            String name = AbstractItem.getNameFromPath(path);
+            files.add(ItemFactory.getInstance().createItem(path,mimetype,name,size));
         }
         return files;
     }

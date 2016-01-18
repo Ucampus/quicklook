@@ -9,7 +9,7 @@ import java.util.HashMap;
  */
 public class ItemFactory {
 
-    private HashMap<String,AbstractItem> dictionary = new HashMap<>();
+    private HashMap<String,Class> dictionary = new HashMap<>();
 
     private static ItemFactory ourInstance = new ItemFactory();
 
@@ -26,19 +26,19 @@ public class ItemFactory {
      */
     private ItemFactory() {
         // Here we register the types of files:
-        register("folder", new FolderItem());
-        register("default",new DefaultItem());
-        register("application/pdf", new PdfItem());
-        register("application/zip", new ZipItem());
-        register("image/jpeg", new PictureItem());
-        register("image/png", new PictureItem());
-        register("image/gif", new PictureItem());
-        register("text/plain", new TxtItem());
-        register("application/x-tar", new TarItem());
-        register("application/x-gzip", new TarItem());
-        register("application/vnd.openxmlformats-officedocument.wordprocessingml.document", new WordItem());
-        register("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new ExcelItem());
-        register("application/vnd.openxmlformats-officedocument.presentationml.presentation", new PowerpointItem());
+        register("folder", FolderItem.class);
+        register("default", DefaultItem.class);
+        register("application/pdf", PdfItem.class);
+        register("application/zip", ZipItem.class);
+        register("image/jpeg", PictureItem.class);
+        register("image/png", PictureItem.class);
+        register("image/gif", PictureItem.class);
+        register("text/plain", TxtItem.class);
+        register("application/x-tar", TarItem.class);
+        register("application/x-gzip", TarItem.class);
+        register("application/vnd.openxmlformats-officedocument.wordprocessingml.document", WordItem.class);
+        register("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ExcelItem.class);
+        register("application/vnd.openxmlformats-officedocument.presentationml.presentation", PowerpointItem.class);
     }
 
     /**
@@ -46,22 +46,8 @@ public class ItemFactory {
      * @param mime mimetype.
      * @param item item associated.
      */
-    public void register(String mime, AbstractItem item) {
+    public void register(String mime, Class item) {
         dictionary.put(mime, item);
-    }
-
-    /**
-     * Creates an item using Files API. The file must exist.
-     * @param path path of the file
-     * @param mimetype mimetype
-     * @return an Item
-     */
-    public AbstractItem createItem(String path, String mimetype) {
-        if (dictionary.containsKey(mimetype)) {
-            return dictionary.get(mimetype).create(path,mimetype);
-        } else {
-            return dictionary.get("default").create(path,mimetype);
-        }
     }
 
     /**

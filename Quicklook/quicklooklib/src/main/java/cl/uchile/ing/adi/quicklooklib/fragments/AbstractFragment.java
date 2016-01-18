@@ -28,7 +28,9 @@ public abstract class AbstractFragment extends Fragment {
         if (b!=null) {
             String path = b.getString(AbstractItem.ITEM_PATH);
             String type = b.getString(AbstractItem.ITEM_TYPE);
-            item = ItemFactory.getInstance().createItem(path,type);
+            long size = AbstractItem.getSizeFromPath(path);
+            String name = AbstractItem.getNameFromPath(path);
+            item = ItemFactory.getInstance().createItem(path,type,name,size);
         }
     }
 

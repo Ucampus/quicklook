@@ -83,7 +83,10 @@ public class TarItem extends VirtualItem {
                         extracted.write(buffer, 0, len);
                     }
                     extracted.close();
-                    return ItemFactory.getInstance().createItem(path, AbstractItem.loadMimeType(path));
+                    String type =  AbstractItem.loadMimeType(path);
+                    long size = AbstractItem.getSizeFromPath(path);
+                    String name = AbstractItem.getNameFromPath(path);
+                    return ItemFactory.getInstance().createItem(path,type,name,size);
                 }
             }
         } catch (Exception e) {

@@ -139,7 +139,6 @@ public abstract class VirtualItem extends ListItem {
         int currentLevel = zippath.split("/").length;
         int zeLevel = zeName.split("/").length;
         int magicNumber = zippath.equals("") ? 0 : 1;
-        //Si la entrada parte con virtualPath y es hijo directo:
         if (zeName.startsWith(zippath) && currentLevel+magicNumber==zeLevel) {
             return true;
         }
