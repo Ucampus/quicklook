@@ -6,36 +6,41 @@ import cl.uchile.ing.adi.quicklooklib.fragments.WebFragment;
 /**
  * Represents web content in the filesystem.
  */
-public class WebItem extends DefaultItem {
+public class TxtItem extends DefaultItem {
 
-    public WebItem() {
+    public TxtItem() {
     }
 
-    public WebItem(String path, String mimetype) {
+    public TxtItem(String path, String mimetype) {
         super(path,mimetype);
     }
 
-    public WebItem(String path, String mimetype, String name, long size) {
+    public TxtItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
     }
 
     @Override
     public int getImage() {
-        return R.drawable.image;
+        return R.drawable.txt;
     }
 
     @Override
     public AbstractItem create(String path,String mimetype) {
-        return new WebItem(path,mimetype);
+        return new TxtItem(path,mimetype);
     }
 
     @Override
     public AbstractItem create(String path, String mimetype, String name, long size) {
-        return new WebItem(path,mimetype,name,size);
+        return new TxtItem(path,mimetype,name,size);
     }
 
     @Override
     protected void createFragment() {
         fragment = new WebFragment();
+    }
+
+    @Override
+    public String getFormattedType() {
+        return "Text file";
     }
 }

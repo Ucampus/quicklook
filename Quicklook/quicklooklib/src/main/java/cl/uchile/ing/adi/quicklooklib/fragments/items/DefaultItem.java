@@ -40,4 +40,8 @@ public class DefaultItem extends AbstractItem {
         fragment = new DefaultFragment();
     }
 
+    @Override
+    public String getFormattedType() {
+        return "File";
+    }
 }

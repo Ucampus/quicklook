@@ -32,7 +32,7 @@ public class DefaultFragment extends AbstractFragment {
         TextView filetype = (TextView) v.findViewById(R.id.filetype);
         TextView filesize = (TextView) v.findViewById(R.id.filesize);
         filename.setText(item.getName());
-        filetype.setText(item.getType());
+        filetype.setText(item.getFormattedType());
         filesize.setText(item.getFormattedSize());
         fileimage.setImageResource(item.getImage());
         return v;

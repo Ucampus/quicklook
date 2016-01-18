@@ -9,7 +9,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.FolderFragment;
 /**
  * Represents a folder in the filesystem.
  */
-public class FolderItem extends AbstractItem {
+public class FolderItem extends ListItem {
 
     public FolderItem() {
     }
@@ -30,16 +30,6 @@ public class FolderItem extends AbstractItem {
     @Override
     public AbstractItem create(String path, String mimetype, String name, long size) {
         return new FolderItem(path,mimetype,name,size);
-    }
-
-    /**
-     * It doesn't calculate folders size.
-     */
-    @Override
-    protected void getDataFromFile() {
-        File file = new File(this.path);
-        this.name = file.getName();
-        this.size = -1;
     }
 
     @Override
@@ -70,5 +60,14 @@ public class FolderItem extends AbstractItem {
             files.add(ItemFactory.getInstance().createItem(path,mimetype));
         }
         return files;
+    }
+
+    public String getSubTitle() {
+        return this.getPath();
+    }
+
+    @Override
+    public String getFormattedType() {
+        return "Folder";
     }
 }

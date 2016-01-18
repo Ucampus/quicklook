@@ -30,10 +30,15 @@ public class ItemFactory {
         register("default",new DefaultItem());
         register("application/pdf", new PdfItem());
         register("application/zip", new ZipItem());
-        register("image/jpeg", new WebItem());
-        register("image/png", new WebItem());
-        register("image/gif", new WebItem());
-        register("text/plain", new WebItem());
+        register("image/jpeg", new PictureItem());
+        register("image/png", new PictureItem());
+        register("image/gif", new PictureItem());
+        register("text/plain", new TxtItem());
+        register("application/x-tar", new TarItem());
+        register("application/x-gzip", new TarItem());
+        register("application/vnd.openxmlformats-officedocument.wordprocessingml.document", new WordItem());
+        register("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new ExcelItem());
+        register("application/vnd.openxmlformats-officedocument.presentationml.presentation", new PowerpointItem());
     }
 
     /**
@@ -75,7 +80,5 @@ public class ItemFactory {
             return dictionary.get("default").create(path,mimetype,name,size);
         }
     }
-
-
 
 }

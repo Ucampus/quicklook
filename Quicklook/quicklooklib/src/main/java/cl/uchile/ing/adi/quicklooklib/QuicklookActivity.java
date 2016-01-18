@@ -20,7 +20,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.FolderFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.ZipItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
 public class QuicklookActivity extends AppCompatActivity implements FolderFragment.OnListFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
@@ -52,9 +52,11 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
                 startActivity(Intent.createChooser(intent, "Open"));
             }
         });
-        String type = AbstractItem.loadMimeType(this.url);
-        AbstractItem item = ItemFactory.getInstance().createItem(this.url, type);
-        checkPermissionsAndChangeFragment(item);
+        if (savedInstanceState==null) {
+            String type = AbstractItem.loadMimeType(this.url);
+            AbstractItem item = ItemFactory.getInstance().createItem(this.url, type);
+            checkPermissionsAndChangeFragment(item);
+        }
     }
 
 
@@ -92,7 +94,7 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
      * @param backstack Adds the previous fragment to backstack.
      */
     public void changeFragment(AbstractItem item, boolean backstack){
-        current = item.getFragment();
+        updateActivity(item);
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.quicklook_fragment, current, "QuickLook");
         if (backstack) t.addToBackStack(null);
@@ -122,7 +124,7 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
      * Also shows them after extraction.
      * @param item the item which is going to be displayed.
      */
-    public void onListFragmentExtraction(final ZipItem item) {
+    public void onListFragmentExtraction(final VirtualItem item) {
         AbstractItem extracted = item.extract(getApplicationContext());
         changeFragment(extracted);
     }
@@ -132,8 +134,9 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
      * @param item Item with new info for the actionbar.
      */
     private void updateActivity(AbstractItem item) {
-        getSupportActionBar().setTitle(item.getName());
-        getSupportActionBar().setSubtitle(item.getPath());
+        setFragment(item.getFragment());
+        getSupportActionBar().setTitle(item.getTitle());
+        getSupportActionBar().setSubtitle(item.getSubTitle());
         checkIfShowingFab(item);
 
     }
@@ -149,7 +152,6 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
                                            @NonNull int[] grantResults) {
 
         if (requestCode == WRITE_PERMISSIONS) {
-            // BEGIN_INCLUDE(permission_result)
             // Received permission result for storage permission.
             Log.i(TAG, "Received response for storage permission request.");
 
@@ -181,6 +183,14 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
             fab.setLayoutParams(p);
             fab.setVisibility(View.VISIBLE);
         }
+    }
+
+    public AbstractFragment getFragment() {
+        return current;
+    }
+
+    public void setFragment(AbstractFragment fragment) {
+        current = fragment;
     }
 
 }

@@ -12,7 +12,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
  * AbstractItem has most of the methods related with items in the library
  * The items
  */
-public abstract class AbstractItem implements Serializable {
+public abstract class AbstractItem {
 
     public static String ITEM_PATH = "path";
     public static String ITEM_TYPE = "type";
@@ -118,6 +118,7 @@ public abstract class AbstractItem implements Serializable {
         b.putString(ITEM_PATH,this.getPath());
         b.putString(ITEM_TYPE,this.getType());
         fragment.setArguments(b);
+        fragment.setItem(this);
     }
 
     /**
@@ -135,6 +136,8 @@ public abstract class AbstractItem implements Serializable {
     public String getType() {
         return this.type;
     }
+
+    public abstract String getFormattedType();
 
     /**
      * Returns the size of file.
@@ -177,7 +180,7 @@ public abstract class AbstractItem implements Serializable {
             return "folder";
         }
         String type= null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+        String extension = MimeTypeMap.getFileExtensionFromUrl(path).replace(" ","_");
         if (extension != null) {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         } else {
@@ -196,5 +199,21 @@ public abstract class AbstractItem implements Serializable {
                  countSize/=1024;
         }
         return ""+countSize+" "+suffixes[i];
+    }
+
+    public String getTitle() {
+        return this.getName();
+    }
+
+    public String getSubTitle() {
+        return this.getFormattedType();
+    }
+
+    public String toString() {
+        return "Item:\n"+
+                "Name: "+getName()+
+                "\nType: "+getType()+
+                "\nPath: "+getPath()+
+                "\nSize: "+getFormattedSize()+"\n";
     }
 }

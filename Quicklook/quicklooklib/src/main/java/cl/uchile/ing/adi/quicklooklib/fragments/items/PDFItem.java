@@ -40,4 +40,8 @@ public class PdfItem extends DefaultItem {
     }
 
 
+    @Override
+    public String getFormattedType() {
+        return "PDF Document";
+    }
 }

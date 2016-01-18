@@ -39,8 +39,9 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mTextView.setText(mValues.get(position).getName());
-        holder.mSubTextView.setText(mValues.get(position).getType()+ " - " +
-                mValues.get(position).getFormattedSize());
+        String subTextMessage = mValues.get(position).getFormattedType()+ " - " +
+                mValues.get(position).getFormattedSize();
+        holder.mSubTextView.setText(subTextMessage);
         holder.mImageView.setImageResource(mValues.get(position).getImage());
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

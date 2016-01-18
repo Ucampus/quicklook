@@ -3,13 +3,12 @@ package cl.uchile.ing.adi.quicklooklib.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.ZipItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
 /**
  * Abstract Fragment defines the basic structure of the fragments managing the files.
@@ -67,6 +66,7 @@ public abstract class AbstractFragment extends Fragment {
     public void setItem(AbstractItem item) {
         this.item = item;
     }
+
     public AbstractItem getItem() {
         return this.item;
     }
@@ -94,7 +94,14 @@ public abstract class AbstractFragment extends Fragment {
          * Extracts a item inside a Compressed folder and opens it.
          * @param item the item which is going to be displayed.
          */
-        void onListFragmentExtraction(ZipItem item);
+        void onListFragmentExtraction(VirtualItem item);
+
+        /**
+         * Retrieves the current fragment.
+         */
+        AbstractFragment getFragment();
+
+        void setFragment(AbstractFragment fragment);
 
     }
 }

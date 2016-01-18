@@ -2,15 +2,15 @@ package cl.uchile.ing.adi.quicklooklib.fragments;
 
 import android.support.v7.widget.RecyclerView;
 
-import cl.uchile.ing.adi.quicklooklib.fragments.adapters.ZipRecyclerViewAdapter;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.ZipItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.adapters.VirtualRecyclerViewAdapter;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
 /**
  * Shows the content of a zip file and allows to navigate inside it.
  */
-public class ZipFragment extends FolderFragment {
+public class VirtualFragment extends FolderFragment {
 
-    public ZipFragment() {
+    public VirtualFragment() {
     }
 
     /**
@@ -19,7 +19,7 @@ public class ZipFragment extends FolderFragment {
      */
     @Override
     public RecyclerView.Adapter getElements() {
-        return new ZipRecyclerViewAdapter(((ZipItem) this.item).getElements(), mListener);
+        return (new VirtualRecyclerViewAdapter(((VirtualItem) item).getElements(), mListener));
     }
 
 }
