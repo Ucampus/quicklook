@@ -110,11 +110,6 @@ public class TarItem extends VirtualItem {
     }
 
     @Override
-    public String getTitle() {
-        return this.getNameFromPath(getPath())+"/"+getNameFromPath(getVirtualPath());
-    }
-
-    @Override
     public String getFormattedType() {
         return "Tar Compressed File";
     }

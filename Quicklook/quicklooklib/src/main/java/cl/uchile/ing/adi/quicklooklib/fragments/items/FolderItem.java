@@ -62,6 +62,10 @@ public class FolderItem extends ListItem {
         return files;
     }
 
+    public String getTitle() {
+        return this.getName();
+    }
+
     public String getSubTitle() {
         return this.getPath();
     }

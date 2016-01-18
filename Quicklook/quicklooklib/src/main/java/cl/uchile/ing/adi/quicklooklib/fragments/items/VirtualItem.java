@@ -151,6 +151,10 @@ public abstract class VirtualItem extends ListItem {
         return this.getNameFromPath(getPath())+"/"+getNameFromPath(getVirtualPath());
     }
 
+    public String getSubTitle() {
+        return this.getFormattedType();
+    }
+
     @Override
     public String getFormattedType() {
         return "Virtual File";
