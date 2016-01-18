@@ -9,25 +9,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
  */
 public class DefaultItem extends AbstractItem {
 
-    public DefaultItem() {
-    }
-
-    public DefaultItem(String path, String mimetype) {
-        super(path,mimetype);
-    }
-
     public DefaultItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
-    }
-
-    @Override
-    public AbstractItem create(String path,String mimetype) {
-        return new DefaultItem(path,mimetype);
-    }
-
-    @Override
-    public AbstractItem create(String path, String mimetype, String name, long size) {
-        return new DefaultItem(path,mimetype,name,size);
     }
 
     @Override

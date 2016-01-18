@@ -8,13 +8,6 @@ import cl.uchile.ing.adi.quicklooklib.fragments.WebFragment;
  */
 public class PictureItem extends DefaultItem {
 
-    public PictureItem() {
-    }
-
-    public PictureItem(String path, String mimetype) {
-        super(path,mimetype);
-    }
-
     public PictureItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
     }
@@ -22,16 +15,6 @@ public class PictureItem extends DefaultItem {
     @Override
     public int getImage() {
         return R.drawable.image;
-    }
-
-    @Override
-    public AbstractItem create(String path,String mimetype) {
-        return new PictureItem(path,mimetype);
-    }
-
-    @Override
-    public AbstractItem create(String path, String mimetype, String name, long size) {
-        return new PictureItem(path,mimetype,name,size);
     }
 
     @Override

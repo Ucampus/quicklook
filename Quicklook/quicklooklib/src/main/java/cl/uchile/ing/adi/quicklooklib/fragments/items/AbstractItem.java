@@ -25,23 +25,6 @@ public abstract class AbstractItem {
     protected AbstractFragment fragment;
     private String virtualPath;
 
-    /**
-     * Default constructor. Used with "create" methods.
-     */
-    public AbstractItem() {
-        this("", "", "", 0);
-    }
-
-    /**
-     * Constructor of the class. Retrieves metadata with file api.
-     * @param path path of file (it must exist)
-     * @param mimetype mimetype of file.
-     */
-    public AbstractItem(String path,String mimetype) {
-        this.path = path;
-        this.type = mimetype;
-        this.getDataFromFile();
-    }
 
     /**
      * Constructor of the class, metadata is inserted manually.
@@ -75,25 +58,6 @@ public abstract class AbstractItem {
         String[] splitPath = path.split("/");
         return splitPath[splitPath.length-1];
     }
-
-    /**
-     * Creates the items. Is used in the Item factory. Uses Files API.
-     * @param path path of the file
-     * @param mimetype mimetype of the file
-     * @return an Item.
-     */
-    public abstract AbstractItem create(String path, String mimetype);
-
-    /**
-     * Creates the items. Used in the item factory. Data inserted manually.
-     * You can create virtual elements (As used in Zip files) with this method.
-     * @param path path of the file
-     * @param mimetype mimetype of the file
-     * @param name name of the file
-     * @param size size of the file
-     * @return an Item
-     */
-    public abstract AbstractItem create(String path, String mimetype, String name, long size);
 
     /**
      * Each implementation of AbstractItem associates a fragment with itself. This

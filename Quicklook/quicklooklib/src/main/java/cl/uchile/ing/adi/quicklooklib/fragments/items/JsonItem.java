@@ -15,28 +15,9 @@ import java.util.Iterator;
  */
 public class JsonItem extends VirtualItem {
 
-    public JsonItem() {
+    public JsonItem(String path, String mimetype, String name, long size) {
+        super(path,mimetype,name,size);
     }
-
-    @Override
-    public AbstractItem create(String path, String mimetype) {
-        String[] newpath = splitVirtualPath(path);
-        return new JsonItem(newpath[0],mimetype,newpath[1]);    }
-
-    @Override
-    public AbstractItem create(String path, String mimetype, String name, long size) {
-        String[] newpath = splitVirtualPath(path);
-        return new ZipItem(newpath[0],mimetype,name,size,newpath[1]);
-    }
-
-    public JsonItem(String path, String mimetype, String virtualPath) {
-        super(path, mimetype, virtualPath);
-    }
-
-    public JsonItem(String path, String mimetype, String name, long size, String virtualPath) {
-        super(path,mimetype,name,size,virtualPath);
-    }
-
 
     @Override
     public ArrayList<AbstractItem> getItemList() {

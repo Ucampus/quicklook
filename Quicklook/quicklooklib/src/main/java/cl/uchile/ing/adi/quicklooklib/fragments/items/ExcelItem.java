@@ -8,13 +8,6 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
  */
 public class ExcelItem extends DefaultItem {
 
-    public ExcelItem() {
-    }
-
-    public ExcelItem(String path, String mimetype) {
-        super(path,mimetype);
-    }
-
     public ExcelItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
     }
@@ -22,16 +15,6 @@ public class ExcelItem extends DefaultItem {
     @Override
     public int getImage() {
         return R.drawable.excel;
-    }
-
-    @Override
-    public AbstractItem create(String path,String mimetype) {
-        return new ExcelItem(path,mimetype);
-    }
-
-    @Override
-    public AbstractItem create(String path, String mimetype, String name, long size) {
-        return new ExcelItem(path,mimetype,name,size);
     }
 
     @Override

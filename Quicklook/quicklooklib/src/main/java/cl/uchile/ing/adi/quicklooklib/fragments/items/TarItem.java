@@ -22,15 +22,8 @@ import java.util.ArrayList;
  */
 public class TarItem extends VirtualItem {
 
-    public TarItem() {
-    }
-
-    public TarItem(String path, String mimetype, String virtualPath) {
-        super(path, mimetype, virtualPath);
-    }
-
-    public TarItem(String path, String mimetype, String name, long size, String virtualPath) {
-        super(path,mimetype,name,size,virtualPath);
+    public TarItem(String path, String mimetype, String name, long size) {
+        super(path,mimetype,name,size);
     }
 
     @Override
@@ -113,20 +106,6 @@ public class TarItem extends VirtualItem {
     @Override
     public String getFormattedType() {
         return "Tar Compressed File";
-    }
-
-    @Override
-    public AbstractItem create(String path,String mimetype) {
-        //The path can be compound (Zip path + inner zip path, separated by SEP).
-        String[] newpath = splitVirtualPath(path);
-        return new TarItem(newpath[0],mimetype,newpath[1]);
-    }
-
-    @Override
-    public AbstractItem create(String path, String mimetype, String name, long size) {
-        //The path can be compound (Zip path + inner zip path, separated by SEP).
-        String[] newpath = splitVirtualPath(path);
-        return new TarItem(newpath[0],mimetype,name,size,newpath[1]);
     }
 
     public boolean isFolder() {

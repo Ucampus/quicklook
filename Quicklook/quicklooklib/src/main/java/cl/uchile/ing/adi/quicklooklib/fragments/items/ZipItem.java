@@ -16,48 +16,15 @@ import java.util.zip.ZipFile;
  */
 public class ZipItem extends VirtualItem {
 
-    public ZipItem() {
-        super();
-    }
-
-
-    /**
-     * The constructor is sightly different compared to Abstract item. It has an extra property
-     * representing the inner path on the virtual element.
-     * @param path path of the zip.
-     * @param mimetype mimetype of the zip. It can be changed, creating virtual items.
-     * @param virtualPath path inside the zip.
-     */
-    public ZipItem(String path, String mimetype, String virtualPath) {
-        super(path, mimetype,virtualPath);
-    }
-
     /**
      * Simmilar to AbstractItem long constructor, but it specifies a path inside the zip.
      * @param path path of the virtual folder.
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
      * @param name name of the virtual folder.
      * @param size size of the virtual folder.
-     * @param virtualPath path inside the virtual folder.
      */
-    public ZipItem(String path, String mimetype, String name, long size, String virtualPath) {
-        super(path,mimetype,name,size,virtualPath);
-    }
-
-
-
-    @Override
-    public AbstractItem create(String path,String mimetype) {
-        //The path can be compound (Zip path + inner zip path, separated by SEP).
-        String[] newpath = splitVirtualPath(path);
-        return new ZipItem(newpath[0],mimetype,newpath[1]);
-    }
-
-    @Override
-    public AbstractItem create(String path, String mimetype, String name, long size) {
-        //The path can be compound (Zip path + inner zip path, separated by SEP).
-        String[] newpath = splitVirtualPath(path);
-        return new ZipItem(newpath[0],mimetype,name,size,newpath[1]);
+    public ZipItem(String path, String mimetype, String name, long size) {
+        super(path,mimetype,name,size);
     }
 
     /**

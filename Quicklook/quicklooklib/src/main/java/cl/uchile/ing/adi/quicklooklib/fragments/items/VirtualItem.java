@@ -25,50 +25,17 @@ public abstract class VirtualItem extends ListItem {
 
     protected ArrayList<AbstractItem> itemList;
 
-    public VirtualItem() {
-    }
-
-    /**
-     * The constructor is sightly different compared to Abstract item. It has an extra property
-     * representing the inner path on the virtual element.
-     * @param path path of the zip.
-     * @param mimetype mimetype of the zip. It can be changed, creating virtual items.
-     * @param virtualPath path inside the zip.
-     */
-    public VirtualItem(String path, String mimetype, String virtualPath) {
-        super(path, mimetype);
-        try {
-            this.virtualPath = virtualPath;
-            getDataFromFile();
-        } catch (Exception e) { e.printStackTrace();}
-    }
-
     /**
      * Simmilar to AbstractItem long constructor, but it specifies a path inside the zip.
      * @param path path of the virtual folder.
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
      * @param name name of the virtual folder.
      * @param size size of the virtual folder.
-     * @param virtualPath path inside the virtual folder.
      */
-    public VirtualItem(String path, String mimetype, String name, long size, String virtualPath) {
-        super(path,mimetype,name,size);
-        this.virtualPath = virtualPath;
+    public VirtualItem(String path, String mimetype, String name, long size) {
+        super(splitVirtualPath(path)[0],mimetype,name,size);
+        this.virtualPath = splitVirtualPath(path)[1];
     }
-
-    /**
-     * An overriden getdataFromFile() method, adapted for virtual folders.
-     */
-    @Override
-    protected void getDataFromFile() {
-        File file = new File(this.path);
-        this.path = file.getAbsolutePath();
-        this.name = file.getName();
-        this.type = loadMimeType(this.path);
-        this.size = file.length();
-
-    }
-
 
     /**
      * Gets elements inside a VirtualItem Folder.
