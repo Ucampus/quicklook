@@ -26,6 +26,7 @@ public class ItemFactory {
      */
     private ItemFactory() {
         // Here we register the types of files:
+<<<<<<< HEAD
         register("folder", FolderItem.class);
         register("default", DefaultItem.class);
         register("application/pdf", PdfItem.class);
@@ -39,6 +40,21 @@ public class ItemFactory {
         register("application/vnd.openxmlformats-officedocument.wordprocessingml.document", WordItem.class);
         register("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ExcelItem.class);
         register("application/vnd.openxmlformats-officedocument.presentationml.presentation", PowerpointItem.class);
+=======
+        register("folder", new FolderItem());
+        register("default",new DefaultItem());
+        register("application/pdf", new PDFItem());
+        register("application/zip", new ZipItem());
+        register("image/jpeg", new PictureItem());
+        register("image/png", new PictureItem());
+        register("image/gif", new PictureItem());
+        register("text/plain", new TxtItem());
+        register("application/x-tar", new TarItem());
+        register("application/x-gzip", new TarItem());
+        register("application/vnd.openxmlformats-officedocument.wordprocessingml.document", new WordItem());
+        register("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", new ExcelItem());
+        register("application/vnd.openxmlformats-officedocument.presentationml.presentation", new PowerpointItem());
+>>>>>>> a0e9498c771a58710591fb48c38d4b92f31daf4a
     }
 
     /**
