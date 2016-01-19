@@ -13,13 +13,4 @@ public class VirtualFragment extends FolderFragment {
     public VirtualFragment() {
     }
 
-    /**
-     * Overriden getElements Method with zip adapter.
-     * @return
-     */
-    @Override
-    public RecyclerView.Adapter getElements() {
-        return (new VirtualRecyclerViewAdapter(((VirtualItem) item).getElements(), mListener));
-    }
-
 }

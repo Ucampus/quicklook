@@ -42,7 +42,7 @@ public class ZipItem extends VirtualItem {
         }
         ZipEntry ze = zipfile.getEntry(path);
         if (ze.isDirectory()) {
-            return ItemFactory.DEFAULT_MIMETYPE;
+            return ItemFactory.FOLDER_MIMETYPE;
         }
         String type= null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(path);
@@ -92,8 +92,8 @@ public class ZipItem extends VirtualItem {
         return false;
     }
 
-    public ArrayList<AbstractItem> getItemList() {
-        ArrayList<AbstractItem> itemList = new ArrayList<>();
+    public ArrayList<String[]> getItemList() {
+        ArrayList<String[]> itemList = new ArrayList<>();
         try {
             ZipFile zipfile = new ZipFile(this.path);
             for (Enumeration<? extends ZipEntry> e = zipfile.entries();
@@ -103,7 +103,8 @@ public class ZipItem extends VirtualItem {
                 String name = getNameFromPath(path);
                 long size = ze.getSize();
                 String type = this.LoadZipMimeType(path);
-                AbstractItem newItem = createForList(path, type, name, size);
+                String[] newItem = {this.path+SEP+path,type,name,Long.toString(size)};
+                //AbstractItem newItem = createForList(path, type, name, size);
                 itemList.add(newItem);
             }
         } catch (Exception e) {

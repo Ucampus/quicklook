@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.adapters.FolderRecyclerViewAdapter;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.ListItem;
 
 /**
  * Opens folders and lists the items inside them. There are extensions of this
@@ -21,17 +22,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
 public class FolderFragment extends AbstractFragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
 
     public FolderFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     /**
@@ -46,21 +38,9 @@ public class FolderFragment extends AbstractFragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(getElements());
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(((ListItem)(this.item)).getAdapter(mListener));
         }
         return view;
-    }
-
-    /**
-     * Returns the adapter with the elements to show.
-     * @return an adapter with elements.
-     */
-    public RecyclerView.Adapter getElements() {
-        return new FolderRecyclerViewAdapter(((FolderItem)this.item).getElements(), mListener);
     }
 }

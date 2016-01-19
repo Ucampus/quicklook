@@ -1,6 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;

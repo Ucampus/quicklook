@@ -12,6 +12,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment.OnListFragmentI
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.DefaultItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
 import java.util.List;
 
@@ -21,10 +23,10 @@ import java.util.List;
  */
 public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecyclerViewAdapter.ViewHolder> {
 
-    protected final List<AbstractItem> mValues;
+    protected final List<String[]> mValues;
     protected final OnListFragmentInteractionListener mListener;
 
-    public FolderRecyclerViewAdapter(List<AbstractItem> items, OnListFragmentInteractionListener listener) {
+    public FolderRecyclerViewAdapter(List<String[]> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -38,12 +40,13 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mTextView.setText(mValues.get(position).getName());
-        String subTextMessage = mValues.get(position).getFormattedType()+ " - " +
-                mValues.get(position).getFormattedSize();
+        String[] item = mValues.get(position);
+        holder.mItem = createForList(item[0],item[1],item[2],Long.parseLong(item[3]));
+        holder.mTextView.setText(holder.mItem.getName());
+        String subTextMessage = holder.mItem.getFormattedType()+ " - " +
+                holder.mItem.getFormattedSize();
         holder.mSubTextView.setText(subTextMessage);
-        holder.mImageView.setImageResource(mValues.get(position).getImage());
+        holder.mImageView.setImageResource(holder.mItem.getImage());
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +85,18 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
 
     public void clickAction(ViewHolder holder) {
         FolderItem.onClick(mListener,holder.mItem);
+    }
+
+    /**
+     * Creates an item for the list of items.
+     * @param path Path of the item
+     * @param type Type of the item
+     * @param name Name of the item
+     * @param size Size of the item
+     * @return item
+     */
+    public AbstractItem createForList(String path, String type, String name, long size) {
+        return ItemFactory.getInstance().createItem(path, type, name, size);
     }
 
 }

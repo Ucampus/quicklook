@@ -1,11 +1,14 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
+import android.support.v7.widget.RecyclerView;
+
 import java.io.File;
 import java.util.ArrayList;
 
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.FolderFragment;
+import cl.uchile.ing.adi.quicklooklib.fragments.adapters.FolderRecyclerViewAdapter;
 
 /**
  * Represents a folder in the filesystem.
@@ -31,17 +34,25 @@ public class FolderItem extends ListItem {
      * Returns a list of items inside a folder
      * @return a list of items inside a folder.
      */
-    public ArrayList<AbstractItem> getElements() {
+    public ArrayList<String[]> getElements() {
         File[] elements = new File(path).listFiles();
-        ArrayList<AbstractItem> files = new ArrayList<> ();
+        ArrayList<String[]> files = new ArrayList<> ();
         for (File elem : elements) {
             String path = elem.getAbsolutePath();
-            String mimetype = AbstractItem.loadMimeType(path);
+            String type = AbstractItem.loadMimeType(path);
             long size = AbstractItem.getSizeFromPath(path);
             String name = AbstractItem.getNameFromPath(path);
-            files.add(ItemFactory.getInstance().createItem(path,mimetype,name,size));
+            String[] newItem = {path,type,name,Long.toString(size)};
+            //AbstractItem newItem = ItemFactory.getInstance().createItem(path, mimetype, name, size);
+            files.add(newItem);
         }
         return files;
+    }
+
+    @Override
+    public RecyclerView.Adapter getAdapter(AbstractFragment.OnListFragmentInteractionListener mListener) {
+        return new FolderRecyclerViewAdapter((this).getElements(), mListener);
+
     }
 
     @Override

@@ -28,8 +28,8 @@ public class TarItem extends VirtualItem {
     }
 
     @Override
-    public ArrayList<AbstractItem> getItemList() {
-        ArrayList<AbstractItem>itemList = new ArrayList<>();
+    public ArrayList<String[]> getItemList() {
+        ArrayList<String[]>itemList = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(getPath());
             InputStream bis = new BufferedInputStream(fis);
@@ -44,7 +44,9 @@ public class TarItem extends VirtualItem {
                 String name = getNameFromPath(path);
                 long size = tae.getSize();
                 String type = this.loadTarGzMimeType(tae);
-                itemList.add(createForList(path, type, name, size));
+                String[] newItem = {this.path+SEP+path,type,name,Long.toString(size)};
+                //AbstractItem newItem = createForList(path, type, name, size);
+                itemList.add(newItem);
             }
         } catch (Exception e) { e.printStackTrace();}
         return itemList;

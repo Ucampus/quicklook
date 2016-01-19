@@ -1,5 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
+import android.support.v7.widget.RecyclerView;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -14,5 +16,7 @@ public abstract class ListItem extends AbstractItem {
         super(path,mimetype,name,size);
     }
 
-    public abstract ArrayList<AbstractItem> getElements();
-    }
+    public abstract ArrayList<String[]> getElements();
+
+    public abstract RecyclerView.Adapter getAdapter(AbstractFragment.OnListFragmentInteractionListener mListener);
+}
