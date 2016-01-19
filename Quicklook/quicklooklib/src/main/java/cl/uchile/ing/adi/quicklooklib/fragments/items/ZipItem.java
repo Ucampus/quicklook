@@ -38,18 +38,18 @@ public class ZipItem extends VirtualItem {
         try {
             zipfile = new ZipFile(this.path);
         } catch (Exception e) {
-            return "default";
+            return ItemFactory.DEFAULT_MIMETYPE;
         }
         ZipEntry ze = zipfile.getEntry(path);
         if (ze.isDirectory()) {
-            return "folder";
+            return ItemFactory.DEFAULT_MIMETYPE;
         }
         String type= null;
         String extension = MimeTypeMap.getFileExtensionFromUrl(path);
         if (extension != null) {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         } else {
-            return "default";
+            return ItemFactory.DEFAULT_MIMETYPE;
         }
         return type;
     }

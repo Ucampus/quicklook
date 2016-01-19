@@ -28,8 +28,8 @@ public class JsonItem extends VirtualItem {
             Iterator<JSONObject> iter = list.iterator();
             while (iter.hasNext()) {
                 JSONObject actual = iter.next();
-                String name =(String)actual.get("name");
-                String path =(String)actual.get("path");
+                String name =(String)actual.get("path");
+                String path =(String)actual.get("name");
                 String mimetype = (String)actual.get("mime");
                 long size = (Long)actual.get("size");
                 itemList.add(createForList(path, mimetype, name, size));
@@ -43,5 +43,10 @@ public class JsonItem extends VirtualItem {
     @Override
     public AbstractItem retrieve(Context context) {
         return null;
+    }
+
+    @Override
+    public String getName() {
+        return getNameFromPath(path);
     }
 }

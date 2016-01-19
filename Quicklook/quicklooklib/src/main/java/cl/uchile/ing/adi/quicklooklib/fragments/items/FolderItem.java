@@ -36,7 +36,7 @@ public class FolderItem extends ListItem {
         ArrayList<AbstractItem> files = new ArrayList<> ();
         for (File elem : elements) {
             String path = elem.getAbsolutePath();
-            String mimetype = loadMimeType(path);
+            String mimetype = AbstractItem.loadMimeType(path);
             long size = AbstractItem.getSizeFromPath(path);
             String name = AbstractItem.getNameFromPath(path);
             files.add(ItemFactory.getInstance().createItem(path,mimetype,name,size));

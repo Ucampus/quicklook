@@ -91,7 +91,7 @@ public class TarItem extends VirtualItem {
 
     private static String loadTarGzMimeType(TarArchiveEntry tar) {
         if (tar.isDirectory()) {
-            return "folder";
+            return ItemFactory.FOLDER_MIMETYPE;
         }
         String type= null;
         String path = tar.getName();
@@ -99,7 +99,7 @@ public class TarItem extends VirtualItem {
         if (extension != null) {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         } else {
-            return "default";
+            return ItemFactory.DEFAULT_MIMETYPE;
         }
         return type;
     }

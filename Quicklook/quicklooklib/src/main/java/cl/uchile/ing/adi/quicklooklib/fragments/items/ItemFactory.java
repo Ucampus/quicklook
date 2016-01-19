@@ -5,14 +5,20 @@ import android.util.Log;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
+import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
+
 /**
  * Assigns mimetypes to fragments.
  */
 public class ItemFactory {
 
+    public static final String QUICKLOOK_MIMETYPE = "text/quicklook-virtual-folder";
     private HashMap<String,Class> dictionary = new HashMap<>();
 
     private static ItemFactory ourInstance = new ItemFactory();
+
+    public static final String FOLDER_MIMETYPE = "application/folder";
+    public static final String DEFAULT_MIMETYPE = "application/default";
 
     /**
      * Returns an instance of the class.
@@ -27,8 +33,8 @@ public class ItemFactory {
      */
     private ItemFactory() {
         // Here we register the types of files:
-        register("folder", FolderItem.class);
-        register("default", DefaultItem.class);
+        register(FOLDER_MIMETYPE, FolderItem.class);
+        register(DEFAULT_MIMETYPE, DefaultItem.class);
         register("application/pdf", PDFItem.class);
         register("application/zip", ZipItem.class);
         register("image/jpeg", PictureItem.class);
@@ -40,6 +46,7 @@ public class ItemFactory {
         register("application/vnd.openxmlformats-officedocument.wordprocessingml.document", WordItem.class);
         register("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ExcelItem.class);
         register("application/vnd.openxmlformats-officedocument.presentationml.presentation", PowerpointItem.class);
+        register(QUICKLOOK_MIMETYPE, JsonItem.class);
     }
 
     /**

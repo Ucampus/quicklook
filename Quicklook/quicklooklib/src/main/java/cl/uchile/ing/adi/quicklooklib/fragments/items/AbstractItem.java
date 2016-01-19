@@ -92,7 +92,7 @@ public abstract class AbstractItem {
      * @return the name of file.
      */
     public String getName() {
-        return this.name;
+        return getNameFromPath(this.path);
     }
 
     /**
@@ -166,14 +166,17 @@ public abstract class AbstractItem {
     public static String loadMimeType(String path) {
         File f = new File(path);
         if (f.isDirectory()) {
-            return "folder";
+            return ItemFactory.FOLDER_MIMETYPE;
         }
         String type ;
         String extension = MimeTypeMap.getFileExtensionFromUrl(path).replace(" ","_");
+        if (extension.equals("ql")) {
+            return ItemFactory.QUICKLOOK_MIMETYPE;
+        }
         if (extension != null) {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         } else {
-            type = "unknown";
+            type = ItemFactory.DEFAULT_MIMETYPE;
         }
         return type;
     }
