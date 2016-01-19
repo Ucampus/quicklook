@@ -171,7 +171,7 @@ public abstract class VirtualItem extends AbstractItem implements ListItem {
     public abstract AbstractItem retrieve(Context context);
 
     public RecyclerView.Adapter getAdapter(AbstractFragment.OnListFragmentInteractionListener mListener) {
-        return (new VirtualRecyclerViewAdapter(((VirtualItem) this).getElements(), mListener));
+        return new VirtualRecyclerViewAdapter(this.getElements(), mListener);
     }
 
     /**

@@ -12,10 +12,6 @@ import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
  * Created by dudu on 17-01-2016.
  */
 public interface ListItem {
-
     ArrayList<AbstractItem> getElements();
-
     RecyclerView.Adapter getAdapter(AbstractFragment.OnListFragmentInteractionListener mListener);
-
-    AbstractItem retrieve(Context context);
 }
