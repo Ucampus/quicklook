@@ -19,11 +19,11 @@ import cl.uchile.ing.adi.quicklooklib.fragments.items.ListItem;
  * Opens folders and lists the items inside them. There are extensions of this
  * class for showing elements inside compressed files.
  */
-public class FolderFragment extends AbstractFragment {
+public class ListFragment extends AbstractFragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
 
-    public FolderFragment() {
+    public ListFragment() {
     }
 
     /**

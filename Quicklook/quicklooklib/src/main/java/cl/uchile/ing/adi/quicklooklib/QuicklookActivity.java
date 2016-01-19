@@ -18,11 +18,12 @@ import android.view.View;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.FolderFragment;
+import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.ListItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
-public class QuicklookActivity extends AppCompatActivity implements FolderFragment.OnListFragmentInteractionListener,
+public class QuicklookActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     private String path;
@@ -108,9 +109,9 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
      * Method called by fragment when item is clicked on list view.
      * @param item the item which is going to be displayed.
      */
+
     public void onListFragmentInteraction(AbstractItem item) {
         changeFragment(item);
-
     }
 
     /**
@@ -122,11 +123,11 @@ public class QuicklookActivity extends AppCompatActivity implements FolderFragme
     }
 
     /**
-     * Manages the extraction of elements in compressed files.
-     * Also shows them after extraction.
+     * Manages the retrieval of elements in compressed files.
+     * Also shows them after retrieval.
      * @param item the item which is going to be displayed.
      */
-    public void onListFragmentExtraction(final VirtualItem item) {
+    public void onListFragmentRetrieval(ListItem item) {
         AbstractItem extracted = item.retrieve(getApplicationContext());
         changeFragment(extracted);
     }

@@ -33,18 +33,12 @@ public class ZipItem extends VirtualItem {
      * Loads mimetype of elements inside zip, using their name.
      * @return a string with the mimetype of the file inside the zip.
      */
-    public String LoadZipMimeType(String path) {
-        ZipFile zipfile;
-        try {
-            zipfile = new ZipFile(this.path);
-        } catch (Exception e) {
-            return ItemFactory.DEFAULT_MIMETYPE;
-        }
-        ZipEntry ze = zipfile.getEntry(path);
+    public String LoadZipMimeType(ZipEntry ze) {
         if (ze.isDirectory()) {
             return ItemFactory.FOLDER_MIMETYPE;
         }
         String type= null;
+        String path= ze.getName();
         String extension = MimeTypeMap.getFileExtensionFromUrl(path);
         if (extension != null) {
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
@@ -92,8 +86,8 @@ public class ZipItem extends VirtualItem {
         return false;
     }
 
-    public ArrayList<String[]> getItemList() {
-        ArrayList<String[]> itemList = new ArrayList<>();
+    public ArrayList<AbstractItem> getItemList() {
+        ArrayList<AbstractItem> itemList = new ArrayList<>();
         try {
             ZipFile zipfile = new ZipFile(this.path);
             for (Enumeration<? extends ZipEntry> e = zipfile.entries();
@@ -102,9 +96,8 @@ public class ZipItem extends VirtualItem {
                 String path = ze.getName();
                 String name = getNameFromPath(path);
                 long size = ze.getSize();
-                String type = this.LoadZipMimeType(path);
-                String[] newItem = {this.path+SEP+path,type,name,Long.toString(size)};
-                //AbstractItem newItem = createForList(path, type, name, size);
+                String type = this.LoadZipMimeType(ze);
+                AbstractItem newItem = createForList(path,type,name,size);
                 itemList.add(newItem);
             }
         } catch (Exception e) {

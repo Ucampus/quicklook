@@ -23,10 +23,10 @@ import java.util.List;
  */
 public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecyclerViewAdapter.ViewHolder> {
 
-    protected final List<String[]> mValues;
+    protected final List<AbstractItem> mValues;
     protected final OnListFragmentInteractionListener mListener;
 
-    public FolderRecyclerViewAdapter(List<String[]> items, OnListFragmentInteractionListener listener) {
+    public FolderRecyclerViewAdapter(List<AbstractItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -40,8 +40,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        String[] item = mValues.get(position);
-        holder.mItem = createForList(item[0],item[1],item[2],Long.parseLong(item[3]));
+        holder.mItem = mValues.get(position);
         holder.mTextView.setText(holder.mItem.getName());
         String subTextMessage = holder.mItem.getFormattedType()+ " - " +
                 holder.mItem.getFormattedSize();
@@ -85,18 +84,6 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
 
     public void clickAction(ViewHolder holder) {
         FolderItem.onClick(mListener,holder.mItem);
-    }
-
-    /**
-     * Creates an item for the list of items.
-     * @param path Path of the item
-     * @param type Type of the item
-     * @param name Name of the item
-     * @param size Size of the item
-     * @return item
-     */
-    public AbstractItem createForList(String path, String type, String name, long size) {
-        return ItemFactory.getInstance().createItem(path, type, name, size);
     }
 
 }

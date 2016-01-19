@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.ListItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
 /**
@@ -96,7 +97,7 @@ public abstract class AbstractFragment extends Fragment {
          * Extracts a item inside a Compressed folder and opens it.
          * @param item the item which is going to be displayed.
          */
-        void onListFragmentExtraction(VirtualItem item);
+        void onListFragmentRetrieval(ListItem item);
 
         /**
          * Retrieves the current fragment.
