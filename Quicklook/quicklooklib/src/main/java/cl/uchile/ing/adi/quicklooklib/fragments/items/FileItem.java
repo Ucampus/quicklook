@@ -1,15 +1,17 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
+import android.content.Context;
+
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 
 /**
- * DefaultItem is the fallback item. It represents every item is not covered by
+ * FileItem is the fallback item. It represents every item is not covered by
  * the library.
  */
-public class DefaultItem extends AbstractItem {
+public class FileItem extends AItem {
 
-    public DefaultItem(String path, String mimetype, String name, long size) {
+    public FileItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
         image =  R.drawable.document;
     }
@@ -23,4 +25,5 @@ public class DefaultItem extends AbstractItem {
     public String getFormattedType() {
         return "File";
     }
+
 }

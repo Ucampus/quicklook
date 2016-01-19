@@ -6,16 +6,15 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
+import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.adapters.VirtualRecyclerViewAdapter;
 
 /**
  * Represents a Virtual file in the filesystem, like a Zip.
  */
-public abstract class VirtualItem extends AbstractItem implements ListItem {
+public abstract class VirtualItem extends AItem implements ListItem {
 
     // Separator, The path here is a combination of the zip path and
     // the inner zip path.
@@ -24,17 +23,17 @@ public abstract class VirtualItem extends AbstractItem implements ListItem {
     // Extra properties (inner path)
     protected String virtualPath;
 
-    protected ArrayList<AbstractItem> itemList;
+    protected ArrayList<AItem> itemList;
 
     /**
-     * Simmilar to AbstractItem long constructor, but it specifies a path inside the zip.
+     * Simmilar to AItem long constructor, but it specifies a path inside the zip.
      * @param path path of the virtual folder.
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
      * @param name name of the virtual folder.
      * @param size size of the virtual folder.
      */
     public VirtualItem(String path, String mimetype, String name, long size) {
-        super(splitVirtualPath(path)[0],mimetype,name,size);
+        super(splitVirtualPath(path)[0], mimetype, name, size);
         this.virtualPath = splitVirtualPath(path)[1];
     }
 
@@ -43,12 +42,12 @@ public abstract class VirtualItem extends AbstractItem implements ListItem {
      * @return An arraylist with the virtual elements of folder.
      */
     @Override
-    public ArrayList<AbstractItem> getElements() {
+    public ArrayList<AItem> getElements() {
         if (itemList==null) {
             itemList = getItemList();
         }
-        ArrayList<AbstractItem> approvedElements = new ArrayList<>();
-        for (AbstractItem elem:itemList) {
+        ArrayList<AItem> approvedElements = new ArrayList<>();
+        for (AItem elem:itemList) {
             if (startsWith(splitVirtualPath(elem.getPath())[1], this.getVirtualPath())) {
                 approvedElements.add(elem);
             }
@@ -144,13 +143,13 @@ public abstract class VirtualItem extends AbstractItem implements ListItem {
      * @param mListener
      * @param item
      */
-    public static void onClick(AbstractFragment.OnListFragmentInteractionListener mListener, AbstractItem item) {
+    public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener, AItem item) {
         String name = item.getName();
         String path = item.getPath();
         long size = item.getSize();
         String type = mListener.getFragment().getItem().getType();
         VirtualItem newItem = (VirtualItem)ItemFactory.getInstance().createItem(path, type, name, size);
-        if (item.isFolder()) {
+        if (item instanceof FolderItem) {
             mListener.onListFragmentInteraction(newItem);
         } else {
             mListener.onListFragmentRetrieval(newItem);
@@ -161,16 +160,9 @@ public abstract class VirtualItem extends AbstractItem implements ListItem {
      * Preapares the item list with all the items inside the virtual object
      * @return ArrayList with all the items inside virtual object.
      */
-    public abstract ArrayList<AbstractItem> getItemList();
+    public abstract ArrayList<AItem> getItemList();
 
-    /**
-     * Gets an specific item from the virtual object and copies it to main memory.
-     * @param context Current application context
-     * @return Abstract item with object
-     */
-    public abstract AbstractItem retrieve(Context context);
-
-    public RecyclerView.Adapter getAdapter(AbstractFragment.OnListFragmentInteractionListener mListener) {
+    public RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener) {
         return new VirtualRecyclerViewAdapter(this.getElements(), mListener);
     }
 
@@ -182,12 +174,20 @@ public abstract class VirtualItem extends AbstractItem implements ListItem {
      * @param size Size of the item
      * @return item
      */
-    public AbstractItem createForList(String path, String type, String name, long size) {
+    public AItem createForList(String path, String type, String name, long size) {
         String newpath = this.path + SEP + path;
-        AbstractItem preItem = ItemFactory.getInstance().createItem(newpath, type, name, size);
+        AItem preItem = ItemFactory.getInstance().createItem(newpath, type, name, size);
         String anotherSep = preItem instanceof VirtualItem ? VirtualItem.SEP : "";
         return ItemFactory.getInstance().createItem(newpath + anotherSep, type, name, size);
     }
+    /**
+     * Gets an specific item from the virtual object and copies it to main memory.
+     * @param context Current application context
+     * @return Abstract item with object
+     */
+    public abstract AItem retrieve(Context context);
+
+
 
 
 }

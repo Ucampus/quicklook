@@ -6,7 +6,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.WebFragment;
 /**
  * Represents web content in the filesystem.
  */
-public class PictureItem extends DefaultItem {
+public class PictureItem extends FileItem {
 
     public PictureItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);

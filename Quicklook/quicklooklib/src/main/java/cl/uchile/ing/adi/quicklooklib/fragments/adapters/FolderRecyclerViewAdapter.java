@@ -8,25 +8,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import cl.uchile.ing.adi.quicklooklib.R;
-import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment.OnListFragmentInteractionListener;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.DefaultItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment.OnListFragmentInteractionListener;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.FileItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DefaultItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link FileItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  */
 public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecyclerViewAdapter.ViewHolder> {
 
-    protected final List<AbstractItem> mValues;
+    protected final List<AItem> mValues;
     protected final OnListFragmentInteractionListener mListener;
 
-    public FolderRecyclerViewAdapter(List<AbstractItem> items, OnListFragmentInteractionListener listener) {
+    public FolderRecyclerViewAdapter(List<AItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -66,7 +64,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         public final TextView mTextView;
         public final TextView mSubTextView;
         public final ImageView mImageView;
-        public AbstractItem mItem;
+        public AItem mItem;
 
         public ViewHolder(View view) {
             super(view);

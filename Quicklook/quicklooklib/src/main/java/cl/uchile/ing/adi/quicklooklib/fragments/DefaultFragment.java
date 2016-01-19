@@ -1,14 +1,10 @@
 package cl.uchile.ing.adi.quicklooklib.fragments;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +13,7 @@ import cl.uchile.ing.adi.quicklooklib.R;
 /**
  * Opens files when there is no fragment in charge to open them.
  */
-public class DefaultFragment extends AbstractFragment {
+public class DefaultFragment extends QuicklookFragment {
 
 
     /**

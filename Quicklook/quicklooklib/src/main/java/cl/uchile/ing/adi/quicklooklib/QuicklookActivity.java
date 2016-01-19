@@ -16,9 +16,10 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
-import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ListItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
@@ -31,7 +32,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     private Runnable r;
     private View coordinator;
     private static int WRITE_PERMISSIONS = 155;
-    private AbstractFragment current;
+    private QuicklookFragment current;
     private FloatingActionButton fab;
 
     @Override
@@ -45,7 +46,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AbstractItem item = current.getItem();
+                AItem item = current.getItem();
                 Uri pathUri = Uri.parse("file://" + item.getPath());
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(pathUri, item.getType());
@@ -54,16 +55,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             }
         });
         if (savedInstanceState==null) {
-            String name = AbstractItem.getNameFromPath(this.path);
-            long size = AbstractItem.getSizeFromPath(this.path);
-            String type = AbstractItem.loadMimeType(this.path);
-            AbstractItem item = ItemFactory.getInstance().createItem(this.path, type,name,size);
+            String name = AItem.getNameFromPath(this.path);
+            long size = AItem.getSizeFromPath(this.path);
+            String type = AItem.loadMimeType(this.path);
+            AItem item = ItemFactory.getInstance().createItem(this.path, type,name,size);
             checkPermissionsAndChangeFragment(item);
         }
     }
 
 
-    private void checkPermissionsAndChangeFragment(final AbstractItem item) {
+    private void checkPermissionsAndChangeFragment(final AItem item) {
         r = new Runnable(){
             public void run() {
                 changeFragment(item,false);
@@ -87,7 +88,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * Manages the transition between the fragments which shows the items.
      * @param item Item to show.
      */
-    public void changeFragment(AbstractItem item) {
+    public void changeFragment(AItem item) {
         changeFragment(item, true);
     }
 
@@ -96,7 +97,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item Item to show.
      * @param backstack Adds the previous fragment to backstack.
      */
-    public void changeFragment(AbstractItem item, boolean backstack){
+    public void changeFragment(AItem item, boolean backstack){
         updateActivity(item);
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.quicklook_fragment, current, "QuickLook");
@@ -110,7 +111,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item the item which is going to be displayed.
      */
 
-    public void onListFragmentInteraction(AbstractItem item) {
+    public void onListFragmentInteraction(AItem item) {
         changeFragment(item);
     }
 
@@ -118,7 +119,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * Manages the text in Action Bar, with current path in filesystem.
      * @param item the item which is going to be displayed
      */
-    public void onListFragmentCreation(AbstractItem item) {
+    public void onListFragmentCreation(AItem item) {
         updateActivity(item);
     }
 
@@ -127,16 +128,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * Also shows them after retrieval.
      * @param item the item which is going to be displayed.
      */
-    public void onListFragmentRetrieval(ListItem item) {
-        AbstractItem extracted = item.retrieve(getApplicationContext());
-        changeFragment(extracted);
+    public void onListFragmentRetrieval(VirtualItem item) {
+        AItem retrieved = item.retrieve(getApplicationContext());
+        changeFragment(retrieved);
     }
 
     /**
      * Updates... the action bar!
      * @param item Item with new info for the actionbar.
      */
-    private void updateActivity(AbstractItem item) {
+    private void updateActivity(AItem item) {
         setFragment(item.getFragment());
         getSupportActionBar().setTitle(item.getTitle());
         getSupportActionBar().setSubtitle(item.getSubTitle());
@@ -174,9 +175,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
     }
 
-    public void checkIfShowingFab(AbstractItem item) {
+    public void checkIfShowingFab(AItem item) {
         CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-        if (item.isFolder()) {
+        if (item instanceof FolderItem) {
             p.setAnchorId(View.NO_ID);
             fab.setLayoutParams(p);
             fab.setVisibility(View.GONE);
@@ -188,12 +189,17 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
     }
 
-    public AbstractFragment getFragment() {
+    public QuicklookFragment getFragment() {
         return current;
     }
 
-    public void setFragment(AbstractFragment fragment) {
+    public void setFragment(QuicklookFragment fragment) {
         current = fragment;
+    }
+
+    public void onListFragmentError(String error) {
+        Snackbar.make(coordinator, "Error: "+error,
+                Snackbar.LENGTH_SHORT).show();
     }
 
 }

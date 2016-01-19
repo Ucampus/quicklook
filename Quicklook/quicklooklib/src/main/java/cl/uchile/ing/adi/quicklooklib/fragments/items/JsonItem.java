@@ -20,8 +20,8 @@ public class JsonItem extends VirtualItem {
     }
 
     @Override
-    public ArrayList<AbstractItem> getItemList() {
-        ArrayList<AbstractItem> itemList = new ArrayList<>();
+    public ArrayList<AItem> getItemList() {
+        ArrayList<AItem> itemList = new ArrayList<>();
         JSONParser parser = new JSONParser();
         try {
             JSONArray list = (JSONArray)parser.parse(new FileReader(path));
@@ -32,7 +32,7 @@ public class JsonItem extends VirtualItem {
                 String path =(String)actual.get("name");
                 String type = (String)actual.get("mime");
                 long size = (Long)actual.get("size");
-                AbstractItem newItem = createForList(path, type, name, size);
+                AItem newItem = createForList(path, type, name, size);
                 itemList.add(newItem);
             }
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class JsonItem extends VirtualItem {
     }
 
     @Override
-    public AbstractItem retrieve(Context context) {
+    public AItem retrieve(Context context) {
         return null;
     }
 

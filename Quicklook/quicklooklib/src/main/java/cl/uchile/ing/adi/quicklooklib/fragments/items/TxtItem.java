@@ -6,7 +6,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.WebFragment;
 /**
  * Represents web content in the filesystem.
  */
-public class TxtItem extends DefaultItem {
+public class TxtItem extends FileItem {
 
     public TxtItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);

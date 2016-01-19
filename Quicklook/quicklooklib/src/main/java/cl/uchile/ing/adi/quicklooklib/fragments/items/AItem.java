@@ -1,20 +1,19 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
-import java.io.Serializable;
 
 import cl.uchile.ing.adi.quicklooklib.R;
-import cl.uchile.ing.adi.quicklooklib.fragments.AbstractFragment;
+import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 
 /**
- * AbstractItem has most of the methods related with items in the library
+ * AItem has most of the methods related with items in the library
  * The items
  */
-public abstract class AbstractItem {
+public abstract class AItem {
 
     public static String ITEM_PATH = "path";
     public static String ITEM_TYPE = "type";
@@ -24,7 +23,7 @@ public abstract class AbstractItem {
     protected String type;
     protected long size;
     protected String path;
-    protected AbstractFragment fragment;
+    protected QuicklookFragment fragment;
     private String virtualPath;
     protected int image;
 
@@ -35,7 +34,7 @@ public abstract class AbstractItem {
      * @param name name of file
      * @param size size of file
      */
-    public AbstractItem(String path, String mimetype, String name, long size) {
+    public AItem(String path, String mimetype, String name, long size) {
         this.path = path;
         this.name = name;
         this.size = size;
@@ -63,7 +62,7 @@ public abstract class AbstractItem {
     }
 
     /**
-     * Each implementation of AbstractItem associates a fragment with itself. This
+     * Each implementation of AItem associates a fragment with itself. This
      * method defines the fragment.
      */
     protected abstract void createFragment();
@@ -72,7 +71,7 @@ public abstract class AbstractItem {
      * Prepares the fragment if it's not prepared and returns it
      * @return the Fragment.
      */
-    public AbstractFragment getFragment() {
+    public QuicklookFragment getFragment() {
         if (fragment == null) {
             createFragment();
             prepareFragment();
@@ -152,14 +151,6 @@ public abstract class AbstractItem {
     }
 
     /**
-     * Evaluates if item is a folder (Virtual or real one).
-     * @return true if item is a folder.
-     */
-    public boolean isFolder() {
-        return false;
-    }
-
-    /**
      * Static helper method. Gets the mimetype of file using the extension.
      * @param path path of the file.
      * @return String with mimetype of file.
@@ -170,7 +161,7 @@ public abstract class AbstractItem {
             return ItemFactory.FOLDER_MIMETYPE;
         }
         String type ;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(path).replace(" ","_");
+        String extension = MimeTypeMap.getFileExtensionFromUrl(path.replace(" ","_"));
         if (extension.equals("ql")) {
             return ItemFactory.QUICKLOOK_MIMETYPE;
         }
@@ -232,4 +223,5 @@ public abstract class AbstractItem {
     public String getSubTitle() {
         return this.getFormattedType();
     }
+
 }

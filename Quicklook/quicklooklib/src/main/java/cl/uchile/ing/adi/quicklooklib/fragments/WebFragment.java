@@ -11,7 +11,7 @@ import cl.uchile.ing.adi.quicklooklib.R;
 /**
  * Created by dudu on 04-01-2016.
  */
-public class WebFragment extends AbstractFragment {
+public class WebFragment extends QuicklookFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

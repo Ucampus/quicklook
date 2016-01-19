@@ -6,7 +6,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 /**
  * Represents web content in the filesystem.
  */
-public class ExcelItem extends DefaultItem {
+public class ExcelItem extends FileItem {
 
     public ExcelItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);

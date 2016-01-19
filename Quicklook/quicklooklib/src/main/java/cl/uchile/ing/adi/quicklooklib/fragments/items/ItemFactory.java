@@ -1,11 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
-import android.util.Log;
-
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
-
-import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
 
 /**
  * Assigns mimetypes to fragments.
@@ -34,7 +30,7 @@ public class ItemFactory {
     private ItemFactory() {
         // Here we register the types of files:
         register(FOLDER_MIMETYPE, FolderItem.class);
-        register(DEFAULT_MIMETYPE, DefaultItem.class);
+        register(DEFAULT_MIMETYPE, FileItem.class);
         register("application/pdf", PDFItem.class);
         register("application/zip", ZipItem.class);
         register("image/jpeg", PictureItem.class);
@@ -66,15 +62,15 @@ public class ItemFactory {
      * @param size size of the item.
      * @return
      */
-    public AbstractItem createItem(String path, String mimetype, String name, long size) {
-        Class c = DefaultItem.class;
-        AbstractItem item = null;
+    public AItem createItem(String path, String mimetype, String name, long size) {
+        Class c = FileItem.class;
+        AItem item = null;
         if (dictionary.containsKey(mimetype)) {
             c = dictionary.get(mimetype);
         }
         try {
             Constructor<?> constructor = c.getConstructor(String.class, String.class, String.class, long.class);
-            item = (AbstractItem)constructor.newInstance(path,mimetype,name,size);
+            item = (AItem)constructor.newInstance(path,mimetype,name,size);
             return item;
         } catch (Exception e) {
             e.printStackTrace();

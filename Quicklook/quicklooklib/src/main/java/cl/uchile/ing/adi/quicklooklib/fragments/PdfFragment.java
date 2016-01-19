@@ -14,7 +14,7 @@ import cl.uchile.ing.adi.quicklooklib.R;
 /**
  * Shows PDF files using <Insert name> library
  */
-public class PdfFragment extends AbstractFragment {
+public class PdfFragment extends QuicklookFragment {
 
     public PdfFragment() {
         // Required empty public constructor
@@ -27,11 +27,15 @@ public class PdfFragment extends AbstractFragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_pdf, container, false);
         PDFView pdfView = (PDFView) v.findViewById(R.id.pdfview);
-        pdfView.fromFile(new File(item.getPath()))
-                .defaultPage(0)
-                .showMinimap(true)
-                .enableSwipe(true)
-                .load();
+        try {
+            pdfView.fromFile(new File(item.getPath()))
+                    .defaultPage(0)
+                    .showMinimap(false)
+                    .enableSwipe(true).onErrorOcured
+                    .load();
+        } catch (Exception e) {
+            showError(e.getCause());
+        }
         return v;
     }
 }

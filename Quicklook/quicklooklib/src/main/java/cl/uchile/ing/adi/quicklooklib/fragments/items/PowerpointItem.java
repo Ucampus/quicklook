@@ -6,7 +6,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 /**
  * Represents web content in the filesystem.
  */
-public class PowerpointItem extends DefaultItem {
+public class PowerpointItem extends FileItem {
 
     public PowerpointItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);

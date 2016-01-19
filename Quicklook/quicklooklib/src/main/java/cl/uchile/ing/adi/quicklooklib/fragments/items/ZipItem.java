@@ -18,7 +18,7 @@ import cl.uchile.ing.adi.quicklooklib.R;
 public class ZipItem extends VirtualItem {
 
     /**
-     * Simmilar to AbstractItem long constructor, but it specifies a path inside the zip.
+     * Simmilar to AItem long constructor, but it specifies a path inside the zip.
      * @param path path of the virtual folder.
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
      * @param name name of the virtual folder.
@@ -37,7 +37,7 @@ public class ZipItem extends VirtualItem {
         if (ze.isDirectory()) {
             return ItemFactory.FOLDER_MIMETYPE;
         }
-        String type= null;
+        String type;
         String path= ze.getName();
         String extension = MimeTypeMap.getFileExtensionFromUrl(path);
         if (extension != null) {
@@ -53,7 +53,7 @@ public class ZipItem extends VirtualItem {
      * @param context The context of the app
      * @return an item.
      */
-    public AbstractItem retrieve(Context context) {
+    public AItem retrieve(Context context) {
         try {
             ZipFile zf = new ZipFile(this.getPath());
             ZipEntry ze = zf.getEntry(this.getVirtualPath());
@@ -68,8 +68,8 @@ public class ZipItem extends VirtualItem {
             extracted.close();
             String path = context.getFilesDir()+"/"+filename;
             String type = loadMimeType(path);
-            long size = AbstractItem.getSizeFromPath(path);
-            String name = AbstractItem.getNameFromPath(path);
+            long size = AItem.getSizeFromPath(path);
+            String name = AItem.getNameFromPath(path);
             return ItemFactory.getInstance().createItem(path, type,name,size);
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,8 +86,8 @@ public class ZipItem extends VirtualItem {
         return false;
     }
 
-    public ArrayList<AbstractItem> getItemList() {
-        ArrayList<AbstractItem> itemList = new ArrayList<>();
+    public ArrayList<AItem> getItemList() {
+        ArrayList<AItem> itemList = new ArrayList<>();
         try {
             ZipFile zipfile = new ZipFile(this.path);
             for (Enumeration<? extends ZipEntry> e = zipfile.entries();
@@ -97,7 +97,7 @@ public class ZipItem extends VirtualItem {
                 String name = getNameFromPath(path);
                 long size = ze.getSize();
                 String type = this.LoadZipMimeType(ze);
-                AbstractItem newItem = createForList(path,type,name,size);
+                AItem newItem = createForList(path, type, name, size);
                 itemList.add(newItem);
             }
         } catch (Exception e) {

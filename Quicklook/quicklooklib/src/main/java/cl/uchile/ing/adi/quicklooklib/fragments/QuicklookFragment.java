@@ -6,7 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.AbstractItem;
+
+import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ListItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
@@ -14,12 +15,12 @@ import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 /**
  * Abstract Fragment defines the basic structure of the fragments managing the files.
  */
-public abstract class AbstractFragment extends Fragment {
+public abstract class QuicklookFragment extends Fragment {
 
-    protected AbstractItem item;
+    protected AItem item;
     protected OnListFragmentInteractionListener mListener;
 
-    public AbstractFragment() {
+    public QuicklookFragment() {
     }
 
     @Override
@@ -27,10 +28,10 @@ public abstract class AbstractFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
         if (b!=null) {
-            String path = b.getString(AbstractItem.ITEM_PATH);
-            String type = b.getString(AbstractItem.ITEM_TYPE);
-            long size = AbstractItem.getSizeFromPath(path);
-            String name = AbstractItem.getNameFromPath(path);
+            String path = b.getString(AItem.ITEM_PATH);
+            String type = b.getString(AItem.ITEM_TYPE);
+            long size = AItem.getSizeFromPath(path);
+            String name = AItem.getNameFromPath(path);
             item = ItemFactory.getInstance().createItem(path,type,name,size);
         }
     }
@@ -66,12 +67,17 @@ public abstract class AbstractFragment extends Fragment {
      * Defines the item related to the fragment.
      * @param item Item related to fragment.
      */
-    public void setItem(AbstractItem item) {
+    public void setItem(AItem item) {
         this.item = item;
     }
 
-    public AbstractItem getItem() {
+    public AItem getItem() {
         return this.item;
+    }
+
+    public void showError(Throwable cause) {
+        String message = cause.getMessage();
+        mListener.onListFragmentError(message);
     }
 
     /**
@@ -85,26 +91,27 @@ public abstract class AbstractFragment extends Fragment {
          * them when exploring folders/zips/etc.
          * @param item the item which is going to be displayed.
          */
-        void onListFragmentInteraction(AbstractItem item);
+        void onListFragmentInteraction(AItem item);
 
         /**
          * Updates the navbar text with the location of the file in the filesystem.
          * @param item the item which is going to be displayed.
          */
-        void onListFragmentCreation(AbstractItem item);
+        void onListFragmentCreation(AItem item);
 
         /**
          * Extracts a item inside a Compressed folder and opens it.
          * @param item the item which is going to be displayed.
          */
-        void onListFragmentRetrieval(ListItem item);
+        void onListFragmentRetrieval(VirtualItem item);
 
         /**
          * Retrieves the current fragment.
          */
-        AbstractFragment getFragment();
+        QuicklookFragment getFragment();
 
-        void setFragment(AbstractFragment fragment);
+        void setFragment(QuicklookFragment fragment);
 
+        void onListFragmentError(String message);
     }
 }
