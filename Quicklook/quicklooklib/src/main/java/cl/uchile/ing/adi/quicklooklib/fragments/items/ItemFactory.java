@@ -39,6 +39,8 @@ public class ItemFactory {
         register("text/plain", TxtItem.class);
         register("application/x-tar", TarItem.class);
         register("application/x-gzip", TarItem.class);
+        register("application/x-rar-compressed", RarItem.class);
+        register("application/rar", RarItem.class);
         register("application/vnd.openxmlformats-officedocument.wordprocessingml.document", WordItem.class);
         register("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ExcelItem.class);
         register("application/vnd.openxmlformats-officedocument.presentationml.presentation", PowerpointItem.class);

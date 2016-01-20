@@ -32,7 +32,7 @@ public class JsonItem extends VirtualItem {
                 String path =(String)actual.get("name");
                 String type = (String)actual.get("mime");
                 long size = (Long)actual.get("size");
-                AItem newItem = createForList(path, type, name, size);
+                AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);
                 itemList.add(newItem);
             }
         } catch (Exception e) {

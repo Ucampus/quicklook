@@ -1,7 +1,6 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
-import android.webkit.MimeTypeMap;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -44,7 +43,7 @@ public class TarItem extends VirtualItem {
                 String name = getNameFromPath(path);
                 long size = tae.getSize();
                 String type = this.loadTarGzMimeType(tae);
-                AItem newItem = createForList(path, type, name, size);
+                AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);
                 itemList.add(newItem);
             }
         } catch (Exception e) { e.printStackTrace();}
@@ -93,16 +92,9 @@ public class TarItem extends VirtualItem {
     private static String loadTarGzMimeType(TarArchiveEntry tar) {
         if (tar.isDirectory()) {
             return ItemFactory.FOLDER_MIMETYPE;
-        }
-        String type= null;
-        String path = tar.getName();
-        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
-        if (extension != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         } else {
-            return ItemFactory.DEFAULT_MIMETYPE;
+            return loadMimeType(tar.getName());
         }
-        return type;
     }
 
     @Override

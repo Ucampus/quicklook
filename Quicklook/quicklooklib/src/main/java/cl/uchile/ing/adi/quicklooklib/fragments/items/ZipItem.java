@@ -1,7 +1,6 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
-import android.webkit.MimeTypeMap;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -18,7 +17,7 @@ import cl.uchile.ing.adi.quicklooklib.R;
 public class ZipItem extends VirtualItem {
 
     /**
-     * Simmilar to AItem long constructor, but it specifies a path inside the zip.
+     * Similar to AItem long constructor, but it specifies a path inside the zip.
      * @param path path of the virtual folder.
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
      * @param name name of the virtual folder.
@@ -36,16 +35,9 @@ public class ZipItem extends VirtualItem {
     public String LoadZipMimeType(ZipEntry ze) {
         if (ze.isDirectory()) {
             return ItemFactory.FOLDER_MIMETYPE;
-        }
-        String type;
-        String path= ze.getName();
-        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
-        if (extension != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         } else {
-            return ItemFactory.DEFAULT_MIMETYPE;
+            return loadMimeType(ze.getName());
         }
-        return type;
     }
 
     /**
@@ -59,7 +51,7 @@ public class ZipItem extends VirtualItem {
             ZipEntry ze = zf.getEntry(this.getVirtualPath());
             InputStream zis = zf.getInputStream(ze);
             String filename = getNameFromPath(this.getVirtualPath());
-            FileOutputStream extracted = context.openFileOutput(filename, context.MODE_PRIVATE);
+            FileOutputStream extracted = context.openFileOutput(filename,Context.MODE_PRIVATE);
             int len;
             byte[] buffer = new byte[1024];
             while ((len = zis.read(buffer)) > 0) {
@@ -97,7 +89,7 @@ public class ZipItem extends VirtualItem {
                 String name = getNameFromPath(path);
                 long size = ze.getSize();
                 String type = this.LoadZipMimeType(ze);
-                AItem newItem = createForList(path, type, name, size);
+                AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);
                 itemList.add(newItem);
             }
         } catch (Exception e) {

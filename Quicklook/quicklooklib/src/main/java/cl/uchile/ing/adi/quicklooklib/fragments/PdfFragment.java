@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.joanzapata.pdfview.PDFView;
+import com.joanzapata.pdfview.listener.OnErrorOccurredListener;
 
 import java.io.File;
 
@@ -27,15 +28,16 @@ public class PdfFragment extends QuicklookFragment {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_pdf, container, false);
         PDFView pdfView = (PDFView) v.findViewById(R.id.pdfview);
-        try {
             pdfView.fromFile(new File(item.getPath()))
                     .defaultPage(0)
                     .showMinimap(false)
-                    .enableSwipe(true).onErrorOcured
+                    .enableSwipe(true)
+                    .onErrorOccured(new OnErrorOccurredListener() {
+                        public void errorOccured() {
+                            showError("PDF load failed!");
+                        }
+                    })
                     .load();
-        } catch (Exception e) {
-            showError(e.getCause());
-        }
         return v;
     }
 }

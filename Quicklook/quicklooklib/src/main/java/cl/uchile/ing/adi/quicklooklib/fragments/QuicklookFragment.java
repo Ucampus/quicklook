@@ -75,9 +75,8 @@ public abstract class QuicklookFragment extends Fragment {
         return this.item;
     }
 
-    public void showError(Throwable cause) {
-        String message = cause.getMessage();
-        mListener.onListFragmentError(message);
+    public void showError(String cause) {
+        mListener.onListFragmentError(cause);
     }
 
     /**
