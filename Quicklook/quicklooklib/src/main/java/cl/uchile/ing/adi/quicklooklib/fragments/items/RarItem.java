@@ -17,8 +17,8 @@ import cl.uchile.ing.adi.quicklooklib.R;
  */
 public class RarItem extends VirtualItem {
 
-    public RarItem(String path, String mimetype, String name, long size) {
-        super(path,mimetype,name,size);
+    public RarItem(String path, String mimetype, String id, long size) {
+        super(path,mimetype,id,size);
         image = R.drawable.compressed;
     }
 

@@ -21,8 +21,8 @@ import cl.uchile.ing.adi.quicklooklib.R;
  */
 public class TarItem extends VirtualItem {
 
-    public TarItem(String path, String mimetype, String name, long size) {
-        super(path,mimetype,name,size);
+    public TarItem(String path, String mimetype, String id, long size) {
+        super(path,mimetype,id,size);
         image = R.drawable.compressed;
     }
 
@@ -40,10 +40,10 @@ public class TarItem extends VirtualItem {
             TarArchiveEntry tae;
             while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null)  {
                 String path = tae.getName();
-                String name = path;
+                String id = path;
                 long size = tae.getSize();
                 String type = this.loadTarGzMimeType(tae);
-                AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);
+                AItem newItem = ItemFactory.getInstance().createItem(path, type, id, size);
                 itemList.add(newItem);
             }
         } catch (Exception e) { e.printStackTrace();}

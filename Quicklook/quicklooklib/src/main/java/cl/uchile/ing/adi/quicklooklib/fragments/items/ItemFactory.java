@@ -60,11 +60,11 @@ public class ItemFactory {
      * Creates item without using the Files API. It can create virtual items.
      * @param path path of the item.
      * @param mimetype mimetype of the item.
-     * @param name name of the item.
+     * @param id id of the item.
      * @param size size of the item.
      * @return
      */
-    public AItem createItem(String path, String mimetype, String name, long size) {
+    public AItem createItem(String path, String mimetype, String id, long size) {
         Class c = FileItem.class;
         AItem item = null;
         if (dictionary.containsKey(mimetype)) {
@@ -72,7 +72,7 @@ public class ItemFactory {
         }
         try {
             Constructor<?> constructor = c.getConstructor(String.class, String.class, String.class, long.class);
-            item = (AItem)constructor.newInstance(path,mimetype,name,size);
+            item = (AItem)constructor.newInstance(path,mimetype,id,size);
             return item;
         } catch (Exception e) {
             e.printStackTrace();

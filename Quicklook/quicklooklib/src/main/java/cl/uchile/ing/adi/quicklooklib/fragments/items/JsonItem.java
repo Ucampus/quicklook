@@ -15,8 +15,8 @@ import java.util.Iterator;
  */
 public class JsonItem extends VirtualItem {
 
-    public JsonItem(String path, String mimetype, String name, long size) {
-        super(path,mimetype,name,size);
+    public JsonItem(String path, String mimetype, String id, long size) {
+        super(path,mimetype,id,size);
     }
 
     @Override

@@ -17,10 +17,9 @@ import cl.uchile.ing.adi.quicklooklib.fragments.adapters.FolderRecyclerViewAdapt
 public class FolderItem extends FileItem implements ListItem {
 
 
-    public FolderItem(String path, String mimetype, String name, long size) {
-        super(path,mimetype,name,size);
+    public FolderItem(String path, String mimetype, String id, long size) {
+        super(path,mimetype,id,size);
         //Don't show MACOSX Folder
-        addBannedWord("__MACOSX");
         image = R.drawable.folder;
     }
 

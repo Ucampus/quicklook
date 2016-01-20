@@ -21,7 +21,7 @@ public class ZipItem extends VirtualItem {
      * Similar to AItem long constructor, but it specifies a path inside the zip.
      * @param path path of the virtual folder.
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
-     * @param name name of the virtual folder.
+     * @param name id of the virtual folder.
      * @param size size of the virtual folder.
      */
     public ZipItem(String path, String mimetype, String name, long size) {
@@ -30,7 +30,7 @@ public class ZipItem extends VirtualItem {
     }
 
     /**
-     * Loads mimetype of elements inside zip, using their name.
+     * Loads mimetype of elements inside zip, using their id.
      * @return a string with the mimetype of the file inside the zip.
      */
     public String LoadZipMimeType(ZipEntry ze) {

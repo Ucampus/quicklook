@@ -1,6 +1,5 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.webkit.MimeTypeMap;
 
@@ -22,7 +21,7 @@ public abstract class AItem {
     public static String ITEM_TYPE = "type";
 
 
-    protected String name;
+    protected String id;
     protected String type;
     protected long size;
     protected String path;
@@ -34,12 +33,12 @@ public abstract class AItem {
      * Constructor of the class, metadata is inserted manually.
      * @param path path of file (it should exist)
      * @param mimetype mimetype of file
-     * @param name name of file
+     * @param id id of file
      * @param size size of file
      */
-    public AItem(String path, String mimetype, String name, long size) {
+    public AItem(String path, String mimetype, String id, long size) {
         this.path = path;
-        this.name = name;
+        this.id = id;
         this.size = size;
         this.type = mimetype;
         //Image for item.
@@ -47,9 +46,9 @@ public abstract class AItem {
     }
 
     /**
-     * Helper class. Obtains the name of a file using the path.
+     * Helper class. Obtains the id of a file using the path.
      * @param path path of file
-     * @return name of file
+     * @return id of file
      */
     public static String getNameFromPath(String path) {
         String[] splitPath = path.split("/");
@@ -88,6 +87,11 @@ public abstract class AItem {
         b.putString(ITEM_TYPE,this.getType());
         fragment.setArguments(b);
         fragment.setItem(this);
+    }
+
+
+    public String getId() {
+        return this.id;
     }
 
     /**
@@ -154,13 +158,16 @@ public abstract class AItem {
     }
 
     public static String loadMimeType(String path) {
-        String type = ItemFactory.DEFAULT_MIMETYPE;
+        String type=null;
         String extension = getExtension(getNameFromPath(path.replace(" ", "_")));
         if (extension != null) {
             if (extension.equals("ql")) {
                 return ItemFactory.QUICKLOOK_MIMETYPE;
             }
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        if (type==null) {
+            type = ItemFactory.DEFAULT_MIMETYPE;
         }
         return type;
     }
@@ -198,8 +205,8 @@ public abstract class AItem {
      *
      * @param name
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setId(String name) {
+        this.id = name;
     }
 
     /**

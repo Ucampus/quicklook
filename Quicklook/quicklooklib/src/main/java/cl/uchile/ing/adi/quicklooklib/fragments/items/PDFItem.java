@@ -8,8 +8,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.PdfFragment;
  */
 public class PDFItem extends FileItem {
 
-    public PDFItem(String path, String mimetype, String name, long size) {
-        super(path,mimetype,name,size);
+    public PDFItem(String path, String mimetype, String id, long size) {
+        super(path,mimetype,id,size);
         image = R.drawable.pdf;
     }
 

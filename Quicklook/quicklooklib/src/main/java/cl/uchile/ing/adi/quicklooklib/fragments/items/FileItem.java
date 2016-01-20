@@ -13,8 +13,9 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
  */
 public class FileItem extends AItem {
 
-    public FileItem(String path, String mimetype, String name, long size) {
-        super(path,mimetype,name,size);
+    public FileItem(String path, String mimetype, String id, long size) {
+        super(path,mimetype,id,size);
+        addBannedWord("__MACOSX");
         image =  R.drawable.document;
     }
 
@@ -25,7 +26,7 @@ public class FileItem extends AItem {
 
     @Override
     public String getFormattedType() {
-        return this.type+" File";
+        return "File";
     }
 
     public static String loadFileMimeType(File f) {
