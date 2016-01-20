@@ -1,3 +1,7 @@
+env:
+  global:
+    - REPO="Quicklook"
+    - CI_HOME=`pwd`/$REPO
 language: ANDROID
 components:
     # Uncomment the lines below if you want to
