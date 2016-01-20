@@ -158,18 +158,15 @@ public abstract class AItem {
     }
 
     public static String loadMimeType(String path) {
-        String type=null;
         String extension = getExtension(getNameFromPath(path.replace(" ", "_")));
         if (extension != null) {
             if (extension.equals("ql")) {
                 return ItemFactory.QUICKLOOK_MIMETYPE;
             }
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        } else {
+            return ItemFactory.DEFAULT_MIMETYPE;
         }
-        if (type==null) {
-            type = ItemFactory.DEFAULT_MIMETYPE;
-        }
-        return type;
+        return extension;
     }
 
     public static String getExtension(String file) {
