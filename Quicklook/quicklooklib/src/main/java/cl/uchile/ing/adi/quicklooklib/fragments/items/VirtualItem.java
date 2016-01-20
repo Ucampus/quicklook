@@ -1,6 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -154,15 +155,16 @@ public abstract class VirtualItem extends AItem implements ListItem {
      * @param item
      */
     public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener, AItem item) {
-        String name = item.getName();
-        String path = item.getPath();
-        long size = item.getSize();
-        String type = mListener.getFragment().getItem().getType();
-        VirtualItem newItem = (VirtualItem)ItemFactory.getInstance().createItem(path, type, name, size);
+        VirtualItem parentItem = (VirtualItem)mListener.getFragment().getItem();
         if (item instanceof FolderItem) {
+            String name = item.getName();
+            String path = item.getPath();
+            long size = item.getSize();
+            String type = parentItem.getType();
+            VirtualItem newItem = (VirtualItem)ItemFactory.getInstance().createItem(path, type, name, size);
             mListener.onListFragmentInteraction(newItem);
         } else {
-            mListener.onListFragmentRetrieval(newItem);
+            mListener.onListFragmentRetrieval(item,parentItem);
         }
     }
 
@@ -188,10 +190,27 @@ public abstract class VirtualItem extends AItem implements ListItem {
     }
     /**
      * Gets an specific item from the virtual object and copies it to main memory.
+     * @param toRetrieve item inside this
      * @param context Current application context
      * @return Abstract item with object
      */
-    public abstract AItem retrieve(Context context);
+    public AItem retrieve(AItem toRetrieve, Context context) {
+        String dirpath = context.getFilesDir().getAbsolutePath()+"/";
+        String path = retrieveItem(toRetrieve.name,dirpath,context);
+        String name = toRetrieve.getName();
+        String type = toRetrieve.getType();
+        long size = toRetrieve.getSize();
+        return ItemFactory.getInstance().createItem(path,type,name,size);
+    }
+
+    /**
+     * Allows to retrieve an item from a virtual item, using its id.
+     * @param id Internal identifier of file
+     * @param dirpath Output path of the retrieved file
+     * @param context Context of application
+     * @return String with complete path of file.
+     */
+    public abstract String retrieveItem(String id, String dirpath, Context context);
 
 
 

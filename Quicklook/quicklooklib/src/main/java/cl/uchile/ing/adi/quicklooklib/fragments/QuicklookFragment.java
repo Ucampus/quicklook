@@ -100,9 +100,10 @@ public abstract class QuicklookFragment extends Fragment {
 
         /**
          * Extracts a item inside a Compressed folder and opens it.
-         * @param item the item which is going to be displayed.
+         * @param toRetrieve the item which is going to be displayed.
+         * @param container item which contains toRetrieve.
          */
-        void onListFragmentRetrieval(VirtualItem item);
+        void onListFragmentRetrieval(AItem toRetrieve, VirtualItem container);
 
         /**
          * Retrieves the current fragment.

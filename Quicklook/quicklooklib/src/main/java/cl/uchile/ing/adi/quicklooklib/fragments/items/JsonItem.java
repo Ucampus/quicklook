@@ -42,7 +42,7 @@ public class JsonItem extends VirtualItem {
     }
 
     @Override
-    public AItem retrieve(Context context) {
+    public String retrieveItem (String path, String dirpath, Context context) {
         return null;
     }
 

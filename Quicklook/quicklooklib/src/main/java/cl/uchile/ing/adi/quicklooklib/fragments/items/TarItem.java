@@ -40,7 +40,7 @@ public class TarItem extends VirtualItem {
             TarArchiveEntry tae;
             while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null)  {
                 String path = tae.getName();
-                String name = getNameFromPath(path);
+                String name = path;
                 long size = tae.getSize();
                 String type = this.loadTarGzMimeType(tae);
                 AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);
@@ -50,7 +50,9 @@ public class TarItem extends VirtualItem {
         return itemList;
     }
 
-    public AItem retrieve(Context context) {
+    public String retrieveItem(String path, String dirpath, Context context) {
+        String filename = getNameFromPath(path);
+        String newPath = dirpath + filename;
         FileOutputStream extFile;
         BufferedOutputStream extracted;
         int buffersize = 2048;
@@ -64,12 +66,8 @@ public class TarItem extends VirtualItem {
             TarArchiveInputStream tais = new TarArchiveInputStream(bis);
             TarArchiveEntry tae;
             while ((tae = (TarArchiveEntry) tais.getNextEntry()) != null) {
-                if (tae.getName().equals(getVirtualPath())) {
-                    String dirpath = context.getFilesDir() + "/" + this.getName() +"/";
-                    File directory = new File(dirpath);
-                    if (!(directory.exists())) directory.mkdir();
-                    String path = dirpath + tae.getName();
-                    extFile = new FileOutputStream(path);
+                if (tae.getName().equals(path)) {
+                    extFile = new FileOutputStream(newPath);
                     extracted = new BufferedOutputStream(extFile,buffersize);
                     byte[] buffer = new byte[buffersize];
                     int len;
@@ -77,10 +75,7 @@ public class TarItem extends VirtualItem {
                         extracted.write(buffer, 0, len);
                     }
                     extracted.close();
-                    String type =  AItem.loadMimeType(path);
-                    long size = AItem.getSizeFromPath(path);
-                    String name = AItem.getNameFromPath(path);
-                    return ItemFactory.getInstance().createItem(path,type,name,size);
+                    return newPath;
                 }
             }
         } catch (Exception e) {

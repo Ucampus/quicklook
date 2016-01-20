@@ -125,13 +125,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         updateActivity(item);
     }
 
-    /**
-     * Manages the retrieval of elements in compressed files.
-     * Also shows them after retrieval.
-     * @param item the item which is going to be displayed.
-     */
-    public void onListFragmentRetrieval(VirtualItem item) {
-        AItem retrieved = item.retrieve(getApplicationContext());
+    public void onListFragmentRetrieval(AItem toRetrieve, VirtualItem container) {
+        AItem retrieved = container.retrieve(toRetrieve, getApplicationContext());
         changeFragment(retrieved);
     }
 

@@ -2,6 +2,7 @@ package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -43,26 +44,23 @@ public class ZipItem extends VirtualItem {
     /**
      * Extracts the elements inside the compressed file.
      * @param context The context of the app
-     * @return an item.
+     * @return Absolute path of extracted file.
      */
-    public AItem retrieve(Context context) {
+    public String retrieveItem(String path, String dirpath, Context context) {
+        String filename = getNameFromPath(path);
+        String newPath = dirpath + filename;
         try {
             ZipFile zf = new ZipFile(this.getPath());
-            ZipEntry ze = zf.getEntry(this.getVirtualPath());
+            ZipEntry ze = zf.getEntry(path);
             InputStream zis = zf.getInputStream(ze);
-            String filename = getNameFromPath(this.getVirtualPath());
-            FileOutputStream extracted = context.openFileOutput(filename,Context.MODE_PRIVATE);
+            FileOutputStream extracted = new FileOutputStream(new File(newPath));
             int len;
             byte[] buffer = new byte[1024];
             while ((len = zis.read(buffer)) > 0) {
                 extracted.write(buffer, 0, len);
             }
             extracted.close();
-            String path = context.getFilesDir()+"/"+filename;
-            String type = loadMimeType(path);
-            long size = AItem.getSizeFromPath(path);
-            String name = AItem.getNameFromPath(path);
-            return ItemFactory.getInstance().createItem(path, type,name,size);
+            return newPath;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -86,7 +84,7 @@ public class ZipItem extends VirtualItem {
                  e.hasMoreElements();) {
                 ZipEntry ze = e.nextElement();
                 String path = ze.getName();
-                String name = getNameFromPath(path);
+                String name = path;
                 long size = ze.getSize();
                 String type = this.LoadZipMimeType(ze);
                 AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);

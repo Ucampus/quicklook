@@ -49,26 +49,22 @@ public class RarItem extends VirtualItem {
     }
 
     @Override
-    public AItem retrieve(Context context) {
+    public String retrieveItem(String path, String dirpath, Context context) {
+        String filename = getNameFromPath(path);
+        String newPath = dirpath + filename;
         Archive a;
-        String filename = getNameFromPath(this.getVirtualPath());
         try {
-            FileOutputStream extracted = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            a = new Archive(new FileVolumeManager(new File(getPath())));
+            FileOutputStream extracted = new FileOutputStream(new File(newPath));
+            a = new Archive(new FileVolumeManager(new File(this.getPath())));
             if (a != null) {
                 a.getMainHeader().print();
                 FileHeader fh = a.nextFileHeader();
                 while (fh != null) {
                     String fhName = fh.getFileNameString().replace('\\', '/').trim();
-                    if (this.getVirtualPath().equals(fhName)) {
+                    if (fhName.equals(path)) {
                         a.extractFile(fh, extracted);
                         extracted.close();
-                        String dirpath = context.getFilesDir() + "/" + filename +"/";
-                        String type = loadRarMimeType(fh);
-                        long size = this.size;
-                        String name = this.name;
-                        AItem newFile = ItemFactory.getInstance().createItem(dirpath,type,name,size);
-                        return newFile;
+                        return newPath;
                     }
                     fh = a.nextFileHeader();
                 }
