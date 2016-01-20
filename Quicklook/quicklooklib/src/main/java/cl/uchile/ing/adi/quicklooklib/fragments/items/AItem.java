@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
@@ -14,6 +15,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
  * The items
  */
 public abstract class AItem {
+
+    public static ArrayList<String> BANNED_NAMES = new ArrayList<>();
 
     public static String ITEM_PATH = "path";
     public static String ITEM_TYPE = "type";
@@ -220,6 +223,14 @@ public abstract class AItem {
      */
     public String getSubTitle() {
         return this.getFormattedType();
+    }
+
+    public static void addBannedWord(String banned) {
+        BANNED_NAMES.add(banned);
+    }
+
+    public static boolean isBannedWord(String banned) {
+        return BANNED_NAMES.contains(banned);
     }
 
 }

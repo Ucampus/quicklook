@@ -16,8 +16,11 @@ import cl.uchile.ing.adi.quicklooklib.fragments.adapters.FolderRecyclerViewAdapt
  */
 public class FolderItem extends FileItem implements ListItem {
 
+
     public FolderItem(String path, String mimetype, String name, long size) {
         super(path,mimetype,name,size);
+        //Don't show MACOSX Folder
+        addBannedWord("__MACOSX");
         image = R.drawable.folder;
     }
 
@@ -34,12 +37,14 @@ public class FolderItem extends FileItem implements ListItem {
         File[] elements = new File(path).listFiles();
         ArrayList<AItem> files = new ArrayList<> ();
         for (File elem : elements) {
-            String path = elem.getAbsolutePath();
-            String type = FileItem.loadFileMimeType(elem);
-            long size = AItem.getSizeFromPath(path);
-            String name = AItem.getNameFromPath(path);
-            AItem newItem = createForList(path,type,name,size);
-            files.add(newItem);
+            if (!isBannedWord(elem.getAbsolutePath())) {
+                String path = elem.getAbsolutePath();
+                String type = FileItem.loadFileMimeType(elem);
+                long size = AItem.getSizeFromPath(path);
+                String name = AItem.getNameFromPath(path);
+                AItem newItem = createForList(path, type, name, size);
+                files.add(newItem);
+            }
         }
         Log.d("getElements: ", files.toString());
         return files;
