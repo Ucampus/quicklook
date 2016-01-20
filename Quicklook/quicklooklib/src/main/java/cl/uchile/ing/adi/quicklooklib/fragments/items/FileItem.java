@@ -2,6 +2,8 @@ package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
 
+import java.io.File;
+
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 
@@ -23,7 +25,17 @@ public class FileItem extends AItem {
 
     @Override
     public String getFormattedType() {
-        return "File";
+        return this.type+" File";
+    }
+
+    public static String loadFileMimeType(File f) {
+        if (f.isDirectory()) {
+            return ItemFactory.FOLDER_MIMETYPE;
+        } else {
+            String path = f.getPath();
+            return loadMimeType(path);
+        }
+
     }
 
 }

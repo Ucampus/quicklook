@@ -19,13 +19,13 @@
 package com.joanzapata.pdfview;
 
 import android.graphics.RectF;
-
-import com.joanzapata.pdfview.util.Constants;
 import com.joanzapata.pdfview.model.PagePart;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Vector;
+
+import static com.joanzapata.pdfview.util.Constants.Cache.*;
 
 class CacheManager {
 
@@ -36,8 +36,8 @@ class CacheManager {
     private Vector<PagePart> thumbnails;
 
     public CacheManager() {
-        activeCache = new PriorityQueue<PagePart>(Constants.Cache.CACHE_SIZE, new PagePartComparator());
-        passiveCache = new PriorityQueue<PagePart>(Constants.Cache.CACHE_SIZE, new PagePartComparator());
+        activeCache = new PriorityQueue<PagePart>(CACHE_SIZE, new PagePartComparator());
+        passiveCache = new PriorityQueue<PagePart>(CACHE_SIZE, new PagePartComparator());
         thumbnails = new Vector<PagePart>();
     }
 
@@ -58,12 +58,12 @@ class CacheManager {
 
     private void makeAFreeSpace() {
 
-        while ((activeCache.size() + passiveCache.size()) >= Constants.Cache.CACHE_SIZE &&
+        while ((activeCache.size() + passiveCache.size()) >= CACHE_SIZE &&
                 !passiveCache.isEmpty()) {
             passiveCache.poll().getRenderedBitmap().recycle();
         }
 
-        while ((activeCache.size() + passiveCache.size()) >= Constants.Cache.CACHE_SIZE &&
+        while ((activeCache.size() + passiveCache.size()) >= CACHE_SIZE &&
                 !activeCache.isEmpty()) {
             activeCache.poll().getRenderedBitmap().recycle();
         }
@@ -72,7 +72,7 @@ class CacheManager {
     public void cacheThumbnail(PagePart part) {
 
         // If cache too big, remove and recycle
-        if (thumbnails.size() >= Constants.Cache.THUMBNAILS_CACHE_SIZE) {
+        if (thumbnails.size() >= THUMBNAILS_CACHE_SIZE) {
             thumbnails.remove(0).getRenderedBitmap().recycle();
         }
 

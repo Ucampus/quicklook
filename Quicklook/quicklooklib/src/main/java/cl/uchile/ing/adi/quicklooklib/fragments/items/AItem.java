@@ -150,27 +150,25 @@ public abstract class AItem {
         return ""+countSize+" "+suffixes[i];
     }
 
-    /**
-     * Static helper method. Gets the mimetype of file using the extension.
-     * @param path path of the file.
-     * @return String with mimetype of file.
-     */
     public static String loadMimeType(String path) {
-        File f = new File(path);
-        if (f.isDirectory()) {
-            return ItemFactory.FOLDER_MIMETYPE;
-        }
-        String type ;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(path.replace(" ","_"));
-        if (extension.equals("ql")) {
-            return ItemFactory.QUICKLOOK_MIMETYPE;
-        }
+        String type = ItemFactory.DEFAULT_MIMETYPE;
+        String extension = getExtension(getNameFromPath(path.replace(" ", "_")));
         if (extension != null) {
+            if (extension.equals("ql")) {
+                return ItemFactory.QUICKLOOK_MIMETYPE;
+            }
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        } else {
-            type = ItemFactory.DEFAULT_MIMETYPE;
         }
         return type;
+    }
+
+    public static String getExtension(String file) {
+        String[] parts = file.split("\\.");
+        int len = parts.length;
+        if (len == 0) {
+            return null;
+        }
+        return parts[len-1];
     }
 
     /**

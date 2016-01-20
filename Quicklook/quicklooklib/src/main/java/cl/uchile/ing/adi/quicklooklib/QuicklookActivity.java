@@ -16,12 +16,14 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
+import java.io.File;
+
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.FileItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.ListItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
 public class QuicklookActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener,
@@ -57,7 +59,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         if (savedInstanceState==null) {
             String name = AItem.getNameFromPath(this.path);
             long size = AItem.getSizeFromPath(this.path);
-            String type = AItem.loadMimeType(this.path);
+            String type = FileItem.loadFileMimeType(new File(this.path));
             AItem item = ItemFactory.getInstance().createItem(this.path, type,name,size);
             checkPermissionsAndChangeFragment(item);
         }

@@ -20,26 +20,27 @@ package com.joanzapata.pdfview;
 
 import android.content.Context;
 import android.graphics.*;
-import android.graphics.Paint.*;
+import android.graphics.Paint.Style;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
-
-import com.joanzapata.pdfview.util.Constants;
-import com.joanzapata.pdfview.util.FileUtils;
 import com.joanzapata.pdfview.exception.FileNotFoundException;
 import com.joanzapata.pdfview.listener.OnDrawListener;
+import com.joanzapata.pdfview.listener.OnErrorOccurredListener;
 import com.joanzapata.pdfview.listener.OnLoadCompleteListener;
 import com.joanzapata.pdfview.listener.OnPageChangeListener;
 import com.joanzapata.pdfview.model.PagePart;
 import com.joanzapata.pdfview.util.ArrayUtils;
+import com.joanzapata.pdfview.util.Constants;
+import com.joanzapata.pdfview.util.FileUtils;
 import com.joanzapata.pdfview.util.NumberUtils;
-
 import org.vudroid.core.DecodeService;
 
 import java.io.File;
 import java.io.IOException;
+
+import static com.joanzapata.pdfview.util.Constants.Cache.CACHE_SIZE;
 
 /**
  * @author Joan Zapata
@@ -150,6 +151,9 @@ public class PDFView extends SurfaceView {
 
     /** Call back object to call when the page has changed */
     private OnPageChangeListener onPageChangeListener;
+
+    /** Call back object to call when error occurs when opening PDF */
+    private OnErrorOccurredListener onErrorOccurredListener;
 
     /** Call back object to call when the above layer is to drawn */
     private OnDrawListener onDrawListener;
@@ -289,6 +293,10 @@ public class PDFView extends SurfaceView {
     
     private void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
         this.onPageChangeListener = onPageChangeListener;
+    }
+
+    private void setOnErrorOccuredListener(OnErrorOccurredListener onErrorOccurredListener) {
+        this.onErrorOccurredListener = onErrorOccurredListener;
     }
 
     private void setOnDrawListener(OnDrawListener onDrawListener) {
@@ -489,10 +497,10 @@ public class PDFView extends SurfaceView {
         // Loop through the pages like [...][4][2][0][1][3][...]
         // loading as many parts as it can.
         int parts = 0;
-        for (int i = 0; i <= Constants.LOADED_SIZE / 2 && parts < Constants.Cache.CACHE_SIZE; i++) {
-            parts += loadPage(index + i, Constants.Cache.CACHE_SIZE - parts);
-            if (i != 0 && parts < Constants.Cache.CACHE_SIZE) {
-                parts += loadPage(index - i, Constants.Cache.CACHE_SIZE - parts);
+        for (int i = 0; i <= Constants.LOADED_SIZE / 2 && parts < CACHE_SIZE; i++) {
+            parts += loadPage(index + i, CACHE_SIZE - parts);
+            if (i != 0 && parts < CACHE_SIZE) {
+                parts += loadPage(index - i, CACHE_SIZE - parts);
             }
         }
 
@@ -563,7 +571,7 @@ public class PDFView extends SurfaceView {
         float middleOfScreenY = (-currentYOffset + getHeight() / 2);
         float middleOfScreenPageX;
         float middleOfScreenPageY;
-        if (!swipeVertical) {
+        if (swipeVertical) {
         	middleOfScreenPageX = middleOfScreenX - userPage * toCurrentScale(optimalPageWidth);
         	middleOfScreenPageY = middleOfScreenY;
         } else {
@@ -655,6 +663,11 @@ public class PDFView extends SurfaceView {
         if (onLoadCompleteListener != null) {
             onLoadCompleteListener.loadComplete(documentPageCount);
         }
+    }
+
+    /** Called when error occurs while loading PDF */
+    public void errorOccurred() {
+        onErrorOccurredListener.errorOccured();
     }
 
     /**
@@ -995,6 +1008,8 @@ public class PDFView extends SurfaceView {
 
         private OnPageChangeListener onPageChangeListener;
 
+        private OnErrorOccurredListener onErrorOccurredListener;
+
         private int defaultPage = 1;
 
         private boolean showMinimap = false;
@@ -1039,6 +1054,11 @@ public class PDFView extends SurfaceView {
             return this;
         }
 
+        public Configurator onErrorOccured(OnErrorOccurredListener onErrorOccurredListener) {
+            this.onErrorOccurredListener = onErrorOccurredListener;
+            return this;
+        }
+
         public Configurator defaultPage(int defaultPage) {
             this.defaultPage = defaultPage;
             return this;
@@ -1064,6 +1084,7 @@ public class PDFView extends SurfaceView {
             PDFView.this.recycle();
             PDFView.this.setOnDrawListener(onDrawListener);
             PDFView.this.setOnPageChangeListener(onPageChangeListener);
+            PDFView.this.setOnErrorOccuredListener(onErrorOccurredListener);
             PDFView.this.enableSwipe(enableSwipe);
             PDFView.this.enableDoubletap(enableDoubletap);
             PDFView.this.setDefaultPage(defaultPage);

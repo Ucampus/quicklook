@@ -48,9 +48,14 @@ public abstract class VirtualItem extends AItem implements ListItem {
         }
         ArrayList<AItem> approvedElements = new ArrayList<>();
         for (AItem elem:itemList) {
-            if (startsWith(splitVirtualPath(elem.getPath())[1], this.getVirtualPath())) {
-                approvedElements.add(elem);
+            if (startsWith(elem.getPath(), this.getVirtualPath())) {
+                approvedElements.add(createForList(elem));
             }
+        }
+        //Allows to go into a folder automatically if it (zip fix)
+        if (getVirtualPath().equals("") && approvedElements.size()==0 && itemList.size() >0) {
+            setVirtualPath(itemList.get(0).getPath().split("/")[0]);
+            return getElements();
         }
         Log.d("getElements: ", "El filtro es " + getVirtualPath());
         Log.d("getElements: ", approvedElements.toString());
@@ -63,6 +68,10 @@ public abstract class VirtualItem extends AItem implements ListItem {
      */
     public String getVirtualPath() {
         return this.virtualPath;
+    }
+
+    public void setVirtualPath(String s) {
+        this.virtualPath = s;
     }
 
     @Override
@@ -168,17 +177,13 @@ public abstract class VirtualItem extends AItem implements ListItem {
 
     /**
      * Creates an item for the list of items.
-     * @param path Path of the item
-     * @param type Type of the item
-     * @param name Name of the item
-     * @param size Size of the item
+     * @param preItem Item not prepared for this (?)
      * @return item
      */
-    public AItem createForList(String path, String type, String name, long size) {
-        String newpath = this.path + SEP + path;
-        AItem preItem = ItemFactory.getInstance().createItem(newpath, type, name, size);
-        String anotherSep = preItem instanceof VirtualItem ? VirtualItem.SEP : "";
-        return ItemFactory.getInstance().createItem(newpath + anotherSep, type, name, size);
+    public AItem createForList(AItem preItem) {
+        String newpath = this.path + SEP + preItem.path
+                        + (preItem instanceof VirtualItem ? VirtualItem.SEP : "");
+        return ItemFactory.getInstance().createItem(newpath, preItem.type, preItem.name, preItem.size);
     }
     /**
      * Gets an specific item from the virtual object and copies it to main memory.

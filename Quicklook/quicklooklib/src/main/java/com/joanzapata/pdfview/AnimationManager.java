@@ -25,6 +25,8 @@ import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.graphics.PointF;
 import android.view.animation.DecelerateInterpolator;
 
+import com.joanzapata.pdfview.PDFView;
+
 /**
  * @author Joan Zapata
  *         <p/>
