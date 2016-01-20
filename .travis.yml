@@ -1,6 +1,6 @@
 env:
   global:
-    - REPO="Quicklook"
+    - REPO="FCFM-ADI/quicklook/Quicklook"
     - CI_HOME=`pwd`/$REPO
 language: android
 android:
