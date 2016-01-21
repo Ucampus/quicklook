@@ -7,6 +7,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.adapters.VirtualRecyclerViewAdapter;
@@ -186,8 +187,7 @@ public abstract class VirtualItem extends AItem implements ListItem {
      * @return Abstract item with object
      */
     public AItem retrieve(AItem toRetrieve, Context context) {
-        String dirpath = context.getFilesDir().getAbsolutePath()+"/";
-        String path = retrieveItem(toRetrieve.id,dirpath,context);
+        String path = retrieveItem(toRetrieve.id,getDownloadPath(),context);
         String name = toRetrieve.getId();
         String type = toRetrieve.getType();
         long size = toRetrieve.getSize();

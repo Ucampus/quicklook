@@ -42,12 +42,19 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     private QuicklookFragment current;
     private FloatingActionButton fab;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
         this.path = getIntent().getStringExtra("localurl");
+        if (getIntent().hasExtra("downloadpath")) {
+            String dlp = getIntent().getStringExtra("downloadpath");
+            AItem.setDownloadPath(dlp);
+        } else {
+            AItem.setDownloadPath(getFilesDir().getAbsolutePath()+"/");
+        }
         try {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {

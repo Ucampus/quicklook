@@ -2,6 +2,7 @@ package cl.uchile.ing.adi.quicklook;
 
 import android.Manifest;
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -43,6 +44,12 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.main_activity_fragment, fragment, "MainQuickLook");
         t.commit();
+        BroadcastReceiver br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+            }
+        };
     }
 
     @Override public void onAssetSelected(final String item) {
@@ -79,6 +86,7 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
     public void openIntent(String urlForAsset) {
         Intent i = new Intent(this, QuicklookActivity.class);
         i.putExtra("localurl", urlForAsset);
+        i.putExtra("downloadpath",Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
         startActivity(i);
     }
 
@@ -86,6 +94,7 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
         Intent i = new Intent(this, QuicklookActivity.class);
         String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         i.putExtra("localurl", s);
+        i.putExtra("downloadpath",Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
         startActivity(i);
     }
 

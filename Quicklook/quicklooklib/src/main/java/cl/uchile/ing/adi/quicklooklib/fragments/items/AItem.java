@@ -20,6 +20,8 @@ public abstract class AItem {
     public static String ITEM_PATH = "path";
     public static String ITEM_TYPE = "type";
 
+    public static String DOWNLOAD_PATH = "";
+
 
     protected String id;
     protected String type;
@@ -235,6 +237,14 @@ public abstract class AItem {
 
     public static boolean isBannedWord(String banned) {
         return BANNED_NAMES.contains(banned);
+    }
+
+    public static String getDownloadPath() {
+        return DOWNLOAD_PATH;
+    }
+
+    public static void setDownloadPath(String dp) {
+        DOWNLOAD_PATH = dp;
     }
 
 }
