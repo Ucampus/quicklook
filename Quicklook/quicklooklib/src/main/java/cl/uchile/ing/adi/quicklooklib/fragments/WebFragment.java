@@ -19,6 +19,8 @@ public class WebFragment extends QuicklookFragment {
         View v =  inflater.inflate(R.layout.fragment_web, container, false);
         WebView web = (WebView) v.findViewById(R.id.web_fragment);
         web.loadUrl("file://"+this.item.getPath());
+        web.getSettings().setBuiltInZoomControls(true);
+        web.getSettings().setDisplayZoomControls(false);
         return v;
     }
 }
