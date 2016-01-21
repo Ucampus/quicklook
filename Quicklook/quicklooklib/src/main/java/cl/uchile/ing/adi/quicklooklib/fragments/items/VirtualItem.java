@@ -133,14 +133,6 @@ public abstract class VirtualItem extends AItem implements ListItem {
         return response;
     }
 
-    public String getTitle() {
-        return this.getNameFromPath(getPath())+"/"+getNameFromPath(getVirtualPath());
-    }
-
-    public String getSubTitle() {
-        return this.getFormattedType();
-    }
-
     @Override
     public String getFormattedType() {
         return "Virtual File";
@@ -211,6 +203,19 @@ public abstract class VirtualItem extends AItem implements ListItem {
      */
     public abstract String retrieveItem(String id, String dirpath, Context context);
 
+
+    public String getTitle() {
+        String name = this.getNameFromPath(getVirtualPath());
+        if (name.equals("")) {
+            name = this.getNameFromPath(getPath());
+        }
+        return name;
+    }
+
+    @Override
+    public String getSubTitle() {
+        return this.getVirtualPath();
+    }
 
 
 

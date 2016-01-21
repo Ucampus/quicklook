@@ -3,6 +3,7 @@ package cl.uchile.ing.adi.quicklooklib;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -10,11 +11,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -43,7 +48,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
         this.path = getIntent().getStringExtra("localurl");
-
+        try {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,9 +68,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         if (savedInstanceState==null) {
             String name = AItem.getNameFromPath(this.path);
             long size = AItem.getSizeFromPath(this.path);
-            String type = FileItem.loadFileMimeType(new File(this.path));
+            String type = FileItem.loadFileType(new File(this.path));
             AItem item = ItemFactory.getInstance().createItem(this.path, type,name,size);
             checkPermissionsAndChangeFragment(item);
+        }
+        int actionBarTitleId = Resources.getSystem().getIdentifier("action_bar_subtitle", "id", "android");
+        if (actionBarTitleId > 0) {
+            TextView title = (TextView) findViewById(actionBarTitleId);
+            if (title != null) {
+                title.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            }
         }
     }
 
@@ -197,6 +213,17 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     public void onListFragmentError(String error) {
         Snackbar.make(coordinator, "Error: "+error,
                 Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

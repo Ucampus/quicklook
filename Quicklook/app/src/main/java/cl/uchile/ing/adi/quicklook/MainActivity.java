@@ -30,7 +30,7 @@ import java.io.OutputStream;
 
 import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
 
-public class MainActivity extends AppCompatActivity implements DemoAssetFragment.OnDemoAssetFragmentListener, ActivityCompat.OnRequestPermissionsResultCallback {
+public class  MainActivity extends AppCompatActivity implements DemoAssetFragment.OnDemoAssetFragmentListener, ActivityCompat.OnRequestPermissionsResultCallback {
     private static String FILES_ASSETS_DIR = "files/";
     Runnable r;
     private static int REQUEST_FILE_PERMISSIONS = 121;
