@@ -1,5 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
+import android.os.Bundle;
+
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
@@ -24,9 +26,6 @@ public class ItemFactory {
         return ourInstance;
     }
 
-    /**
-     * You need to define new file types here, and their related items.
-     */
     private ItemFactory() {
         // Here we register the types of files:
         register(FOLDER_MIMETYPE, FolderItem.class);
@@ -59,24 +58,29 @@ public class ItemFactory {
     /**
      * Creates item without using the Files API. It can create virtual items.
      * @param path path of the item.
-     * @param mimetype mimetype of the item.
+     * @param type mimetype of the item.
      * @param id id of the item.
      * @param size size of the item.
      * @return
      */
-    public AItem createItem(String path, String mimetype, String id, long size) {
+    public AItem createItem(String path, String type, String id, long size, Bundle extra) {
         Class c = FileItem.class;
         AItem item = null;
-        if (dictionary.containsKey(mimetype)) {
-            c = dictionary.get(mimetype);
+        if (dictionary.containsKey(type)) {
+            c = dictionary.get(type);
         }
         try {
-            Constructor<?> constructor = c.getConstructor(String.class, String.class, String.class, long.class);
-            item = (AItem)constructor.newInstance(path,mimetype,id,size);
+            Constructor<?> constructor = c.getConstructor(String.class, String.class, String.class, long.class, Bundle.class);
+            item = (AItem)constructor.newInstance(path,type,id,size,extra);
             return item;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return item;
     }
+
+    public AItem createItem(String path, String type, String id, long size) {
+        return createItem(path,type,id,size,null);
+    }
+
 }

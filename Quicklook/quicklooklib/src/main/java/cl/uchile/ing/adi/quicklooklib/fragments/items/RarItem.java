@@ -1,6 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.github.junrar.Archive;
 import com.github.junrar.impl.FileVolumeManager;
@@ -17,8 +18,8 @@ import cl.uchile.ing.adi.quicklooklib.R;
  */
 public class RarItem extends VirtualItem {
 
-    public RarItem(String path, String mimetype, String id, long size) {
-        super(path,mimetype,id,size);
+    public RarItem(String path, String mimetype, String id, long size, Bundle extra) {
+        super(path,mimetype,id,size,extra);
         image = R.drawable.compressed;
     }
 

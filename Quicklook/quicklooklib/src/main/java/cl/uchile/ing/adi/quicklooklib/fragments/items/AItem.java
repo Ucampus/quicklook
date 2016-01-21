@@ -27,6 +27,7 @@ public abstract class AItem {
     protected String type;
     protected long size;
     protected String path;
+    protected Bundle extra;
     protected QuicklookFragment fragment;
     private String virtualPath;
     protected int image;
@@ -34,15 +35,17 @@ public abstract class AItem {
     /**
      * Constructor of the class, metadata is inserted manually.
      * @param path path of file (it should exist)
-     * @param mimetype mimetype of file
+     * @param type type of file
      * @param id id of file
      * @param size size of file
+     * @param extra extras introduced by bundle.
      */
-    public AItem(String path, String mimetype, String id, long size) {
+    public AItem(String path, String type, String id, long size, Bundle extra) {
         this.path = path;
         this.id = id;
         this.size = size;
-        this.type = mimetype;
+        this.type = type;
+        this.extra = extra;
         //Image for item.
         this.image = R.drawable.document;
     }

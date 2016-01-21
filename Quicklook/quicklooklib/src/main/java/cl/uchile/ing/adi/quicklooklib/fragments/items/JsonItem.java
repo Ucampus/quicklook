@@ -1,6 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,8 +16,8 @@ import java.util.Iterator;
  */
 public class JsonItem extends VirtualItem {
 
-    public JsonItem(String path, String mimetype, String id, long size) {
-        super(path,mimetype,id,size);
+    public JsonItem(String path, String mimetype, String id, long size, Bundle extra) {
+        super(path,mimetype,id,size,extra);
     }
 
     @Override

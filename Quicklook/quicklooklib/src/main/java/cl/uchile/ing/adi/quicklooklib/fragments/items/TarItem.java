@@ -1,6 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -20,8 +21,8 @@ import cl.uchile.ing.adi.quicklooklib.R;
  */
 public class TarItem extends VirtualItem {
 
-    public TarItem(String path, String mimetype, String id, long size) {
-        super(path,mimetype,id,size);
+    public TarItem(String path, String mimetype, String id, long size, Bundle extra) {
+        super(path,mimetype,id,size,extra);
         image = R.drawable.compressed;
     }
 

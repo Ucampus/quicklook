@@ -1,5 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
+import android.os.Bundle;
+
 import java.io.File;
 
 import cl.uchile.ing.adi.quicklooklib.R;
@@ -11,8 +13,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
  */
 public class FileItem extends AItem {
 
-    public FileItem(String path, String mimetype, String id, long size) {
-        super(path,mimetype,id,size);
+    public FileItem(String path, String mimetype, String id, long size, Bundle extra) {
+        super(path,mimetype,id,size,extra);
         addBannedWord("__MACOSX");
         image =  R.drawable.document;
     }

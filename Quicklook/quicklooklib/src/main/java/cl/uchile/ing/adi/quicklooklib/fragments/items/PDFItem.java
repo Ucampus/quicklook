@@ -1,5 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
+import android.os.Bundle;
+
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.PdfFragment;
 
@@ -8,8 +10,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.PdfFragment;
  */
 public class PDFItem extends FileItem {
 
-    public PDFItem(String path, String mimetype, String id, long size) {
-        super(path,mimetype,id,size);
+    public PDFItem(String path, String mimetype, String id, long size, Bundle extra) {
+        super(path,mimetype,id,size,extra);
         image = R.drawable.pdf;
     }
 

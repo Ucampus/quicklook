@@ -1,6 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -24,8 +25,8 @@ public class ZipItem extends VirtualItem {
      * @param name id of the virtual folder.
      * @param size size of the virtual folder.
      */
-    public ZipItem(String path, String mimetype, String name, long size) {
-        super(path,mimetype,name,size);
+    public ZipItem(String path, String mimetype, String name, long size, Bundle extra) {
+        super(path,mimetype,name,size, extra);
         image = R.drawable.compressed;
     }
 

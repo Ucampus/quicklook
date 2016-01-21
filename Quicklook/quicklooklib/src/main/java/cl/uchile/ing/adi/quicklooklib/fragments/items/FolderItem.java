@@ -1,5 +1,6 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
@@ -17,9 +18,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.adapters.FolderRecyclerViewAdapt
 public class FolderItem extends FileItem implements ListItem {
 
 
-    public FolderItem(String path, String mimetype, String id, long size) {
-        super(path, mimetype, id, size);
-        //Don't show MACOSX Folder
+    public FolderItem(String path, String mimetype, String id, long size, Bundle extra) {
+        super(path, mimetype, id, size, extra);
         image = R.drawable.folder;
     }
 

@@ -33,8 +33,8 @@ public abstract class VirtualItem extends AItem implements ListItem {
      * @param id id of the virtual folder.
      * @param size size of the virtual folder.
      */
-    public VirtualItem(String path, String mimetype, String id, long size) {
-        super(splitVirtualPath(path)[0], mimetype, id, size);
+    public VirtualItem(String path, String mimetype, String id, long size, Bundle extra) {
+        super(splitVirtualPath(path)[0], mimetype, id, size, extra);
         this.virtualPath = splitVirtualPath(path)[1];
     }
 
