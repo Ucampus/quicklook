@@ -1,5 +1,6 @@
 package cl.uchile.ing.adi.quicklooklib.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,9 @@ public class WebFragment extends QuicklookFragment {
         WebView web = (WebView) v.findViewById(R.id.web_fragment);
         web.loadUrl("file://"+this.item.getPath());
         web.getSettings().setBuiltInZoomControls(true);
-        web.getSettings().setDisplayZoomControls(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            web.getSettings().setDisplayZoomControls(false);
+        }
         return v;
     }
 }
