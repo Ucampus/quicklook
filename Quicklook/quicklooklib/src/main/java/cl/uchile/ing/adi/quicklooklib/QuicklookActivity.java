@@ -1,10 +1,15 @@
 package cl.uchile.ing.adi.quicklooklib;
 
 import android.Manifest;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -19,9 +24,15 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.TextView;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
@@ -49,12 +60,18 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
         this.path = getIntent().getStringExtra("localurl");
+
+        //Set download path
+        String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                .getAbsolutePath()+"/Quicklook/";
         if (getIntent().hasExtra("downloadpath")) {
-            String dlp = getIntent().getStringExtra("downloadpath");
-            AItem.setDownloadPath(dlp);
-        } else {
-            AItem.setDownloadPath(getFilesDir().getAbsolutePath()+"/");
+            downloadPath = getIntent().getStringExtra("downloadpath");
         }
+        File folder = new File(downloadPath);
+        if (!folder.exists()) folder.mkdirs();
+        AItem.setDownloadPath(downloadPath);
+
+        //Action bar back button
         try {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
@@ -64,12 +81,22 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AItem item = current.getItem();
-                Uri pathUri = Uri.parse("file://" + item.getPath());
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(pathUri, item.getType());
-                Log.d("FAB", pathUri.getPath());
-                startActivity(Intent.createChooser(intent, "Open"));
+                final AItem item = current.getItem();
+                final String mime = MimeTypeMap.getSingleton()
+                        .getMimeTypeFromExtension(
+                                MimeTypeMap.getFileExtensionFromUrl(Uri.encode(item.getPath())));
+                String newPath = copyItemToDownloadFolder(item,mime);
+                final Uri pathUri = Uri.parse("file://" + newPath);
+                Snackbar.make(coordinator,"File downloaded!",Snackbar.LENGTH_INDEFINITE)
+                        .setAction("Open with", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setDataAndType(pathUri, mime);
+                                Log.d("FAB", pathUri.getPath());
+                                startActivity(Intent.createChooser(intent, "Open")) ;
+                            }
+                        }).show();
             }
         });
         if (savedInstanceState==null) {
@@ -85,6 +112,36 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             if (title != null) {
                 title.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             }
+        }
+    }
+
+    /**
+     * Copies an item on internal space to download folder.
+     * @param item Item to be copied
+     * @return Path of item on downloads folder.
+     */
+    private String copyItemToDownloadFolder(AItem item,String mime) {
+        try {
+            String itemPath = AItem.getDownloadPath()+item.getName();
+            File f = new File(itemPath);
+            int copied = 1;
+            if (!f.exists()) {
+                FileOutputStream fos = new FileOutputStream(itemPath);
+                copied = IOUtils.copy(new FileInputStream(item.getPath()), fos);
+                fos.close();
+                if(copied>0) {
+                    DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                        dm.addCompletedDownload(item.getName(),item.getName(), true, mime, itemPath, copied, false);
+                    }
+                } else{
+                    return null;
+                }
+            }
+            return itemPath;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -217,8 +274,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         current = fragment;
     }
 
-    public void onListFragmentError(String error) {
-        Snackbar.make(coordinator, "Error: "+error,
+    public void onListFragmentInfo(String error) {
+        Snackbar.make(coordinator, "Info: "+error,
                 Snackbar.LENGTH_SHORT).show();
     }
 

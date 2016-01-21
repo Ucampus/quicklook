@@ -94,7 +94,7 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
         Intent i = new Intent(this, QuicklookActivity.class);
         String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         i.putExtra("localurl", s);
-        i.putExtra("downloadpath",Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+        i.putExtra("downloadpath",Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()+"/");
         startActivity(i);
     }
 

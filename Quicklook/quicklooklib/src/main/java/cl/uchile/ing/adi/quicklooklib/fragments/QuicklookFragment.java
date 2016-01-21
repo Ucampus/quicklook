@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.ListItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
 /**
@@ -76,7 +75,7 @@ public abstract class QuicklookFragment extends Fragment {
     }
 
     public void showError(String cause) {
-        mListener.onListFragmentError(cause);
+        mListener.onListFragmentInfo(cause);
     }
 
     /**
@@ -112,6 +111,6 @@ public abstract class QuicklookFragment extends Fragment {
 
         void setFragment(QuicklookFragment fragment);
 
-        void onListFragmentError(String message);
+        void onListFragmentInfo(String message);
     }
 }

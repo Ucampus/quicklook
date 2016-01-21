@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
@@ -187,7 +188,10 @@ public abstract class VirtualItem extends AItem implements ListItem {
      * @return Abstract item with object
      */
     public AItem retrieve(AItem toRetrieve, Context context) {
-        String path = retrieveItem(toRetrieve.id,getDownloadPath(),context);
+        String innerPath = context.getFilesDir().getAbsolutePath()+"/quicklook/";
+        File folder = new File(innerPath);
+        if (!folder.exists()) folder.mkdirs();
+        String path = retrieveItem(toRetrieve.id,innerPath,context);
         String name = toRetrieve.getId();
         String type = toRetrieve.getType();
         long size = toRetrieve.getSize();
