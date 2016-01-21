@@ -157,7 +157,7 @@ public abstract class AItem {
         return ""+countSize+" "+suffixes[i];
     }
 
-    public static String loadMimeType(String path) {
+    public static String loadType(String path) {
         String extension = getExtension(getNameFromPath(path.replace(" ", "_")));
         if (extension != null) {
             if (extension.equals("ql")) {

@@ -33,11 +33,11 @@ public class ZipItem extends VirtualItem {
      * Loads mimetype of elements inside zip, using their id.
      * @return a string with the mimetype of the file inside the zip.
      */
-    public String LoadZipMimeType(ZipEntry ze) {
+    public String LoadZipType(ZipEntry ze) {
         if (ze.isDirectory()) {
             return ItemFactory.FOLDER_MIMETYPE;
         } else {
-            return loadMimeType(ze.getName());
+            return loadType(ze.getName());
         }
     }
 
@@ -86,7 +86,7 @@ public class ZipItem extends VirtualItem {
                 String path = ze.getName();
                 String name = path;
                 long size = ze.getSize();
-                String type = this.LoadZipMimeType(ze);
+                String type = this.LoadZipType(ze);
                 AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);
                 itemList.add(newItem);
             }

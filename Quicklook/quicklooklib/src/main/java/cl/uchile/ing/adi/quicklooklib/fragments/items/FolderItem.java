@@ -18,7 +18,7 @@ public class FolderItem extends FileItem implements ListItem {
 
 
     public FolderItem(String path, String mimetype, String id, long size) {
-        super(path,mimetype,id,size);
+        super(path, mimetype, id, size);
         //Don't show MACOSX Folder
         image = R.drawable.folder;
     }
@@ -38,7 +38,7 @@ public class FolderItem extends FileItem implements ListItem {
         for (File elem : elements) {
             if (!isBannedWord(elem.getAbsolutePath())) {
                 String path = elem.getAbsolutePath();
-                String type = FileItem.loadFileMimeType(elem);
+                String type = FileItem.loadFileType(elem);
                 long size = AItem.getSizeFromPath(path);
                 String name = AItem.getNameFromPath(path);
                 AItem newItem = createForList(path, type, name, size);

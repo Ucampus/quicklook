@@ -1,7 +1,5 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
-import android.content.Context;
-
 import java.io.File;
 
 import cl.uchile.ing.adi.quicklooklib.R;
@@ -29,12 +27,12 @@ public class FileItem extends AItem {
         return "File";
     }
 
-    public static String loadFileMimeType(File f) {
+    public static String loadFileType(File f) {
         if (f.isDirectory()) {
             return ItemFactory.FOLDER_MIMETYPE;
         } else {
             String path = f.getPath();
-            return loadMimeType(path);
+            return loadType(path);
         }
 
     }

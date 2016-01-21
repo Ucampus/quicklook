@@ -38,7 +38,7 @@ public class RarItem extends VirtualItem {
             while (fh!=null) {
                 String name = fh.getFileNameString().replace('\\','/').trim();
                 String path = name;
-                String type = loadRarMimeType(fh);
+                String type = loadRarType(fh);
                 long size = fh.getFullPackSize();
                 AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);
                 itemList.add(newItem);
@@ -75,12 +75,12 @@ public class RarItem extends VirtualItem {
         return null;
     }
 
-    public String loadRarMimeType(FileHeader fh) {
+    public String loadRarType(FileHeader fh) {
         if (fh.isDirectory()) {
             return ItemFactory.FOLDER_MIMETYPE;
         } else {
             String path = fh.getFileNameString().replace('\\','/');
-            return loadMimeType(path);
+            return loadType(path);
         }
     }
 }

@@ -8,7 +8,6 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -42,7 +41,7 @@ public class TarItem extends VirtualItem {
                 String path = tae.getName();
                 String id = path;
                 long size = tae.getSize();
-                String type = this.loadTarGzMimeType(tae);
+                String type = this.loadTarGzType(tae);
                 AItem newItem = ItemFactory.getInstance().createItem(path, type, id, size);
                 itemList.add(newItem);
             }
@@ -84,11 +83,11 @@ public class TarItem extends VirtualItem {
         return null;
     }
 
-    private static String loadTarGzMimeType(TarArchiveEntry tar) {
+    private static String loadTarGzType(TarArchiveEntry tar) {
         if (tar.isDirectory()) {
             return ItemFactory.FOLDER_MIMETYPE;
         } else {
-            return loadMimeType(tar.getName());
+            return loadType(tar.getName());
         }
     }
 
