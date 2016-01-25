@@ -57,13 +57,30 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
-        this.path = getIntent().getStringExtra("localurl");
+        onNewIntent(getIntent());
+        if (savedInstanceState==null) {
+            long size = AItem.getSizeFromPath(this.path);
+            String type = FileItem.loadFileType(new File(this.path));
+            Bundle extra;
+            if (getIntent().hasExtra("extra")) {
+                extra = getIntent().getBundleExtra("extra");
+            } else {
+                extra = new Bundle();
+            }
+            AItem item = ItemFactory.getInstance().createItem(this.path, type, size,extra);
+            checkPermissionsAndChangeFragment(item);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        this.path = intent.getStringExtra("localurl");
 
         //Set download path
         String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 .getAbsolutePath()+"/Quicklook/";
-        if (getIntent().hasExtra("downloadpath")) {
-            downloadPath = getIntent().getStringExtra("downloadpath");
+        if (intent.hasExtra("downloadpath")) {
+            downloadPath = intent.getStringExtra("downloadpath");
         }
         File folder = new File(downloadPath);
         if (!folder.exists()) folder.mkdirs();
@@ -97,18 +114,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                         }).show();
             }
         });
-        if (savedInstanceState==null) {
-            long size = AItem.getSizeFromPath(this.path);
-            String type = FileItem.loadFileType(new File(this.path));
-            Bundle extra;
-            if (getIntent().hasExtra("extra")) {
-                extra = getIntent().getBundleExtra("extra");
-            } else {
-                extra = new Bundle();
-            }
-            AItem item = ItemFactory.getInstance().createItem(this.path, type, size,extra);
-            checkPermissionsAndChangeFragment(item);
-        }
     }
 
     /**
@@ -203,7 +208,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     public void onListFragmentRetrieval(AItem toRetrieve, VirtualItem container) {
         AItem retrieved = container.retrieve(toRetrieve, getApplicationContext());
-        changeFragment(retrieved);
+        if (retrieved!=null) {
+            changeFragment(retrieved);
+        } else {
+            onListFragmentInfo("Nothing to show!");
+        }
     }
 
     /**

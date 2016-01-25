@@ -2,6 +2,7 @@ package cl.uchile.ing.adi.quicklook.customItems;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -21,6 +22,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
  * Created by dudu on 18-01-2016.
  */
 public class QLItem extends VirtualItem {
+
+    public static  final String QL_BROADCAST = "cl.uchile.ing.adi.QUICKLOOK_REQUEST";
 
     public QLItem(String path, String mimetype, long size, Bundle extra) {
         super(path,mimetype,size,extra);
@@ -42,6 +45,7 @@ public class QLItem extends VirtualItem {
                     Bundle itemExtra = new Bundle();
                     itemExtra.putString("json",extra.getString("json"));
                     itemExtra.putString("webPath",(String)actual.get("path"));
+                    itemExtra.putString("mimetype",(String)actual.get("mime"));
                     AItem newItem = ItemFactory.getInstance().createItem(path, type, size,itemExtra);
                     itemList.add(newItem);
                 }
@@ -60,8 +64,33 @@ public class QLItem extends VirtualItem {
         return loadType(path);
     }
 
+    /**
+     * Overwriting retrieve because we need the item
+     * @param toRetrieve item inside this
+     * @param context Current application context
+     * @return
+     */
     @Override
-    public String retrieveItem (String path, String dirpath, Context context) {
+    public AItem retrieve(AItem toRetrieve, Context context) {
+            Intent intent = new Intent();
+            intent.setAction(QL_BROADCAST);
+            intent.putExtra("name",toRetrieve.getName());
+            intent.putExtra("mime",toRetrieve.getExtra().getString("mimetype"));
+            intent.putExtra("path",toRetrieve.getExtra().getString("webPath"));
+            intent.putExtra("size",toRetrieve.getSize());
+            context.sendBroadcast(intent);
+            return null;
+    }
+
+    /**
+     *  Placeholder
+     * @param id Internal identifier of file
+     * @param dirpath Output path of the retrieved file
+     * @param context Context of application
+     * @return
+     */
+    @Override
+    public String retrieveItem(String id, String dirpath, Context context) {
         return null;
     }
 

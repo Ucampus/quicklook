@@ -87,7 +87,7 @@ public abstract class VirtualItem extends AItem implements ListItem {
         String innerRoute = this.getVirtualPath().equals("") ? "" : SEP+this.getVirtualPath();
         b.putString(ITEM_PATH,this.getPath()+innerRoute);
         b.putString(ITEM_TYPE,this.getType());
-        b.putBundle(ITEM_EXTRA,this.getExtra());
+        b.putBundle(ITEM_EXTRA, this.getExtra());
         fragment.setArguments(b);
         fragment.setItem(this);
     }
@@ -191,11 +191,15 @@ public abstract class VirtualItem extends AItem implements ListItem {
         String innerPath = context.getFilesDir().getAbsolutePath()+"/quicklook/";
         File folder = new File(innerPath);
         if (!folder.exists()) folder.mkdirs();
-        String path = retrieveItem(splitVirtualPath(toRetrieve.path)[1],innerPath,context);
-        String type = toRetrieve.getType();
-        long size = toRetrieve.getSize();
-        Bundle extra = toRetrieve.getExtra();
-        return ItemFactory.getInstance().createItem(path,type,size,extra);
+        String path = retrieveItem(splitVirtualPath(toRetrieve.path)[1], innerPath, context);
+        if (path!=null) {
+            String type = toRetrieve.getType();
+            long size = toRetrieve.getSize();
+            Bundle extra = toRetrieve.getExtra();
+            return ItemFactory.getInstance().createItem(path, type, size, extra);
+        } else {
+            return null;
+        }
     }
 
     /**
