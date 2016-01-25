@@ -1,4 +1,4 @@
-package cl.uchile.ing.adi.quicklooklib.fragments.items;
+package cl.uchile.ing.adi.quicklook.customItems;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,12 +11,16 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
+
 /**
  * Created by dudu on 18-01-2016.
  */
-public class JsonItem extends VirtualItem {
+public class QLItem extends VirtualItem {
 
-    public JsonItem(String path, String mimetype, String id, long size, Bundle extra) {
+    public QLItem(String path, String mimetype, String id, long size, Bundle extra) {
         super(path,mimetype,id,size,extra);
     }
 

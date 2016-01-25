@@ -162,16 +162,18 @@ public abstract class AItem {
         return ""+countSize+" "+suffixes[i];
     }
 
+    /**
+     * A estas alturas ya sabemos que el item no es carpeta
+     * @param path
+     * @return
+     */
     public static String loadType(String path) {
         String extension = getExtension(getNameFromPath(path.replace(" ", "_")));
-        if (extension != null) {
-            if (extension.equals("ql")) {
-                return ItemFactory.QUICKLOOK_MIMETYPE;
-            }
-        } else {
+        if (extension == null) {
             return ItemFactory.DEFAULT_MIMETYPE;
+        } else {
+            return extension;
         }
-        return extension;
     }
 
     public static String getExtension(String file) {

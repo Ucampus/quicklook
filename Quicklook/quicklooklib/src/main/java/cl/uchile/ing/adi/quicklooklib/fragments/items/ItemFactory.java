@@ -10,7 +10,6 @@ import java.util.HashMap;
  */
 public class ItemFactory {
 
-    public static final String QUICKLOOK_MIMETYPE = "text/quicklook-virtual-folder";
     private HashMap<String,Class> dictionary = new HashMap<>();
 
     private static ItemFactory ourInstance = new ItemFactory();
@@ -43,7 +42,6 @@ public class ItemFactory {
         register("docx", WordItem.class);
         register("xlsx", ExcelItem.class);
         register("pptx", PowerpointItem.class);
-        register(QUICKLOOK_MIMETYPE, JsonItem.class);
     }
 
     /**

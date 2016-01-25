@@ -6,8 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.MediaScannerConnection;
-import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -17,19 +15,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
+import cl.uchile.ing.adi.quicklook.customItems.QLItem;
 
 public class  MainActivity extends AppCompatActivity implements DemoAssetFragment.OnDemoAssetFragmentListener, ActivityCompat.OnRequestPermissionsResultCallback {
     private static String FILES_ASSETS_DIR = "files/";
@@ -86,7 +81,9 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
     public void openIntent(String urlForAsset) {
         Intent i = new Intent(this, QuicklookActivity.class);
         i.putExtra("localurl", urlForAsset);
-        i.putExtra("downloadpath",Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+        String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+        QuicklookActivity.registerType("ql", QLItem.class);
+        QuicklookActivity.setDownloadPath(s+"/hola");
         startActivity(i);
     }
 
@@ -94,7 +91,8 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
         Intent i = new Intent(this, QuicklookActivity.class);
         String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         i.putExtra("localurl", s);
-        i.putExtra("downloadpath",Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()+"/");
+        QuicklookActivity.registerType("ql", QLItem.class);
+        QuicklookActivity.setDownloadPath(s+"/hola");
         startActivity(i);
     }
 

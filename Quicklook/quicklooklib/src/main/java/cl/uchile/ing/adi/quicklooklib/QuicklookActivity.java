@@ -3,7 +3,6 @@ package cl.uchile.ing.adi.quicklooklib;
 import android.Manifest;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -16,7 +15,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -290,4 +288,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         return super.onOptionsItemSelected(item);
     }
 
+    public static void registerType(String type, Class className) {
+        ItemFactory.getInstance().register(type,className);
+    }
+
+    public static void setDownloadPath(String path) {
+        AItem.setDownloadPath(path);
+    }
 }
