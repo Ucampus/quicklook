@@ -19,6 +19,7 @@ public abstract class AItem {
 
     public static String ITEM_PATH = "path";
     public static String ITEM_TYPE = "type";
+    public static String ITEM_EXTRA = "extra";
 
     public static String DOWNLOAD_PATH = "";
 
@@ -35,7 +36,6 @@ public abstract class AItem {
      * Constructor of the class, metadata is inserted manually.
      * @param path path of file (it should exist)
      * @param type type of file
-     * @param id id of file
      * @param size size of file
      * @param extra extras introduced by bundle.
      */
@@ -88,6 +88,7 @@ public abstract class AItem {
         Bundle b = new Bundle();
         b.putString(ITEM_PATH,this.getPath());
         b.putString(ITEM_TYPE,this.getType());
+        b.putBundle(ITEM_EXTRA,this.getExtra());
         fragment.setArguments(b);
         fragment.setItem(this);
     }
@@ -138,6 +139,9 @@ public abstract class AItem {
      */
     public abstract String getFormattedType();
 
+    public Bundle getExtra() {
+        return this.extra;
+    }
 
     /**
      * Returns human-readable expression of file size

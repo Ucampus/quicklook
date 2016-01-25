@@ -98,18 +98,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             }
         });
         if (savedInstanceState==null) {
-            String name = AItem.getNameFromPath(this.path);
             long size = AItem.getSizeFromPath(this.path);
             String type = FileItem.loadFileType(new File(this.path));
-            AItem item = ItemFactory.getInstance().createItem(this.path, type,size);
-            checkPermissionsAndChangeFragment(item);
-        }
-        int actionBarTitleId = Resources.getSystem().getIdentifier("action_bar_subtitle", "id", "android");
-        if (actionBarTitleId > 0) {
-            TextView title = (TextView) findViewById(actionBarTitleId);
-            if (title != null) {
-                title.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            Bundle extra;
+            if (getIntent().hasExtra("extra")) {
+                extra = getIntent().getBundleExtra("extra");
+            } else {
+                extra = new Bundle();
             }
+            AItem item = ItemFactory.getInstance().createItem(this.path, type, size,extra);
+            checkPermissionsAndChangeFragment(item);
         }
     }
 

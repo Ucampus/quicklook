@@ -86,7 +86,8 @@ public class ZipItem extends VirtualItem {
                 String path = ze.getName();
                 long size = ze.getSize();
                 String type = this.LoadZipType(ze);
-                AItem newItem = ItemFactory.getInstance().createItem(path, type, size);
+                Bundle extra = this.getExtra();
+                AItem newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
                 itemList.add(newItem);
             }
         } catch (Exception e) {

@@ -40,7 +40,8 @@ public class FolderItem extends FileItem implements ListItem {
                 String path = elem.getAbsolutePath();
                 String type = FileItem.loadFileType(elem);
                 long size = AItem.getSizeFromPath(path);
-                AItem newItem = createForList(path, type, size);
+                Bundle extra = this.getExtra();
+                AItem newItem = createForList(path, type, size, extra);
                 files.add(newItem);
             }
         }
@@ -75,7 +76,7 @@ public class FolderItem extends FileItem implements ListItem {
      * @param size Size of the item
      * @return item
      */
-    public AItem createForList(String path, String type, long size) {
-        return ItemFactory.getInstance().createItem(path, type, size);
+    public AItem createForList(String path, String type, long size, Bundle extra) {
+        return ItemFactory.getInstance().createItem(path, type, size,extra);
     }
 }

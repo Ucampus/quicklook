@@ -1,7 +1,9 @@
 package cl.uchile.ing.adi.quicklook.customItems;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -27,22 +29,35 @@ public class QLItem extends VirtualItem {
     @Override
     public ArrayList<AItem> getItemList() {
         ArrayList<AItem> itemList = new ArrayList<>();
-        JSONParser parser = new JSONParser();
-        try {
-            JSONArray list = (JSONArray)parser.parse(new FileReader(path));
-            Iterator<JSONObject> iter = list.iterator();
-            while (iter.hasNext()) {
-                JSONObject actual = iter.next();
-                String path =(String)actual.get("name");
-                String type = (String)actual.get("mime");
-                long size = (Long)actual.get("size");
-                AItem newItem = ItemFactory.getInstance().createItem(path, type, size);
-                itemList.add(newItem);
+        if (extra != null && extra.getString("json")!=null) {
+            JSONParser parser = new JSONParser();
+            try {
+                JSONArray list = (JSONArray)parser.parse(extra.getString("json"));
+                Iterator<JSONObject> iter = list.iterator();
+                while (iter.hasNext()) {
+                    JSONObject actual = iter.next();
+                    String path =(String)actual.get("name");
+                    String type = loadQLType((String)actual.get("mime"), path);
+                    long size = (Long)actual.get("size");
+                    Bundle itemExtra = new Bundle();
+                    itemExtra.putString("json",extra.getString("json"));
+                    itemExtra.putString("webPath",(String)actual.get("path"));
+                    AItem newItem = ItemFactory.getInstance().createItem(path, type, size,itemExtra);
+                    itemList.add(newItem);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        Log.d("QLItem", "No se pudo leer el json... Tal vez no existe?");
         return itemList;
+    }
+
+    public static String loadQLType(String type,String path) {
+        if (type.equals(ItemFactory.FOLDER_MIMETYPE)) {
+            return type;
+        }
+        return loadType(path);
     }
 
     @Override

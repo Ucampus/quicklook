@@ -87,6 +87,7 @@ public abstract class VirtualItem extends AItem implements ListItem {
         String innerRoute = this.getVirtualPath().equals("") ? "" : SEP+this.getVirtualPath();
         b.putString(ITEM_PATH,this.getPath()+innerRoute);
         b.putString(ITEM_TYPE,this.getType());
+        b.putBundle(ITEM_EXTRA,this.getExtra());
         fragment.setArguments(b);
         fragment.setItem(this);
     }
@@ -152,7 +153,8 @@ public abstract class VirtualItem extends AItem implements ListItem {
             String path = item.getPath();
             long size = item.getSize();
             String type = parentItem.getType();
-            VirtualItem newItem = (VirtualItem)ItemFactory.getInstance().createItem(path, type, size);
+            Bundle extra = item.getExtra();
+            VirtualItem newItem = (VirtualItem)ItemFactory.getInstance().createItem(path, type, size,extra);
             mListener.onListFragmentInteraction(newItem);
         } else {
             mListener.onListFragmentRetrieval(item,parentItem);
@@ -177,7 +179,7 @@ public abstract class VirtualItem extends AItem implements ListItem {
     public AItem createForList(AItem preItem) {
         String newpath = this.path + SEP + preItem.path
                         + (preItem instanceof VirtualItem ? VirtualItem.SEP : "");
-        return ItemFactory.getInstance().createItem(newpath, preItem.type, preItem.size);
+        return ItemFactory.getInstance().createItem(newpath, preItem.type, preItem.size,preItem.extra);
     }
     /**
      * Gets an specific item from the virtual object and copies it to main memory.
@@ -192,7 +194,8 @@ public abstract class VirtualItem extends AItem implements ListItem {
         String path = retrieveItem(splitVirtualPath(toRetrieve.path)[1],innerPath,context);
         String type = toRetrieve.getType();
         long size = toRetrieve.getSize();
-        return ItemFactory.getInstance().createItem(path,type,size);
+        Bundle extra = toRetrieve.getExtra();
+        return ItemFactory.getInstance().createItem(path,type,size,extra);
     }
 
     /**

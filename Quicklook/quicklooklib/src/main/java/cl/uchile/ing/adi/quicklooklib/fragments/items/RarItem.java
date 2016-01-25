@@ -41,7 +41,8 @@ public class RarItem extends VirtualItem {
                 String path = name;
                 String type = loadRarType(fh);
                 long size = fh.getFullPackSize();
-                AItem newItem = ItemFactory.getInstance().createItem(path, type, size);
+                Bundle extra = this.getExtra();
+                AItem newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
                 itemList.add(newItem);
                 fh = a.nextFileHeader();
             }

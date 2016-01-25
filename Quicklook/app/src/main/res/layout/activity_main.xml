@@ -19,6 +19,14 @@
         android:onClick="openDownloads"
         android:nestedScrollingEnabled="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Abrir QL de prueba"
+        android:id="@+id/button2"
+        android:onClick="openQL"
+        android:nestedScrollingEnabled="true" />
+
     <FrameLayout
         android:id="@+id/main_activity_fragment"
         android:layout_width="match_parent"

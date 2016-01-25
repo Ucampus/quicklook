@@ -75,9 +75,4 @@ public class ItemFactory {
         }
         return item;
     }
-
-    public AItem createItem(String path, String type, long size) {
-        return createItem(path,type,size,null);
-    }
-
 }
