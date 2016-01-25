@@ -9,15 +9,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,12 +40,15 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     private String path;
-    private static String TAG = "QuickLookPermissions";
     private Runnable r;
     private View coordinator;
-    private static int WRITE_PERMISSIONS = 155;
     private QuicklookFragment current;
 
+    private static String TAG = "QuickLookPermissions";
+    private static int WRITE_PERMISSIONS = 155;
+
+
+    // Activity Config.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +56,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
         onNewIntent(getIntent());
+        //Only if fragment is not rendered
         if (savedInstanceState==null) {
             long size = BaseItem.getSizeFromPath(this.path);
             String type = FileItem.loadFileType(new File(this.path));
@@ -68,22 +69,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             BaseItem item = ItemFactory.getInstance().createItem(this.path, type, size,extra);
             checkPermissionsAndChangeFragment(item);
         }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        this.path = intent.getStringExtra("localurl");
-
-        //Set download path
-        String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                .getAbsolutePath()+"/Quicklook/";
-        if (intent.hasExtra("downloadpath")) {
-            downloadPath = intent.getStringExtra("downloadpath");
-        }
-        File folder = new File(downloadPath);
-        if (!folder.exists()) folder.mkdirs();
-        BaseItem.setDownloadPath(downloadPath);
-
         //Action bar back button
         try {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -92,119 +77,53 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
     }
 
-    /**
-     * Copies an item on internal space to download folder.
-     * @param item Item to be copied
-     * @return Path of item on downloads folder.
-     */
-    private String copyItemToDownloadFolder(BaseItem item,String mime) {
-        try {
-            String itemPath = BaseItem.getDownloadPath()+item.getName();
-            File f = new File(itemPath);
-            int copied = 1;
-            if (!f.exists()) {
-                FileOutputStream fos = new FileOutputStream(itemPath);
-                copied = IOUtils.copy(new FileInputStream(item.getPath()), fos);
-                fos.close();
-                if(copied>0) {
-                    DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
-                        dm.addCompletedDownload(item.getName(),item.getName(), true, mime, itemPath, copied, false);
-                    }
-                } else{
-                    return null;
-                }
-            }
-            return itemPath;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
-    private void checkPermissionsAndChangeFragment(final BaseItem item) {
-        r = new Runnable(){
-            public void run() {
-                changeFragment(item,false);
-            }
-        };
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Contacts permissions have not been granted.
-            Log.i(TAG, "Storage permissions has NOT been granted. Requesting permissions.");
-            requestStoragePermissions();
+    @Override
+    protected void onNewIntent(Intent intent) {
+        //Set url of start item
+        this.path = intent.getStringExtra("localurl");
+        //Set download path
+        String downloadPath;
+        if (intent.hasExtra("downloadpath")) {
+            downloadPath = intent.getStringExtra("downloadpath");
         } else {
-
-            // Contact permissions have been granted. Show the contacts fragment.
-            Log.i(TAG,
-                    "Contact permissions have already been granted. Displaying contact details.");
-            r.run();
+            downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                    .getAbsolutePath()+"/Quicklook/";
         }
+        //Create downloadPath folder if not exists.
+        File folder = new File(downloadPath);
+        if (!folder.exists()) folder.mkdirs();
+        BaseItem.setDownloadPath(downloadPath);
     }
 
-    /**
-     * Manages the transition between the fragments which shows the items.
-     * @param item Item to show.
-     */
-    public void changeFragment(BaseItem item) {
-        changeFragment(item, true);
-    }
-
-    /**
-     * Manages the transition between the fragments which shows the items.
-     * @param item Item to show.
-     * @param backstack Adds the previous fragment to backstack.
-     */
-    public void changeFragment(BaseItem item, boolean backstack){
-        updateActivity(item);
-        FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        t.replace(R.id.quicklook_fragment, current, "QuickLook");
-        if (backstack) t.addToBackStack(null);
-        t.commitAllowingStateLoss();
-    }
-
-    /**
-     * Method called by fragment when item is clicked on list view.
-     * @param item the item which is going to be displayed.
-     */
-
-    public void onListFragmentInteraction(BaseItem item) {
-        changeFragment(item);
-    }
-
-    /**
-     * Manages the text in Action Bar, with current path in filesystem.
-     * @param item the item which is going to be displayed
-     */
-    public void onListFragmentCreation(BaseItem item) {
-        updateActivity(item);
-    }
-
-    public void onListFragmentRetrieval(BaseItem toRetrieve, VirtualItem container) {
-        BaseItem retrieved = container.retrieve(toRetrieve, getApplicationContext());
-        if (retrieved!=null) {
-            changeFragment(retrieved);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem mItem) {
+        // handle item selection
+        int i = mItem.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        else if (i == R.id.save) {
+            saveItem();
+            onListFragmentInfo("Document saved on " + BaseItem.getDownloadPath() + " folder.");
+            return true;
+        } else if (i == R.id.share) {
+            shareItem();
+            return true;
+        } else if (i == R.id.open_with) {
+            openItem();
+            return true;
         } else {
-            onListFragmentInfo("Nothing to show!");
+            return super.onOptionsItemSelected(mItem);
         }
     }
 
-    /**
-     * Updates... the action bar!
-     * @param item Item with new info for the actionbar.
-     */
-    private void updateActivity(BaseItem item) {
-        setFragment(item.getFragment());
-        getSupportActionBar().setTitle(item.getTitle());
-        getSupportActionBar().setSubtitle(item.getSubTitle());
-
-    }
-
-    private void requestStoragePermissions() {
-
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                WRITE_PERMISSIONS);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        if (!(this.current.getItem() instanceof FolderItem)) {
+            inflater.inflate(R.menu.item_menu, menu);
+        }
+        return true;
     }
 
     @Override
@@ -231,6 +150,105 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
     }
 
+    // Fragment management.
+
+    /**
+     * Checks if storage permissions exist
+     * @param item Item to render after checking permissions.
+     */
+    private void checkPermissionsAndChangeFragment(final BaseItem item) {
+        r = new Runnable(){
+            public void run() {
+                changeFragment(item,false);
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "Storage permissions has NOT been granted. Requesting permissions.");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    WRITE_PERMISSIONS);
+        } else {
+            Log.i(TAG,
+                       "Storage permissions have already been granted. Displaying details.");
+            r.run();
+        }
+    }
+
+    /**
+     * Manages the transition between the fragments which shows the items.
+     * @param item Item to show.
+     */
+    public void changeFragment(BaseItem item) {
+        changeFragment(item, true);
+    }
+
+    /**
+     * Manages the transition between the fragments which shows the items.
+     * @param item Item to show.
+     * @param backstack if true, adds the previous fragment to backstack.
+     */
+    public void changeFragment(BaseItem item, boolean backstack){
+        updateActivity(item);
+        FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.replace(R.id.quicklook_fragment, current, "QuickLook");
+        if (backstack) t.addToBackStack(null);
+        t.commitAllowingStateLoss();
+    }
+
+
+    /**
+     * Updates... the action bar!
+     * @param item Item with new info for the actionbar.
+     */
+    private void updateActivity(BaseItem item) {
+        setFragment(item.getFragment());
+        getSupportActionBar().setTitle(item.getTitle());
+        getSupportActionBar().setSubtitle(item.getSubTitle());
+
+    }
+
+    //Listeners
+
+    /**
+     * Method called by fragment when item is clicked on list view.
+     * @param item the item which is going to be displayed.
+     */
+
+    public void onListFragmentInteraction(BaseItem item) {
+        changeFragment(item);
+    }
+
+    /**
+     * Manages the text in Action Bar, with current path in filesystem.
+     * @param item the item which is going to be displayed
+     */
+    public void onListFragmentCreation(BaseItem item) {
+        updateActivity(item);
+    }
+
+    /**
+     * Shows a snack bar with information.
+     * @param info
+     */
+    public void onListFragmentInfo(String info) {
+        Snackbar.make(coordinator, "Info: "+info,
+                Snackbar.LENGTH_LONG).show();
+    }
+
+    /**
+     * Action when item is retrieved... ¿Can we join it with interaction?
+     * @param toRetrieve the item which is going to be displayed.
+     * @param container item which contains toRetrieve.
+     */
+    public void onListFragmentRetrieval(BaseItem toRetrieve, VirtualItem container) {
+        BaseItem retrieved = container.retrieve(toRetrieve, getApplicationContext());
+        if (retrieved!=null) {
+            changeFragment(retrieved);
+        }
+    }
+
+   // Getters/Setters
+
     public QuicklookFragment getFragment() {
         return current;
     }
@@ -239,55 +257,13 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         current = fragment;
     }
 
-    public void onListFragmentInfo(String error) {
-        Snackbar.make(coordinator, "Info: "+error,
-                Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem mItem) {
-        // handle item selection
-        int i = mItem.getItemId();
-        if (i == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-        else if (i == R.id.save) {
-            Uri pathUri = saveItem();
-            return true;
-        } else if (i == R.id.share) {
-            shareItem();
-            return true;
-        } else if (i == R.id.open_with) {
-            openItem();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(mItem);
-        }
-    }
-
-    public static void registerType(String type, Class className) {
-        ItemFactory.getInstance().register(type, className);
-    }
-
-    public static void setDownloadPath(String path) {
-        BaseItem.setDownloadPath(path);
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        if (!(this.current.getItem() instanceof FolderItem)) {
-            inflater.inflate(R.menu.item_menu, menu);
-        }
-        return true;
-    }
+    // Button item functions
 
     public Uri saveItem() {
         BaseItem item = current.getItem();
         String mime =getMime(item.getPath());
-        String newPath = copyItemToDownloadFolder(item, mime);
+        String newPath = item.copyItem(mime);
         Uri pathUri = Uri.parse("file://" + newPath);
-        onListFragmentInfo("Document saved on "+BaseItem.getDownloadPath()+" folder.");
         return pathUri;
     }
 
@@ -318,9 +294,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
     }
 
-    private String getMime(String path) {
+    //Helper (Static) Functions
+
+    /**
+     * Returns mime type of file, or "text/plain" if it isn't detected.
+     * @param path Path to file.
+     * @return Mime type.
+     */
+    public static String getMime(String path) {
         String type = MimeTypeMap.getSingleton()
-                    .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(path));
+                .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(path));
         if (type==null) {
             return "text/plain";
         } else {
@@ -328,5 +311,20 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
     }
 
+    /**
+     * Registers a type to open.
+     * @param type
+     * @param className
+     */
+    public static void registerType(String type, Class className) {
+        ItemFactory.getInstance().register(type, className);
+    }
 
+    /**
+     * Sets the download path.
+     * @param path
+     */
+    public static void setDownloadPath(String path) {
+        BaseItem.setDownloadPath(path);
+    }
 }

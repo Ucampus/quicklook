@@ -1,9 +1,17 @@
 package cl.uchile.ing.adi.quicklooklib.fragments.items;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.MimeTypeMap;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import cl.uchile.ing.adi.quicklooklib.R;
@@ -240,5 +248,30 @@ public abstract class BaseItem {
     public static void setDownloadPath(String dp) {
         DOWNLOAD_PATH = dp;
     }
+
+    /**
+     * Copies an item on internal space to download folder.
+     * @return Path of item on downloads folder.
+     */
+    public String copyItem(String mime) {
+        try {
+            String itemPath = BaseItem.getDownloadPath()+getName();
+            File f = new File(itemPath);
+            int copied;
+            if (!f.exists()) {
+                FileOutputStream fos = new FileOutputStream(itemPath);
+                copied = IOUtils.copy(new FileInputStream(getPath()), fos);
+                fos.close();
+                if(copied<=0) {
+                    return null;
+                }
+            }
+            return itemPath;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }
