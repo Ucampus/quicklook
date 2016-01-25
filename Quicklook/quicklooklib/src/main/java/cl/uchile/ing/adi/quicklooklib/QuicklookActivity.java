@@ -18,6 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -97,16 +99,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 final String mime = MimeTypeMap.getSingleton()
                         .getMimeTypeFromExtension(
                                 MimeTypeMap.getFileExtensionFromUrl(Uri.encode(item.getPath())));
-                String newPath = copyItemToDownloadFolder(item,mime);
+                String newPath = copyItemToDownloadFolder(item, mime);
                 final Uri pathUri = Uri.parse("file://" + newPath);
-                Snackbar.make(coordinator,"File downloaded!",Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(coordinator, "File downloaded!", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Open with", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
                                 intent.setDataAndType(pathUri, mime);
                                 Log.d("FAB", pathUri.getPath());
-                                startActivity(Intent.createChooser(intent, "Open")) ;
+                                startActivity(Intent.createChooser(intent, "Open"));
                             }
                         }).show();
             }
@@ -283,20 +285,37 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+        // handle item selection
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
-        return super.onOptionsItemSelected(item);
+        else if (i == R.id.save) {
+            return true;
+        } else if (i == R.id.open_with) {
+            return true;
+        } else if (i == R.id.share) {
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     public static void registerType(String type, Class className) {
-        ItemFactory.getInstance().register(type,className);
+        ItemFactory.getInstance().register(type, className);
     }
 
     public static void setDownloadPath(String path) {
         BaseItem.setDownloadPath(path);
     }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        if (!(this.current.getItem() instanceof FolderItem)) {
+            inflater.inflate(R.menu.item_menu, menu);
+        }
+        return true;
+    }
+
 }

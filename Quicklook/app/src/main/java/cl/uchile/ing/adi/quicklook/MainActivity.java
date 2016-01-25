@@ -31,6 +31,7 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
     private static String FILES_ASSETS_DIR = "files/";
     Runnable r;
     private static int REQUEST_FILE_PERMISSIONS = 121;
+    BroadcastReceiver br;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,14 +41,14 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.main_activity_fragment, fragment, "MainQuickLook");
         t.commit();
-        BroadcastReceiver br = new BroadcastReceiver() {
+        br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d("MainActivity", "Oh, un broadcast... abrire quicklook de nuevo");
                 openIntent(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
             }
         };
-        registerReceiver(br,new IntentFilter(QLItem.QL_BROADCAST));
+        registerReceiver(br, new IntentFilter(QLItem.QL_BROADCAST));
     }
 
     @Override public void onAssetSelected(final String item) {
@@ -162,4 +163,9 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onPause();
+        unregisterReceiver(br);
+    }
 }

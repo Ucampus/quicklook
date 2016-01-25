@@ -15,13 +15,15 @@ import cl.uchile.ing.adi.quicklooklib.fragments.adapters.FolderRecyclerViewAdapt
 /**
  * Represents a folder in the filesystem.
  */
-public class FolderItem extends FileItem implements ListItem {
+public class FolderItem extends BaseItem implements ListItem {
 
 
     public FolderItem(String path, String mimetype, long size, Bundle extra) {
         super(path, mimetype, size, extra);
         image = R.drawable.folder;
     }
+
+
 
     @Override
     protected void createFragment() {
@@ -49,7 +51,6 @@ public class FolderItem extends FileItem implements ListItem {
         return files;
     }
 
-    @Override
     public RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener) {
         return new FolderRecyclerViewAdapter((this).getElements(), mListener);
 

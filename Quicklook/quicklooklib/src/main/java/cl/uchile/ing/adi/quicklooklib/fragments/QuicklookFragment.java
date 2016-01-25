@@ -4,10 +4,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.BaseItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
@@ -33,6 +38,7 @@ public abstract class QuicklookFragment extends Fragment {
             Bundle extra = b.getBundle(BaseItem.ITEM_EXTRA);
             item = ItemFactory.getInstance().createItem(path,type,size,extra);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override

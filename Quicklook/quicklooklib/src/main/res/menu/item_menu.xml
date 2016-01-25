@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/save"
+        android:orderInCategory="20"
+        app:showAsAction="never"
+        android:title="Save">
+    </item>
+    <item
+        android:id="@+id/open_with"
+        app:showAsAction="never"
+        android:orderInCategory="9999"
+        android:title="Open with...">
+    </item>
+    <item
+        android:id="@+id/share"
+        app:showAsAction="never"
+        android:orderInCategory="9999"
+        android:title="Share">
+    </item>
+</menu>
