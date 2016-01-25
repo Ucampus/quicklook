@@ -48,7 +48,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     private View coordinator;
     private static int WRITE_PERMISSIONS = 155;
     private QuicklookFragment current;
-    private FloatingActionButton fab;
 
 
     @Override
@@ -91,28 +90,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         } catch (Exception e) {
             e.printStackTrace();
         }
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final BaseItem item = current.getItem();
-                final String mime = MimeTypeMap.getSingleton()
-                        .getMimeTypeFromExtension(
-                                MimeTypeMap.getFileExtensionFromUrl(Uri.encode(item.getPath())));
-                String newPath = copyItemToDownloadFolder(item, mime);
-                final Uri pathUri = Uri.parse("file://" + newPath);
-                Snackbar.make(coordinator, "File downloaded!", Snackbar.LENGTH_INDEFINITE)
-                        .setAction("Open with", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setDataAndType(pathUri, mime);
-                                Log.d("FAB", pathUri.getPath());
-                                startActivity(Intent.createChooser(intent, "Open"));
-                            }
-                        }).show();
-            }
-        });
     }
 
     /**
@@ -184,7 +161,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.quicklook_fragment, current, "QuickLook");
         if (backstack) t.addToBackStack(null);
-        checkIfShowingFab(item);
         t.commitAllowingStateLoss();
     }
 
@@ -222,7 +198,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         setFragment(item.getFragment());
         getSupportActionBar().setTitle(item.getTitle());
         getSupportActionBar().setSubtitle(item.getSubTitle());
-        checkIfShowingFab(item);
 
     }
 
@@ -256,20 +231,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
     }
 
-    public void checkIfShowingFab(BaseItem item) {
-        CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
-        if (item instanceof FolderItem) {
-            p.setAnchorId(View.NO_ID);
-            fab.setLayoutParams(p);
-            fab.setVisibility(View.GONE);
-        } else {
-            p.anchorGravity = Gravity.BOTTOM | Gravity.END;
-            p.setAnchorId(R.id.quicklook_coordinator);
-            fab.setLayoutParams(p);
-            fab.setVisibility(View.VISIBLE);
-        }
-    }
-
     public QuicklookFragment getFragment() {
         return current;
     }
@@ -280,25 +241,28 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     public void onListFragmentInfo(String error) {
         Snackbar.make(coordinator, "Info: "+error,
-                Snackbar.LENGTH_SHORT).show();
+                Snackbar.LENGTH_LONG).show();
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem mItem) {
         // handle item selection
-        int i = item.getItemId();
+        int i = mItem.getItemId();
         if (i == android.R.id.home) {
             onBackPressed();
             return true;
         }
         else if (i == R.id.save) {
-            return true;
-        } else if (i == R.id.open_with) {
+            Uri pathUri = saveItem();
             return true;
         } else if (i == R.id.share) {
+            shareItem();
+            return true;
+        } else if (i == R.id.open_with) {
+            openItem();
             return true;
         } else {
-            return super.onOptionsItemSelected(item);
+            return super.onOptionsItemSelected(mItem);
         }
     }
 
@@ -317,5 +281,52 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
         return true;
     }
+
+    public Uri saveItem() {
+        BaseItem item = current.getItem();
+        String mime =getMime(item.getPath());
+        String newPath = copyItemToDownloadFolder(item, mime);
+        Uri pathUri = Uri.parse("file://" + newPath);
+        onListFragmentInfo("Document saved on "+BaseItem.getDownloadPath()+" folder.");
+        return pathUri;
+    }
+
+    public void openItem() {
+        Uri pathUri = saveItem();
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        String mime = getMime(pathUri.getPath());
+        intent.setDataAndType(pathUri, mime);
+        Log.d("openItem", pathUri.getPath());
+        startActivity(Intent.createChooser(intent, "Open"));
+    }
+
+
+    private void shareItem() {
+        Uri pathUri = saveItem();
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        File f = new File(pathUri.getPath());
+        if (f.exists()) {
+            String mime = getMime(pathUri.getPath());
+            intent.setType(mime);
+            intent.putExtra(Intent.EXTRA_STREAM, pathUri);
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Sharing Quicklook file");
+            intent.putExtra(Intent.EXTRA_TEXT,"Hi, I'm sending you a file... Regards!");
+            Log.d("shareItem", pathUri.getPath());
+            startActivity(Intent.createChooser(intent, "Share"));
+        } else {
+
+        }
+    }
+
+    private String getMime(String path) {
+        String type = MimeTypeMap.getSingleton()
+                    .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(path));
+        if (type==null) {
+            return "text/plain";
+        } else {
+            return type;
+        }
+    }
+
 
 }
