@@ -10,8 +10,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.WebFragment;
  */
 public class PictureItem extends FileItem {
 
-    public PictureItem(String path, String mimetype, String id, long size, Bundle extra) {
-        super(path,mimetype,id,size,extra);
+    public PictureItem(String path, String mimetype, long size, Bundle extra) {
+        super(path,mimetype,size,extra);
         image = R.drawable.image;
     }
 

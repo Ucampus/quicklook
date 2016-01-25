@@ -18,8 +18,8 @@ import cl.uchile.ing.adi.quicklooklib.R;
  */
 public class RarItem extends VirtualItem {
 
-    public RarItem(String path, String mimetype, String id, long size, Bundle extra) {
-        super(path,mimetype,id,size,extra);
+    public RarItem(String path, String mimetype, long size, Bundle extra) {
+        super(path,mimetype,size,extra);
         image = R.drawable.compressed;
     }
 
@@ -41,7 +41,7 @@ public class RarItem extends VirtualItem {
                 String path = name;
                 String type = loadRarType(fh);
                 long size = fh.getFullPackSize();
-                AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);
+                AItem newItem = ItemFactory.getInstance().createItem(path, type, size);
                 itemList.add(newItem);
                 fh = a.nextFileHeader();
             }

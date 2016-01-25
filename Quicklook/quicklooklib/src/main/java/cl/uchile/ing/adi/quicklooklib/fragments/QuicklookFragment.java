@@ -31,7 +31,7 @@ public abstract class QuicklookFragment extends Fragment {
             String type = b.getString(AItem.ITEM_TYPE);
             long size = AItem.getSizeFromPath(path);
             String name = AItem.getNameFromPath(path);
-            item = ItemFactory.getInstance().createItem(path,type,name,size);
+            item = ItemFactory.getInstance().createItem(path,type,size);
         }
     }
 

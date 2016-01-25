@@ -10,8 +10,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
  */
 public class WordItem extends FileItem {
 
-    public WordItem(String path, String mimetype, String name, long size, Bundle extra) {
-        super(path,mimetype,name,size, extra);
+    public WordItem(String path, String mimetype, long size, Bundle extra) {
+        super(path,mimetype,size, extra);
         image = R.drawable.word;
     }
 

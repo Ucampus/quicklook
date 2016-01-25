@@ -13,8 +13,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
  */
 public class FileItem extends AItem {
 
-    public FileItem(String path, String mimetype, String id, long size, Bundle extra) {
-        super(path,mimetype,id,size,extra);
+    public FileItem(String path, String mimetype, long size, Bundle extra) {
+        super(path,mimetype,size,extra);
         addBannedWord("__MACOSX");
         image =  R.drawable.document;
     }

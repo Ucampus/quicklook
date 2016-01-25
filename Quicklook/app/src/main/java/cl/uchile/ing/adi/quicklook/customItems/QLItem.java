@@ -20,8 +20,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
  */
 public class QLItem extends VirtualItem {
 
-    public QLItem(String path, String mimetype, String id, long size, Bundle extra) {
-        super(path,mimetype,id,size,extra);
+    public QLItem(String path, String mimetype, long size, Bundle extra) {
+        super(path,mimetype,size,extra);
     }
 
     @Override
@@ -33,11 +33,10 @@ public class QLItem extends VirtualItem {
             Iterator<JSONObject> iter = list.iterator();
             while (iter.hasNext()) {
                 JSONObject actual = iter.next();
-                String name =(String)actual.get("path");
                 String path =(String)actual.get("name");
                 String type = (String)actual.get("mime");
                 long size = (Long)actual.get("size");
-                AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);
+                AItem newItem = ItemFactory.getInstance().createItem(path, type, size);
                 itemList.add(newItem);
             }
         } catch (Exception e) {

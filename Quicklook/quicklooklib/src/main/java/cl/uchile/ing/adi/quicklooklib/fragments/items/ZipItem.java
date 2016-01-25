@@ -22,11 +22,10 @@ public class ZipItem extends VirtualItem {
      * Similar to AItem long constructor, but it specifies a path inside the zip.
      * @param path path of the virtual folder.
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
-     * @param name id of the virtual folder.
      * @param size size of the virtual folder.
      */
-    public ZipItem(String path, String mimetype, String name, long size, Bundle extra) {
-        super(path,mimetype,name,size, extra);
+    public ZipItem(String path, String mimetype, long size, Bundle extra) {
+        super(path,mimetype,size, extra);
         image = R.drawable.compressed;
     }
 
@@ -85,10 +84,9 @@ public class ZipItem extends VirtualItem {
                  e.hasMoreElements();) {
                 ZipEntry ze = e.nextElement();
                 String path = ze.getName();
-                String name = path;
                 long size = ze.getSize();
                 String type = this.LoadZipType(ze);
-                AItem newItem = ItemFactory.getInstance().createItem(path, type, name, size);
+                AItem newItem = ItemFactory.getInstance().createItem(path, type, size);
                 itemList.add(newItem);
             }
         } catch (Exception e) {

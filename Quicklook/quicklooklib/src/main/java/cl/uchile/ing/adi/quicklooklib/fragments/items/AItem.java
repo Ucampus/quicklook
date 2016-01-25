@@ -23,7 +23,6 @@ public abstract class AItem {
     public static String DOWNLOAD_PATH = "";
 
 
-    protected String id;
     protected String type;
     protected long size;
     protected String path;
@@ -40,9 +39,8 @@ public abstract class AItem {
      * @param size size of file
      * @param extra extras introduced by bundle.
      */
-    public AItem(String path, String type, String id, long size, Bundle extra) {
+    public AItem(String path, String type, long size, Bundle extra) {
         this.path = path;
-        this.id = id;
         this.size = size;
         this.type = type;
         this.extra = extra;
@@ -92,11 +90,6 @@ public abstract class AItem {
         b.putString(ITEM_TYPE,this.getType());
         fragment.setArguments(b);
         fragment.setItem(this);
-    }
-
-
-    public String getId() {
-        return this.id;
     }
 
     /**
@@ -203,14 +196,6 @@ public abstract class AItem {
      */
     public void setVirtualPath(String virtualPath) {
         this.virtualPath = virtualPath;
-    }
-
-    /** Sets Name value
-     *
-     * @param name
-     */
-    public void setId(String name) {
-        this.id = name;
     }
 
     /**

@@ -10,8 +10,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
  */
 public class PowerpointItem extends FileItem {
 
-    public PowerpointItem(String path, String mimetype, String id, long size,Bundle extra) {
-        super(path,mimetype,id,size,extra);
+    public PowerpointItem(String path, String mimetype, long size,Bundle extra) {
+        super(path,mimetype,size,extra);
         image = R.drawable.powerpoint;
     }
 

@@ -31,11 +31,10 @@ public abstract class VirtualItem extends AItem implements ListItem {
      * Simmilar to AItem long constructor, but it specifies a path inside the zip.
      * @param path path of the virtual folder.
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
-     * @param id id of the virtual folder.
      * @param size size of the virtual folder.
      */
-    public VirtualItem(String path, String mimetype, String id, long size, Bundle extra) {
-        super(splitVirtualPath(path)[0], mimetype, id, size, extra);
+    public VirtualItem(String path, String mimetype, long size, Bundle extra) {
+        super(splitVirtualPath(path)[0], mimetype, size, extra);
         this.virtualPath = splitVirtualPath(path)[1];
     }
 
@@ -150,11 +149,10 @@ public abstract class VirtualItem extends AItem implements ListItem {
     public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener, AItem item) {
         VirtualItem parentItem = (VirtualItem)mListener.getFragment().getItem();
         if (item instanceof FolderItem) {
-            String id = item.getId();
             String path = item.getPath();
             long size = item.getSize();
             String type = parentItem.getType();
-            VirtualItem newItem = (VirtualItem)ItemFactory.getInstance().createItem(path, type, id, size);
+            VirtualItem newItem = (VirtualItem)ItemFactory.getInstance().createItem(path, type, size);
             mListener.onListFragmentInteraction(newItem);
         } else {
             mListener.onListFragmentRetrieval(item,parentItem);
@@ -179,7 +177,7 @@ public abstract class VirtualItem extends AItem implements ListItem {
     public AItem createForList(AItem preItem) {
         String newpath = this.path + SEP + preItem.path
                         + (preItem instanceof VirtualItem ? VirtualItem.SEP : "");
-        return ItemFactory.getInstance().createItem(newpath, preItem.type, preItem.id, preItem.size);
+        return ItemFactory.getInstance().createItem(newpath, preItem.type, preItem.size);
     }
     /**
      * Gets an specific item from the virtual object and copies it to main memory.
@@ -191,11 +189,10 @@ public abstract class VirtualItem extends AItem implements ListItem {
         String innerPath = context.getFilesDir().getAbsolutePath()+"/quicklook/";
         File folder = new File(innerPath);
         if (!folder.exists()) folder.mkdirs();
-        String path = retrieveItem(toRetrieve.id,innerPath,context);
-        String name = toRetrieve.getId();
+        String path = retrieveItem(splitVirtualPath(toRetrieve.path)[1],innerPath,context);
         String type = toRetrieve.getType();
         long size = toRetrieve.getSize();
-        return ItemFactory.getInstance().createItem(path,type,name,size);
+        return ItemFactory.getInstance().createItem(path,type,size);
     }
 
     /**

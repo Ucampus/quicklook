@@ -10,8 +10,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
  */
 public class ExcelItem extends FileItem {
 
-    public ExcelItem(String path, String mimetype, String id, long size, Bundle extra) {
-        super(path,mimetype,id,size,extra);
+    public ExcelItem(String path, String mimetype, long size, Bundle extra) {
+        super(path,mimetype,size,extra);
         image = R.drawable.excel;
     }
 

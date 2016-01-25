@@ -18,8 +18,8 @@ import cl.uchile.ing.adi.quicklooklib.fragments.adapters.FolderRecyclerViewAdapt
 public class FolderItem extends FileItem implements ListItem {
 
 
-    public FolderItem(String path, String mimetype, String id, long size, Bundle extra) {
-        super(path, mimetype, id, size, extra);
+    public FolderItem(String path, String mimetype, long size, Bundle extra) {
+        super(path, mimetype, size, extra);
         image = R.drawable.folder;
     }
 
@@ -40,8 +40,7 @@ public class FolderItem extends FileItem implements ListItem {
                 String path = elem.getAbsolutePath();
                 String type = FileItem.loadFileType(elem);
                 long size = AItem.getSizeFromPath(path);
-                String name = AItem.getNameFromPath(path);
-                AItem newItem = createForList(path, type, name, size);
+                AItem newItem = createForList(path, type, size);
                 files.add(newItem);
             }
         }
@@ -73,11 +72,10 @@ public class FolderItem extends FileItem implements ListItem {
      * Creates an item for the list of items.
      * @param path Path of the item
      * @param type Type of the item
-     * @param name Name of the item
      * @param size Size of the item
      * @return item
      */
-    public AItem createForList(String path, String type, String name, long size) {
-        return ItemFactory.getInstance().createItem(path, type, name, size);
+    public AItem createForList(String path, String type, long size) {
+        return ItemFactory.getInstance().createItem(path, type, size);
     }
 }

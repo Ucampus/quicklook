@@ -101,7 +101,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             String name = AItem.getNameFromPath(this.path);
             long size = AItem.getSizeFromPath(this.path);
             String type = FileItem.loadFileType(new File(this.path));
-            AItem item = ItemFactory.getInstance().createItem(this.path, type,name,size);
+            AItem item = ItemFactory.getInstance().createItem(this.path, type,size);
             checkPermissionsAndChangeFragment(item);
         }
         int actionBarTitleId = Resources.getSystem().getIdentifier("action_bar_subtitle", "id", "android");
