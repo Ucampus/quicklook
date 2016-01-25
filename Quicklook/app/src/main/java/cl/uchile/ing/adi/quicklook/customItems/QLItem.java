@@ -1,6 +1,5 @@
 package cl.uchile.ing.adi.quicklook.customItems;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +9,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
@@ -30,8 +28,8 @@ public class QLItem extends VirtualItem {
     }
 
     @Override
-    public ArrayList<AItem> getItemList() {
-        ArrayList<AItem> itemList = new ArrayList<>();
+    public ArrayList<BaseItem> getItemList() {
+        ArrayList<BaseItem> itemList = new ArrayList<>();
         if (extra != null && extra.getString("json")!=null) {
             JSONParser parser = new JSONParser();
             try {
@@ -46,7 +44,7 @@ public class QLItem extends VirtualItem {
                     itemExtra.putString("json",extra.getString("json"));
                     itemExtra.putString("webPath",(String)actual.get("path"));
                     itemExtra.putString("mimetype",(String)actual.get("mime"));
-                    AItem newItem = ItemFactory.getInstance().createItem(path, type, size,itemExtra);
+                    BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size,itemExtra);
                     itemList.add(newItem);
                 }
             } catch (Exception e) {
@@ -71,7 +69,7 @@ public class QLItem extends VirtualItem {
      * @return
      */
     @Override
-    public AItem retrieve(AItem toRetrieve, Context context) {
+    public BaseItem retrieve(BaseItem toRetrieve, Context context) {
             Intent intent = new Intent();
             intent.setAction(QL_BROADCAST);
             intent.putExtra("name",toRetrieve.getName());

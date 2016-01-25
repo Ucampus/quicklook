@@ -27,8 +27,8 @@ public class TarItem extends VirtualItem {
     }
 
     @Override
-    public ArrayList<AItem> getItemList() {
-        ArrayList<AItem>itemList = new ArrayList<>();
+    public ArrayList<BaseItem> getItemList() {
+        ArrayList<BaseItem>itemList = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(getPath());
             InputStream bis = new BufferedInputStream(fis);
@@ -43,7 +43,7 @@ public class TarItem extends VirtualItem {
                 long size = tae.getSize();
                 String type = this.loadTarGzType(tae);
                 Bundle extra = this.getExtra();
-                AItem newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
+                BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
                 itemList.add(newItem);
             }
         } catch (Exception e) { e.printStackTrace();}

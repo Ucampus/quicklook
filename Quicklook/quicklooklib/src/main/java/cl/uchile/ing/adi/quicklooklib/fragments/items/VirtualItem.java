@@ -8,7 +8,6 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 
-import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.adapters.VirtualRecyclerViewAdapter;
@@ -16,7 +15,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.adapters.VirtualRecyclerViewAdap
 /**
  * Represents a Virtual file in the filesystem, like a Zip.
  */
-public abstract class VirtualItem extends AItem implements ListItem {
+public abstract class VirtualItem extends BaseItem implements ListItem {
 
     // Separator, The path here is a combination of the zip path and
     // the inner zip path.
@@ -25,10 +24,10 @@ public abstract class VirtualItem extends AItem implements ListItem {
     // Extra properties (inner path)
     protected String virtualPath;
 
-    protected ArrayList<AItem> itemList;
+    protected ArrayList<BaseItem> itemList;
 
     /**
-     * Simmilar to AItem long constructor, but it specifies a path inside the zip.
+     * Simmilar to BaseItem long constructor, but it specifies a path inside the zip.
      * @param path path of the virtual folder.
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
      * @param size size of the virtual folder.
@@ -43,12 +42,12 @@ public abstract class VirtualItem extends AItem implements ListItem {
      * @return An arraylist with the virtual elements of folder.
      */
     @Override
-    public ArrayList<AItem> getElements() {
+    public ArrayList<BaseItem> getElements() {
         if (itemList==null) {
             itemList = getItemList();
         }
-        ArrayList<AItem> approvedElements = new ArrayList<>();
-        for (AItem elem:itemList) {
+        ArrayList<BaseItem> approvedElements = new ArrayList<>();
+        for (BaseItem elem:itemList) {
             if (startsWith(elem.getPath(), this.getVirtualPath()) &&
                     !isBannedWord(elem.getName())) {
                 approvedElements.add(createForList(elem));
@@ -147,7 +146,7 @@ public abstract class VirtualItem extends AItem implements ListItem {
      * @param mListener
      * @param item
      */
-    public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener, AItem item) {
+    public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener, BaseItem item) {
         VirtualItem parentItem = (VirtualItem)mListener.getFragment().getItem();
         if (item instanceof FolderItem) {
             String path = item.getPath();
@@ -165,7 +164,7 @@ public abstract class VirtualItem extends AItem implements ListItem {
      * Preapares the item list with all the items inside the virtual object
      * @return ArrayList with all the items inside virtual object.
      */
-    public abstract ArrayList<AItem> getItemList();
+    public abstract ArrayList<BaseItem> getItemList();
 
     public RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener) {
         return new VirtualRecyclerViewAdapter(this.getElements(), mListener);
@@ -176,7 +175,7 @@ public abstract class VirtualItem extends AItem implements ListItem {
      * @param preItem Item not prepared for this (?)
      * @return item
      */
-    public AItem createForList(AItem preItem) {
+    public BaseItem createForList(BaseItem preItem) {
         String newpath = this.path + SEP + preItem.path
                         + (preItem instanceof VirtualItem ? VirtualItem.SEP : "");
         return ItemFactory.getInstance().createItem(newpath, preItem.type, preItem.size,preItem.extra);
@@ -187,7 +186,7 @@ public abstract class VirtualItem extends AItem implements ListItem {
      * @param context Current application context
      * @return Abstract item with object
      */
-    public AItem retrieve(AItem toRetrieve, Context context) {
+    public BaseItem retrieve(BaseItem toRetrieve, Context context) {
         String innerPath = context.getFilesDir().getAbsolutePath()+"/quicklook/";
         File folder = new File(innerPath);
         if (!folder.exists()) folder.mkdirs();

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment.OnListFragmentInteractionListener;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.FileItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
 
@@ -21,10 +21,10 @@ import java.util.List;
  */
 public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecyclerViewAdapter.ViewHolder> {
 
-    protected final List<AItem> mValues;
+    protected final List<BaseItem> mValues;
     protected final OnListFragmentInteractionListener mListener;
 
-    public FolderRecyclerViewAdapter(List<AItem> items, OnListFragmentInteractionListener listener) {
+    public FolderRecyclerViewAdapter(List<BaseItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -64,7 +64,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
         public final TextView mTextView;
         public final TextView mSubTextView;
         public final ImageView mImageView;
-        public AItem mItem;
+        public BaseItem mItem;
 
         public ViewHolder(View view) {
             super(view);

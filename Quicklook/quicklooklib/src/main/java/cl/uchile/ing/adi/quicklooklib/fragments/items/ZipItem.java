@@ -19,7 +19,7 @@ import cl.uchile.ing.adi.quicklooklib.R;
 public class ZipItem extends VirtualItem {
 
     /**
-     * Similar to AItem long constructor, but it specifies a path inside the zip.
+     * Similar to BaseItem long constructor, but it specifies a path inside the zip.
      * @param path path of the virtual folder.
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
      * @param size size of the virtual folder.
@@ -76,8 +76,8 @@ public class ZipItem extends VirtualItem {
         return false;
     }
 
-    public ArrayList<AItem> getItemList() {
-        ArrayList<AItem> itemList = new ArrayList<>();
+    public ArrayList<BaseItem> getItemList() {
+        ArrayList<BaseItem> itemList = new ArrayList<>();
         try {
             ZipFile zipfile = new ZipFile(this.path);
             for (Enumeration<? extends ZipEntry> e = zipfile.entries();
@@ -87,7 +87,7 @@ public class ZipItem extends VirtualItem {
                 long size = ze.getSize();
                 String type = this.LoadZipType(ze);
                 Bundle extra = this.getExtra();
-                AItem newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
+                BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
                 itemList.add(newItem);
             }
         } catch (Exception e) {

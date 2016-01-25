@@ -60,15 +60,15 @@ public class ItemFactory {
      * @param size size of the item.
      * @return
      */
-    public AItem createItem(String path, String type, long size, Bundle extra) {
+    public BaseItem createItem(String path, String type, long size, Bundle extra) {
         Class c = FileItem.class;
-        AItem item = null;
+        BaseItem item = null;
         if (dictionary.containsKey(type)) {
             c = dictionary.get(type);
         }
         try {
             Constructor<?> constructor = c.getConstructor(String.class, String.class, long.class, Bundle.class);
-            item = (AItem)constructor.newInstance(path,type,size,extra);
+            item = (BaseItem)constructor.newInstance(path,type,size,extra);
             return item;
         } catch (Exception e) {
             e.printStackTrace();

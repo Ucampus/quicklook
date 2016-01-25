@@ -24,8 +24,8 @@ public class RarItem extends VirtualItem {
     }
 
     @Override
-    public ArrayList<AItem> getItemList() {
-        ArrayList<AItem> itemList = new ArrayList<>();
+    public ArrayList<BaseItem> getItemList() {
+        ArrayList<BaseItem> itemList = new ArrayList<>();
         Archive a;
         try {
             a = new Archive(new FileVolumeManager(new File(getPath())));
@@ -42,7 +42,7 @@ public class RarItem extends VirtualItem {
                 String type = loadRarType(fh);
                 long size = fh.getFullPackSize();
                 Bundle extra = this.getExtra();
-                AItem newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
+                BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
                 itemList.add(newItem);
                 fh = a.nextFileHeader();
             }

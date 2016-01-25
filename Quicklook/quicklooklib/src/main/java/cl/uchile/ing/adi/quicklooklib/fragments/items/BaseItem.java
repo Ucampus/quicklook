@@ -10,10 +10,10 @@ import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 
 /**
- * AItem has most of the methods related with items in the library
+ * BaseItem has most of the methods related with items in the library
  * The items
  */
-public abstract class AItem {
+public abstract class BaseItem {
 
     public static ArrayList<String> BANNED_NAMES = new ArrayList<>();
 
@@ -39,7 +39,7 @@ public abstract class AItem {
      * @param size size of file
      * @param extra extras introduced by bundle.
      */
-    public AItem(String path, String type, long size, Bundle extra) {
+    public BaseItem(String path, String type, long size, Bundle extra) {
         this.path = path;
         this.size = size;
         this.type = type;
@@ -67,7 +67,7 @@ public abstract class AItem {
     }
 
     /**
-     * Each implementation of AItem associates a fragment with itself. This
+     * Each implementation of BaseItem associates a fragment with itself. This
      * method defines the fragment.
      */
     protected abstract void createFragment();

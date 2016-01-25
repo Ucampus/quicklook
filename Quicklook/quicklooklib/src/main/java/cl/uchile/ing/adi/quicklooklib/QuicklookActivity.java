@@ -5,7 +5,6 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -17,13 +16,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.TextView;
 
 import org.apache.commons.io.IOUtils;
 
@@ -33,7 +30,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.FileItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
@@ -59,7 +56,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         coordinator = findViewById(R.id.quicklook_coordinator);
         onNewIntent(getIntent());
         if (savedInstanceState==null) {
-            long size = AItem.getSizeFromPath(this.path);
+            long size = BaseItem.getSizeFromPath(this.path);
             String type = FileItem.loadFileType(new File(this.path));
             Bundle extra;
             if (getIntent().hasExtra("extra")) {
@@ -67,7 +64,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             } else {
                 extra = new Bundle();
             }
-            AItem item = ItemFactory.getInstance().createItem(this.path, type, size,extra);
+            BaseItem item = ItemFactory.getInstance().createItem(this.path, type, size,extra);
             checkPermissionsAndChangeFragment(item);
         }
     }
@@ -84,7 +81,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
         File folder = new File(downloadPath);
         if (!folder.exists()) folder.mkdirs();
-        AItem.setDownloadPath(downloadPath);
+        BaseItem.setDownloadPath(downloadPath);
 
         //Action bar back button
         try {
@@ -96,7 +93,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final AItem item = current.getItem();
+                final BaseItem item = current.getItem();
                 final String mime = MimeTypeMap.getSingleton()
                         .getMimeTypeFromExtension(
                                 MimeTypeMap.getFileExtensionFromUrl(Uri.encode(item.getPath())));
@@ -121,9 +118,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item Item to be copied
      * @return Path of item on downloads folder.
      */
-    private String copyItemToDownloadFolder(AItem item,String mime) {
+    private String copyItemToDownloadFolder(BaseItem item,String mime) {
         try {
-            String itemPath = AItem.getDownloadPath()+item.getName();
+            String itemPath = BaseItem.getDownloadPath()+item.getName();
             File f = new File(itemPath);
             int copied = 1;
             if (!f.exists()) {
@@ -147,7 +144,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
 
-    private void checkPermissionsAndChangeFragment(final AItem item) {
+    private void checkPermissionsAndChangeFragment(final BaseItem item) {
         r = new Runnable(){
             public void run() {
                 changeFragment(item,false);
@@ -171,7 +168,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * Manages the transition between the fragments which shows the items.
      * @param item Item to show.
      */
-    public void changeFragment(AItem item) {
+    public void changeFragment(BaseItem item) {
         changeFragment(item, true);
     }
 
@@ -180,7 +177,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item Item to show.
      * @param backstack Adds the previous fragment to backstack.
      */
-    public void changeFragment(AItem item, boolean backstack){
+    public void changeFragment(BaseItem item, boolean backstack){
         updateActivity(item);
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.quicklook_fragment, current, "QuickLook");
@@ -194,7 +191,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item the item which is going to be displayed.
      */
 
-    public void onListFragmentInteraction(AItem item) {
+    public void onListFragmentInteraction(BaseItem item) {
         changeFragment(item);
     }
 
@@ -202,12 +199,12 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * Manages the text in Action Bar, with current path in filesystem.
      * @param item the item which is going to be displayed
      */
-    public void onListFragmentCreation(AItem item) {
+    public void onListFragmentCreation(BaseItem item) {
         updateActivity(item);
     }
 
-    public void onListFragmentRetrieval(AItem toRetrieve, VirtualItem container) {
-        AItem retrieved = container.retrieve(toRetrieve, getApplicationContext());
+    public void onListFragmentRetrieval(BaseItem toRetrieve, VirtualItem container) {
+        BaseItem retrieved = container.retrieve(toRetrieve, getApplicationContext());
         if (retrieved!=null) {
             changeFragment(retrieved);
         } else {
@@ -219,7 +216,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * Updates... the action bar!
      * @param item Item with new info for the actionbar.
      */
-    private void updateActivity(AItem item) {
+    private void updateActivity(BaseItem item) {
         setFragment(item.getFragment());
         getSupportActionBar().setTitle(item.getTitle());
         getSupportActionBar().setSubtitle(item.getSubTitle());
@@ -257,7 +254,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
     }
 
-    public void checkIfShowingFab(AItem item) {
+    public void checkIfShowingFab(BaseItem item) {
         CoordinatorLayout.LayoutParams p = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
         if (item instanceof FolderItem) {
             p.setAnchorId(View.NO_ID);
@@ -300,6 +297,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     public static void setDownloadPath(String path) {
-        AItem.setDownloadPath(path);
+        BaseItem.setDownloadPath(path);
     }
 }

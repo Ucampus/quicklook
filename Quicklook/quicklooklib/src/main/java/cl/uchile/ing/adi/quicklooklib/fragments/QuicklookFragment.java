@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
@@ -16,7 +16,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
  */
 public abstract class QuicklookFragment extends Fragment {
 
-    protected AItem item;
+    protected BaseItem item;
     protected OnListFragmentInteractionListener mListener;
 
     public QuicklookFragment() {
@@ -27,10 +27,10 @@ public abstract class QuicklookFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle b = getArguments();
         if (b!=null) {
-            String path = b.getString(AItem.ITEM_PATH);
-            String type = b.getString(AItem.ITEM_TYPE);
-            long size = AItem.getSizeFromPath(path);
-            Bundle extra = b.getBundle(AItem.ITEM_EXTRA);
+            String path = b.getString(BaseItem.ITEM_PATH);
+            String type = b.getString(BaseItem.ITEM_TYPE);
+            long size = BaseItem.getSizeFromPath(path);
+            Bundle extra = b.getBundle(BaseItem.ITEM_EXTRA);
             item = ItemFactory.getInstance().createItem(path,type,size,extra);
         }
     }
@@ -66,11 +66,11 @@ public abstract class QuicklookFragment extends Fragment {
      * Defines the item related to the fragment.
      * @param item Item related to fragment.
      */
-    public void setItem(AItem item) {
+    public void setItem(BaseItem item) {
         this.item = item;
     }
 
-    public AItem getItem() {
+    public BaseItem getItem() {
         return this.item;
     }
 
@@ -89,20 +89,20 @@ public abstract class QuicklookFragment extends Fragment {
          * them when exploring folders/zips/etc.
          * @param item the item which is going to be displayed.
          */
-        void onListFragmentInteraction(AItem item);
+        void onListFragmentInteraction(BaseItem item);
 
         /**
          * Updates the navbar text with the location of the file in the filesystem.
          * @param item the item which is going to be displayed.
          */
-        void onListFragmentCreation(AItem item);
+        void onListFragmentCreation(BaseItem item);
 
         /**
          * Extracts a item inside a Compressed folder and opens it.
          * @param toRetrieve the item which is going to be displayed.
          * @param container item which contains toRetrieve.
          */
-        void onListFragmentRetrieval(AItem toRetrieve, VirtualItem container);
+        void onListFragmentRetrieval(BaseItem toRetrieve, VirtualItem container);
 
         /**
          * Retrieves the current fragment.

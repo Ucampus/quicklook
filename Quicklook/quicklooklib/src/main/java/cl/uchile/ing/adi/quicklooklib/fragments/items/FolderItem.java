@@ -32,16 +32,16 @@ public class FolderItem extends FileItem implements ListItem {
      * Returns a list of items inside a folder
      * @return a list of items inside a folder.
      */
-    public ArrayList<AItem> getElements() {
+    public ArrayList<BaseItem> getElements() {
         File[] elements = new File(path).listFiles();
-        ArrayList<AItem> files = new ArrayList<> ();
+        ArrayList<BaseItem> files = new ArrayList<> ();
         for (File elem : elements) {
             if (!isBannedWord(elem.getAbsolutePath())) {
                 String path = elem.getAbsolutePath();
                 String type = FileItem.loadFileType(elem);
-                long size = AItem.getSizeFromPath(path);
+                long size = BaseItem.getSizeFromPath(path);
                 Bundle extra = this.getExtra();
-                AItem newItem = createForList(path, type, size, extra);
+                BaseItem newItem = createForList(path, type, size, extra);
                 files.add(newItem);
             }
         }
@@ -65,7 +65,7 @@ public class FolderItem extends FileItem implements ListItem {
         return "Folder";
     }
 
-    public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener,AItem mItem) {
+    public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem) {
         mListener.onListFragmentInteraction(mItem);
     }
 
@@ -76,7 +76,7 @@ public class FolderItem extends FileItem implements ListItem {
      * @param size Size of the item
      * @return item
      */
-    public AItem createForList(String path, String type, long size, Bundle extra) {
+    public BaseItem createForList(String path, String type, long size, Bundle extra) {
         return ItemFactory.getInstance().createItem(path, type, size,extra);
     }
 }

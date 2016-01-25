@@ -11,7 +11,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
  * FileItem is the fallback item. It represents every item is not covered by
  * the library.
  */
-public class FileItem extends AItem {
+public class FileItem extends BaseItem {
 
     public FileItem(String path, String mimetype, long size, Bundle extra) {
         super(path,mimetype,size,extra);

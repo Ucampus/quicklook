@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import java.util.List;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment.OnListFragmentInteractionListener;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.AItem;
+import cl.uchile.ing.adi.quicklooklib.fragments.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.FileItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
 
@@ -15,7 +15,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
  */
 public class VirtualRecyclerViewAdapter extends FolderRecyclerViewAdapter {
 
-    public VirtualRecyclerViewAdapter(List<AItem> items, OnListFragmentInteractionListener listener) {
+    public VirtualRecyclerViewAdapter(List<BaseItem> items, OnListFragmentInteractionListener listener) {
         super(items, listener);
     }
 
