@@ -48,7 +48,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Create Quicklook internal work directory and set it
-        BaseItem.setCachePath(getFilesDir().getAbsolutePath()+"/quicklook/");
+        if (BaseItem.getCachePath()==null) {
+            BaseItem.setCachePath(getFilesDir().getAbsolutePath() + "/quicklook/");
+        }
         File f = new File(BaseItem.getCachePath());
         f.mkdirs();
         super.onCreate(savedInstanceState);

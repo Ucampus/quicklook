@@ -187,7 +187,7 @@ public abstract class VirtualItem extends BaseItem implements ListItem {
      * @return Abstract item with object
      */
     public BaseItem retrieve(BaseItem toRetrieve, Context context) {
-        String innerPath = context.getFilesDir().getAbsolutePath()+"/quicklook/";
+        String innerPath = getCachePath();
         File folder = new File(innerPath);
         if (!folder.exists()) folder.mkdirs();
         String path = retrieveItem(splitVirtualPath(toRetrieve.path)[1], innerPath, context);

@@ -245,6 +245,14 @@ public abstract class BaseItem {
         DOWNLOAD_PATH = dp;
     }
 
+    public static String getCachePath() {
+        return DOWNLOAD_PATH;
+    }
+
+    public static void setCachePath(String dp) {
+        DOWNLOAD_PATH = dp;
+    }
+
     /**
      * Copies an item on internal space to download folder.
      * @return Path of item on downloads folder.
