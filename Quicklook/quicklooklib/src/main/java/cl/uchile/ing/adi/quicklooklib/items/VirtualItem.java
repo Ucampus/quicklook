@@ -15,7 +15,7 @@ import cl.uchile.ing.adi.quicklooklib.adapters.VirtualRecyclerViewAdapter;
 /**
  * Represents a Virtual file in the filesystem, like a Zip.
  */
-public abstract class VirtualItem extends BaseItem implements ListItem {
+public abstract class VirtualItem extends BaseItem implements IListItem {
 
     // Separator, The path here is a combination of the zip path and
     // the inner zip path.

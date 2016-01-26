@@ -15,7 +15,7 @@ import cl.uchile.ing.adi.quicklooklib.adapters.FolderRecyclerViewAdapter;
 /**
  * Represents a folder in the filesystem.
  */
-public class FolderItem extends BaseItem implements ListItem {
+public class FolderItem extends BaseItem implements IListItem {
 
 
     public FolderItem(String path, String mimetype, long size, Bundle extra) {

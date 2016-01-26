@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cl.uchile.ing.adi.quicklooklib.R;
-import cl.uchile.ing.adi.quicklooklib.items.ListItem;
+import cl.uchile.ing.adi.quicklooklib.items.IListItem;
 
 /**
  * Opens folders and lists the items inside them. There are extensions of this
@@ -33,7 +33,7 @@ public class ListFragment extends QuicklookFragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(((ListItem)(this.item)).getAdapter(mListener));
+            recyclerView.setAdapter(((IListItem)(this.item)).getAdapter(mListener));
         }
         return view;
     }
