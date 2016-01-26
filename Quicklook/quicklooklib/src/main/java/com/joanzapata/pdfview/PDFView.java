@@ -23,9 +23,7 @@ import android.graphics.*;
 import android.graphics.Paint.Style;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceView;
 import com.joanzapata.pdfview.exception.FileNotFoundException;
 import com.joanzapata.pdfview.listener.OnDrawListener;
@@ -70,6 +68,9 @@ public class PDFView extends SurfaceView {
 
     /** Rendered parts go to the cache manager */
     private CacheManager cacheManager;
+
+    /** Animation manager manage all offset and zoom animation */
+    private AnimationManager animationManager;
 
     /** Drag manager manage all touch events */
     private DragPinchManager dragPinchManager;
@@ -192,6 +193,7 @@ public class PDFView extends SurfaceView {
         super(context, set);
         miniMapRequired = false;
         cacheManager = new CacheManager();
+        animationManager = new AnimationManager(this);
         dragPinchManager = new DragPinchManager(this);
 
         paint = new Paint();
@@ -232,17 +234,10 @@ public class PDFView extends SurfaceView {
 
         // Start decoding document
         decodingAsyncTask = new DecodingAsyncTask(uri, this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            decodingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            decodingAsyncTask.execute();
-        }
+        decodingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         renderingAsyncTask = new RenderingAsyncTask(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            renderingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            renderingAsyncTask.execute();
-        }
+        renderingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**
@@ -270,15 +265,10 @@ public class PDFView extends SurfaceView {
 
         // Reset the zoom and center the page on the screen
         resetZoom();
-        /**if (swipeVertical)
+        if (swipeVertical)
         	animationManager.startYAnimation(currentYOffset, calculateCenterOffsetForPage(pageNb));
         else
-        	animationManager.startXAnimation(currentXOffset, calculateCenterOffsetForPage(pageNb));**/
-
-        if (swipeVertical)
-            moveTo(currentXOffset, calculateCenterOffsetForPage(currentFilteredPage));
-        else
-            moveTo(calculateCenterOffsetForPage(currentFilteredPage), currentYOffset);
+        	animationManager.startXAnimation(currentXOffset, calculateCenterOffsetForPage(pageNb));
         loadPages();
 
         if (onPageChangeListener != null) {
@@ -332,13 +322,12 @@ public class PDFView extends SurfaceView {
 
     @Override
     protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        Log.d("PDFView", "Deataching...");
         recycle();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        animationManager.stopAll();
         calculateOptimalWidthAndHeight();
         loadPages();
         if (swipeVertical)
@@ -979,6 +968,10 @@ public class PDFView extends SurfaceView {
 
     public void resetZoom() {
         zoomTo(1);
+    }
+
+    public void resetZoomWithAnimation() {
+        animationManager.startZoomAnimation(zoom, 1f);
     }
 
     /** Use an asset file as the pdf source */
