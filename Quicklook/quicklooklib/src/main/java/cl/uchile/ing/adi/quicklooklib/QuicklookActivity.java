@@ -28,6 +28,9 @@ import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.items.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.FileUtils;
+
 public class QuicklookActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
@@ -44,6 +47,10 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Create Quicklook internal work directory and set it
+        BaseItem.setCachePath(getFilesDir().getAbsolutePath()+"/quicklook/");
+        File f = new File(BaseItem.getCachePath());
+        f.mkdirs();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
@@ -67,6 +74,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -123,7 +131,12 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         super.onDestroy();
         String innerPath = getFilesDir().getAbsolutePath()+"/quicklook/";
         File f = new File(innerPath);
-        f.delete();
+        try {
+            FileUtils.deleteDirectory(f);
+            Log.d("QuicklookActivity", "Directorio temporal borrado!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

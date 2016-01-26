@@ -29,7 +29,7 @@ public interface Constants {
     static final int LOADED_SIZE = 3;
 
     /** Between 0 and 1, the thumbnails quality (default 0.2) */
-    static final float THUMBNAIL_RATIO = 0.6f;
+    static final float THUMBNAIL_RATIO = 1f;
 
     /**
      * The size of the rendered parts (default 256)
@@ -39,17 +39,17 @@ public interface Constants {
     static final float PART_SIZE = 256;
 
     /** Transparency of masks around the main page (between 0 and 255, default 50) */
-    static final int MASK_ALPHA = 50;
+    static final int MASK_ALPHA = 255;
 
     /** The size of the grid of loaded images around the current point */
-    static final int GRID_SIZE = 14;
+    static final int GRID_SIZE = 7;
 
     public interface Cache {
 
         /** The size of the cache (number of bitmaps kept) */
         static final int CACHE_SIZE = (int) Math.pow(GRID_SIZE, 2d);
 
-        static final int THUMBNAILS_CACHE_SIZE = 32;
+        static final int THUMBNAILS_CACHE_SIZE =4;
     }
 
     public interface Pinch {

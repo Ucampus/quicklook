@@ -120,7 +120,7 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
     }
 
     private boolean isPageChange(float distance) {
-        return Math.abs(distance) > Math.abs(pdfView.toCurrentScale(pdfView.getOptimalPageWidth()) / 4);
+        return Math.abs(distance) > Math.abs(pdfView.toCurrentScale(pdfView.getOptimalPageWidth()) / 3);
     }
 
     private boolean isQuickMove(float dx, long dt) {
@@ -134,7 +134,9 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
 
     @Override
     public void onDoubleTap(float x, float y) {
-        //Does nothing.
+        if (isZooming()) {
+            pdfView.resetZoomWithAnimation();
+        }
     }
 
 	public void setSwipeVertical(boolean swipeVertical) {
