@@ -1,12 +1,9 @@
 package cl.uchile.ing.adi.quicklooklib;
 
 import android.Manifest;
-import android.app.DownloadManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -21,20 +18,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.BaseItem;
+import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.FileItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
+import cl.uchile.ing.adi.quicklooklib.items.FileItem;
+import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
+import cl.uchile.ing.adi.quicklooklib.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
 public class QuicklookActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
@@ -124,6 +116,14 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             inflater.inflate(R.menu.item_menu, menu);
         }
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        String innerPath = getFilesDir().getAbsolutePath()+"/quicklook/";
+        File f = new File(innerPath);
+        f.delete();
     }
 
     @Override

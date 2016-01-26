@@ -1,4 +1,4 @@
-package cl.uchile.ing.adi.quicklooklib.fragments.items;
+package cl.uchile.ing.adi.quicklooklib.items;
 
 import android.support.v7.widget.RecyclerView;
 

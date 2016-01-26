@@ -3,7 +3,6 @@ package cl.uchile.ing.adi.quicklook.customItems;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,9 +12,9 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import cl.uchile.ing.adi.quicklooklib.fragments.items.BaseItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
+import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
+import cl.uchile.ing.adi.quicklooklib.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
 /**
  * Created by dudu on 18-01-2016.
@@ -41,7 +40,6 @@ public class QLItem extends VirtualItem {
                 String type = loadQLType((String)actual.get("mime"), path);
                 long size = (Long)actual.get("size");
                 Bundle itemExtra = new Bundle();
-                itemExtra.putString("json",extra.getString("json"));
                 itemExtra.putString("webPath",(String)actual.get("path"));
                 itemExtra.putString("mimetype",(String)actual.get("mime"));
                 BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size,itemExtra);

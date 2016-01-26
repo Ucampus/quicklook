@@ -1,10 +1,6 @@
-package cl.uchile.ing.adi.quicklooklib.fragments.items;
+package cl.uchile.ing.adi.quicklooklib.items;
 
-import android.app.DownloadManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.webkit.MimeTypeMap;
 
 import org.apache.commons.io.IOUtils;
 

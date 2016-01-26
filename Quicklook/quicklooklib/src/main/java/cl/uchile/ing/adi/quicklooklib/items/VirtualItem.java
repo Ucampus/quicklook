@@ -1,4 +1,4 @@
-package cl.uchile.ing.adi.quicklooklib.fragments.items;
+package cl.uchile.ing.adi.quicklooklib.items;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
-import cl.uchile.ing.adi.quicklooklib.fragments.adapters.VirtualRecyclerViewAdapter;
+import cl.uchile.ing.adi.quicklooklib.adapters.VirtualRecyclerViewAdapter;
 
 /**
  * Represents a Virtual file in the filesystem, like a Zip.

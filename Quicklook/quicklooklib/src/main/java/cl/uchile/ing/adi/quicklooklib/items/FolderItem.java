@@ -1,4 +1,4 @@
-package cl.uchile.ing.adi.quicklooklib.fragments.items;
+package cl.uchile.ing.adi.quicklooklib.items;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
-import cl.uchile.ing.adi.quicklooklib.fragments.adapters.FolderRecyclerViewAdapter;
+import cl.uchile.ing.adi.quicklooklib.adapters.FolderRecyclerViewAdapter;
 
 /**
  * Represents a folder in the filesystem.

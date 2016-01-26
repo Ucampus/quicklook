@@ -1,4 +1,4 @@
-package cl.uchile.ing.adi.quicklooklib.fragments.adapters;
+package cl.uchile.ing.adi.quicklooklib.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment.OnListFragmentInteractionListener;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.BaseItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.FileItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
+import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
+import cl.uchile.ing.adi.quicklooklib.items.FileItem;
+import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
 
 import java.util.List;
 

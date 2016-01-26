@@ -4,17 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import cl.uchile.ing.adi.quicklooklib.R;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.BaseItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.FolderItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.ItemFactory;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.VirtualItem;
+import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
+import cl.uchile.ing.adi.quicklooklib.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
 /**
  * Abstract Fragment defines the basic structure of the fragments managing the files.

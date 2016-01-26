@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cl.uchile.ing.adi.quicklooklib.R;
-import cl.uchile.ing.adi.quicklooklib.fragments.items.ListItem;
+import cl.uchile.ing.adi.quicklooklib.items.ListItem;
 
 /**
  * Opens folders and lists the items inside them. There are extensions of this

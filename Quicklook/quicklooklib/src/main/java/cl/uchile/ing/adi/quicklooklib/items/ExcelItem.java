@@ -1,4 +1,4 @@
-package cl.uchile.ing.adi.quicklooklib.fragments.items;
+package cl.uchile.ing.adi.quicklooklib.items;
 
 import android.os.Bundle;
 
@@ -8,11 +8,11 @@ import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 /**
  * Represents web content in the filesystem.
  */
-public class PowerpointItem extends FileItem {
+public class ExcelItem extends FileItem {
 
-    public PowerpointItem(String path, String mimetype, long size,Bundle extra) {
+    public ExcelItem(String path, String mimetype, long size, Bundle extra) {
         super(path,mimetype,size,extra);
-        image = R.drawable.powerpoint;
+        image = R.drawable.excel;
     }
 
     @Override
@@ -22,6 +22,6 @@ public class PowerpointItem extends FileItem {
 
     @Override
     public String getFormattedType() {
-        return "MS Powerpoint Document";
+        return "MS Excel Document";
     }
 }
