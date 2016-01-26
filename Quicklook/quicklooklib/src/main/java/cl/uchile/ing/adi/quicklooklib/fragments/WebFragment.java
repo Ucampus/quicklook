@@ -21,9 +21,13 @@ public class WebFragment extends QuicklookFragment {
         WebView web = (WebView) v.findViewById(R.id.web_fragment);
         web.loadUrl("file://"+this.item.getPath());
         web.getSettings().setBuiltInZoomControls(true);
+        web.getSettings().setSupportZoom(true);
+        web.getSettings().setUseWideViewPort(true);
+        web.getSettings().setLoadWithOverviewMode(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             web.getSettings().setDisplayZoomControls(false);
         }
         return v;
     }
+
 }
