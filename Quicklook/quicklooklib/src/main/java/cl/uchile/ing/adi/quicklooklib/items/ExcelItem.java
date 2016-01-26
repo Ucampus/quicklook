@@ -13,6 +13,7 @@ public class ExcelItem extends FileItem {
     public ExcelItem(String path, String mimetype, long size, Bundle extra) {
         super(path,mimetype,size,extra);
         image = R.drawable.excel;
+        formattedName = getContext().getString(R.string.items_excel_formatted_name);
     }
 
     @Override
@@ -20,8 +21,4 @@ public class ExcelItem extends FileItem {
         fragment = new DefaultFragment();
     }
 
-    @Override
-    public String getFormattedType() {
-        return "MS Excel Document";
-    }
 }

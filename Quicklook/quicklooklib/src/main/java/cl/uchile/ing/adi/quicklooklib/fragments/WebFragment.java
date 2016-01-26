@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import cl.uchile.ing.adi.quicklooklib.R;
+import cl.uchile.ing.adi.quicklooklib.items.PictureItem;
 
 /**
- * Created by dudu on 04-01-2016.
+ * Renders typical web resources using WebView.
  */
 public class WebFragment extends QuicklookFragment {
 
@@ -19,11 +20,13 @@ public class WebFragment extends QuicklookFragment {
                              Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_web, container, false);
         WebView web = (WebView) v.findViewById(R.id.web_fragment);
-        web.loadUrl("file://"+this.item.getPath());
+        web.loadUrl("file://" + this.item.getPath());
         web.getSettings().setBuiltInZoomControls(true);
-        web.getSettings().setSupportZoom(true);
-        web.getSettings().setUseWideViewPort(true);
-        web.getSettings().setLoadWithOverviewMode(true);
+        if (item instanceof PictureItem) {
+            web.getSettings().setSupportZoom(true);
+            web.getSettings().setUseWideViewPort(true);
+            web.getSettings().setLoadWithOverviewMode(true);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             web.getSettings().setDisplayZoomControls(false);
         }

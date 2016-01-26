@@ -1,5 +1,6 @@
 package cl.uchile.ing.adi.quicklooklib.items;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import org.apache.commons.io.IOUtils;
@@ -14,8 +15,7 @@ import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 
 /**
- * BaseItem has most of the methods related with items in the library
- * The items
+ * BaseItem has most of the methods related with items in the library.
  */
 public abstract class BaseItem {
 
@@ -26,6 +26,9 @@ public abstract class BaseItem {
     public static String ITEM_EXTRA = "extra";
 
     public static String DOWNLOAD_PATH = "";
+    public static String CACHE_PATH;
+
+    public static Context context;
 
 
     protected String type;
@@ -33,8 +36,8 @@ public abstract class BaseItem {
     protected String path;
     protected Bundle extra;
     protected QuicklookFragment fragment;
-    private String virtualPath;
     protected int image;
+    protected String formattedName;
 
     /**
      * Constructor of the class, metadata is inserted manually.
@@ -50,6 +53,8 @@ public abstract class BaseItem {
         this.extra = extra;
         //Image for item.
         this.image = R.drawable.document;
+        //Formatted name for item
+        this.formattedName = getContext().getString(R.string.items_default_formatted_name);
     }
 
     /**
@@ -141,7 +146,9 @@ public abstract class BaseItem {
      * Returns human-readable string with file type.
      * @return String with file type.
      */
-    public abstract String getFormattedType();
+    public String getFormattedType() {
+        return this.formattedName;
+    }
 
     public Bundle getExtra() {
         return this.extra;
@@ -177,6 +184,11 @@ public abstract class BaseItem {
         }
     }
 
+    /**
+     * Returns extension of a path
+     * @param file filepath
+     * @return extension
+     */
     public static String getExtension(String file) {
         String[] parts = file.split("\\.");
         int len = parts.length;
@@ -196,14 +208,6 @@ public abstract class BaseItem {
                 "\nType: "+getType()+
                 "\nPath: "+getPath()+
                 "\nSize: "+getFormattedSize()+"\n";
-    }
-
-    /**
-     * Sets virtual path value
-     * @param virtualPath
-     */
-    public void setVirtualPath(String virtualPath) {
-        this.virtualPath = virtualPath;
     }
 
     /**
@@ -229,28 +233,53 @@ public abstract class BaseItem {
         return this.getFormattedType();
     }
 
+    /**
+     * Adds a banned word to banned word list.
+     * @param banned
+     */
     public static void addBannedWord(String banned) {
         BANNED_NAMES.add(banned);
     }
 
+    /**
+     * Checks if a word is a banned word.
+     * @param banned
+     * @return true if the word is a banned word
+     */
     public static boolean isBannedWord(String banned) {
         return BANNED_NAMES.contains(banned);
     }
 
+    /**
+     * Returns the download path of files.
+     * @return download path of files.
+     */
     public static String getDownloadPath() {
         return DOWNLOAD_PATH;
     }
 
+    /**
+     * Sets the download path.
+     * @param dp new download path
+     */
     public static void setDownloadPath(String dp) {
         DOWNLOAD_PATH = dp;
     }
 
+    /**
+     * Returns the download cache of files.
+     * @return
+     */
     public static String getCachePath() {
-        return DOWNLOAD_PATH;
+        return CACHE_PATH;
     }
 
-    public static void setCachePath(String dp) {
-        DOWNLOAD_PATH = dp;
+    /**
+     * Sets the cache path.
+     * @param cp new cache path.
+     */
+    public static void setCachePath(String cp) {
+        CACHE_PATH = cp;
     }
 
     /**
@@ -275,6 +304,14 @@ public abstract class BaseItem {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void setContext(Context c) {
+        context = c;
+    }
+
+    public static Context getContext() {
+        return context;
     }
 
 

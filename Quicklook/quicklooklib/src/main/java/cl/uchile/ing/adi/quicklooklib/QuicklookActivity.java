@@ -47,13 +47,15 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         // Create Quicklook internal work directory and set it
         if (BaseItem.getCachePath()==null) {
             BaseItem.setCachePath(getFilesDir().getAbsolutePath() + "/quicklook/");
         }
         File f = new File(BaseItem.getCachePath());
         f.mkdirs();
-        super.onCreate(savedInstanceState);
+        // Set context to items (localization)
+        BaseItem.setContext(this);
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
         onNewIntent(getIntent());
@@ -62,8 +64,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             long size = BaseItem.getSizeFromPath(this.path);
             String type = FileItem.loadFileType(new File(this.path));
             Bundle extra;
-            if (getIntent().hasExtra("extra")) {
-                extra = getIntent().getBundleExtra("extra");
+            if (getIntent().hasExtra(BaseItem.ITEM_EXTRA)) {
+                extra = getIntent().getBundleExtra(BaseItem.ITEM_EXTRA);
             } else {
                 extra = new Bundle();
             }

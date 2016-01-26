@@ -13,6 +13,8 @@ public class PDFItem extends FileItem {
     public PDFItem(String path, String mimetype,  long size, Bundle extra) {
         super(path,mimetype,size,extra);
         image = R.drawable.pdf;
+        formattedName = getContext().getString(R.string.items_pdf_formatted_name);
+
     }
 
     @Override
@@ -20,9 +22,4 @@ public class PDFItem extends FileItem {
         fragment = new PdfFragment();
     }
 
-
-    @Override
-    public String getFormattedType() {
-        return "PDF Document";
-    }
 }

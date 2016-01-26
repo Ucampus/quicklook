@@ -17,6 +17,7 @@ public class FileItem extends BaseItem {
         super(path,mimetype,size,extra);
         addBannedWord("__MACOSX");
         image =  R.drawable.document;
+        formattedName = getContext().getString(R.string.items_file_formatted_name);
     }
 
     @Override
@@ -24,10 +25,6 @@ public class FileItem extends BaseItem {
         fragment = new DefaultFragment();
     }
 
-    @Override
-    public String getFormattedType() {
-        return "File";
-    }
 
     public static String loadFileType(File f) {
         if (f.isDirectory()) {

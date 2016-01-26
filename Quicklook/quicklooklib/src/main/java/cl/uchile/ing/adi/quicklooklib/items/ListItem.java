@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 
 /**
- * Created by dudu on 17-01-2016.
+ * Interface for listable items.
  */
 public interface ListItem {
     ArrayList<BaseItem> getElements();

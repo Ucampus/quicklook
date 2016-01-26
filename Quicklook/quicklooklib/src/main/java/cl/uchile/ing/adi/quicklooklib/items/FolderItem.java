@@ -21,6 +21,7 @@ public class FolderItem extends BaseItem implements ListItem {
     public FolderItem(String path, String mimetype, long size, Bundle extra) {
         super(path, mimetype, size, extra);
         image = R.drawable.folder;
+        formattedName = getContext().getString(R.string.items_folder_formatted_name);
     }
 
 
@@ -59,11 +60,6 @@ public class FolderItem extends BaseItem implements ListItem {
     @Override
     public String getSubTitle() {
         return this.getPath();
-    }
-
-    @Override
-    public String getFormattedType() {
-        return "Folder";
     }
 
     public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem) {

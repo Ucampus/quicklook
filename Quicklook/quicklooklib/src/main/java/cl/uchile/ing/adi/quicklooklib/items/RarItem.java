@@ -21,6 +21,7 @@ public class RarItem extends VirtualItem {
     public RarItem(String path, String mimetype, long size, Bundle extra) {
         super(path,mimetype,size,extra);
         image = R.drawable.compressed;
+        formattedName = getContext().getString(R.string.items_rar_formatted_name);
     }
 
     @Override

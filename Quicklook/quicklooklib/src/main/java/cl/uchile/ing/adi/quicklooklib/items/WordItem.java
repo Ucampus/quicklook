@@ -13,15 +13,11 @@ public class WordItem extends FileItem {
     public WordItem(String path, String mimetype, long size, Bundle extra) {
         super(path,mimetype,size, extra);
         image = R.drawable.word;
+        formattedName = getContext().getString(R.string.items_word_formatted_name);
     }
 
     @Override
     protected void createFragment() {
         fragment = new DefaultFragment();
-    }
-
-    @Override
-    public String getFormattedType() {
-        return "MS Word Document";
     }
 }

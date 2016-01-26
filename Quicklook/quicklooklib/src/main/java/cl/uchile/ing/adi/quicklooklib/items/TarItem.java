@@ -24,6 +24,7 @@ public class TarItem extends VirtualItem {
     public TarItem(String path, String mimetype, long size, Bundle extra) {
         super(path,mimetype,size,extra);
         image = R.drawable.compressed;
+        formattedName = getContext().getString(R.string.items_tar_formatted_name);
     }
 
     @Override
@@ -90,10 +91,5 @@ public class TarItem extends VirtualItem {
         } else {
             return loadType(tar.getName());
         }
-    }
-
-    @Override
-    public String getFormattedType() {
-        return "Tar Compressed File";
     }
 }

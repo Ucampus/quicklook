@@ -17,7 +17,7 @@ import java.io.File;
 import cl.uchile.ing.adi.quicklooklib.R;
 
 /**
- * Shows PDF files using <Insert name> library
+ * Shows PDF files using PDFView library
  */
 public class PdfFragment extends QuicklookFragment {
 
@@ -40,21 +40,16 @@ public class PdfFragment extends QuicklookFragment {
                     .enableSwipe(true)
                     .onErrorOccured(new OnErrorOccurredListener() {
                         public void errorOccured() {
-                            showError("PDF load failed!");
+                            showError(getContext().getString(R.string.pdf_load_failed));
                         }
                     }).onPageChange(new OnPageChangeListener() {
                 @Override
                 public void onPageChanged(int page, int pageCount) {
                     TextView pages = (TextView) v.findViewById(R.id.pdf_pages);
-                    pages.setText(""+page+"/"+pageCount);
+                    String actualPage = "" + page + "/" + pageCount;
+                    pages.setText(actualPage);
                 }
             })
-                    .onLoad(new OnLoadCompleteListener() {
-                        @Override
-                        public void loadComplete(int nbPages) {
-                            Log.d("PdfFragment", "Loaded! " + nbPages);
-                        }
-                    })
                     .swipeVertical(true)
                     .load();
         return v;

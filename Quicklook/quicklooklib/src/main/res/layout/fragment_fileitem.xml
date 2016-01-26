@@ -21,27 +21,28 @@
             android:id="@+id/item_text"
             android:layout_width="fill_parent"
             android:layout_height="30dp"
-            android:textSize="15dip"
+            android:textSize="15sp"
             android:lines="1"
             android:ellipsize="middle"
             android:textColor="#333333"
             android:textStyle="bold"
             android:gravity="bottom"
-            android:text="Archivzxkcjhvlkjshsakjlhfsalkljhkjlhkjlhjklhlkfjgdslkjfdlkho">
+            android:text="">
         </TextView>
 
         <TextView
             android:id="@+id/item_subtext"
             android:layout_width="fill_parent"
             android:layout_height="20dp"
+            android:paddingEnd="4dip"
             android:paddingRight="4dip"
-            android:textSize="10dip"
+            android:textSize="12sp"
             android:lines="1"
             android:ellipsize="middle"
             android:gravity="center_vertical"
             android:textColor="#666666"
 
-            android:text="Tipo - Peso">
+            android:text="">
         </TextView>
 
     </LinearLayout>

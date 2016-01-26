@@ -13,7 +13,7 @@
         android:id="@+id/pdf_pages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Loading..."
+        android:text="..."
         android:layout_gravity="center_horizontal"
         android:textSize="20sp"
         android:padding="4dp"

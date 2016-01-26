@@ -58,22 +58,27 @@ public abstract class VirtualItem extends BaseItem implements ListItem {
             setVirtualPath(itemList.get(0).getPath().split("/")[0]);
             return getElements();
         }
-        Log.d("getElements: ", "El filtro es " + getVirtualPath());
+        Log.d("getElements: ", "Now, filter is " + getVirtualPath());
         Log.d("getElements: ", approvedElements.toString());
         return approvedElements;
     }
 
     /**
-     * Returns the inner zip path.
-     * @return inner zip path.
+     * Returns the inner virtual path.
+     * @return inner virtual path.
      */
     public String getVirtualPath() {
         return this.virtualPath;
     }
 
+    /**
+     * Sets the inner virtual path.
+     * @param s inner virtual path.
+     */
     public void setVirtualPath(String s) {
         this.virtualPath = s;
     }
+
 
     @Override
     protected void createFragment() {
@@ -82,13 +87,11 @@ public abstract class VirtualItem extends BaseItem implements ListItem {
 
     @Override
     public void prepareFragment() {
-        Bundle b = new Bundle();
+        super.prepareFragment();
+        Bundle b = fragment.getArguments();
         String innerRoute = this.getVirtualPath().equals("") ? "" : SEP+this.getVirtualPath();
         b.putString(ITEM_PATH,this.getPath()+innerRoute);
-        b.putString(ITEM_TYPE,this.getType());
-        b.putBundle(ITEM_EXTRA, this.getExtra());
         fragment.setArguments(b);
-        fragment.setItem(this);
     }
 
     /**
@@ -134,12 +137,6 @@ public abstract class VirtualItem extends BaseItem implements ListItem {
         return response;
     }
 
-    @Override
-    public String getFormattedType() {
-        return "Virtual File";
-    }
-
-
     /**
      * Defines an action to do when a virtual item is clicked. The action could be enter to a folder,
      * or retrieve a item from the folder.
@@ -172,8 +169,8 @@ public abstract class VirtualItem extends BaseItem implements ListItem {
 
     /**
      * Creates an item for the list of items.
-     * @param preItem Item not prepared for this (?)
-     * @return item
+     * @param preItem Item not prepared for this
+     * @return item ready to be in a list.
      */
     public BaseItem createForList(BaseItem preItem) {
         String newpath = this.path + SEP + preItem.path
@@ -211,6 +208,11 @@ public abstract class VirtualItem extends BaseItem implements ListItem {
     public abstract String retrieveItem(String id, String dirpath, Context context);
 
 
+    /**
+     * Title is name of current virtual directory.
+     * @return current title
+     */
+    @Override
     public String getTitle() {
         String name = this.getNameFromPath(getVirtualPath());
         if (name.equals("")) {
@@ -219,6 +221,10 @@ public abstract class VirtualItem extends BaseItem implements ListItem {
         return name;
     }
 
+    /**
+     * Subtitle is a breadcrumb in virtual items.
+     * @return current subtitle
+     */
     @Override
     public String getSubTitle() {
         return this.getVirtualPath();

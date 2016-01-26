@@ -13,15 +13,11 @@ public class TxtItem extends FileItem {
     public TxtItem(String path, String mimetype, long size,Bundle extra) {
         super(path,mimetype,size,extra);
         image = R.drawable.txt;
+        formattedName = getContext().getString(R.string.items_text_formatted_name);
     }
 
     @Override
     protected void createFragment() {
         fragment = new WebFragment();
-    }
-
-    @Override
-    public String getFormattedType() {
-        return "Text file";
     }
 }

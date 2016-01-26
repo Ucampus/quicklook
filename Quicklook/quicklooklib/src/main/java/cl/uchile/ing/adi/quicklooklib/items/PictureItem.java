@@ -13,6 +13,7 @@ public class PictureItem extends FileItem {
     public PictureItem(String path, String mimetype, long size, Bundle extra) {
         super(path,mimetype,size,extra);
         image = R.drawable.image;
+        formattedName = getContext().getString(R.string.items_picture_formatted_name);
     }
 
     @Override
@@ -20,8 +21,4 @@ public class PictureItem extends FileItem {
         fragment = new WebFragment();
     }
 
-    @Override
-    public String getFormattedType() {
-        return "Picture";
-    }
 }

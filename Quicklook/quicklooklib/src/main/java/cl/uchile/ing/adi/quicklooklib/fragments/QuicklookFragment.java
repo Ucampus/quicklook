@@ -52,7 +52,7 @@ public abstract class QuicklookFragment extends Fragment {
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
+            throw new RuntimeException(context
                     + " must implement OnListFragmentInteractionListener");
         }
     }

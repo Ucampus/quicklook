@@ -27,6 +27,8 @@ public class ZipItem extends VirtualItem {
     public ZipItem(String path, String mimetype, long size, Bundle extra) {
         super(path,mimetype,size, extra);
         image = R.drawable.compressed;
+        formattedName = getContext().getString(R.string.items_zip_formatted_name);
+
     }
 
     /**
@@ -65,11 +67,6 @@ public class ZipItem extends VirtualItem {
             e.printStackTrace();
             return null;
         }
-    }
-
-    @Override
-    public String getFormattedType() {
-        return "Zip Compressed File";
     }
 
     public boolean isFolder() {

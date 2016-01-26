@@ -13,6 +13,7 @@ public class PowerpointItem extends FileItem {
     public PowerpointItem(String path, String mimetype, long size,Bundle extra) {
         super(path,mimetype,size,extra);
         image = R.drawable.powerpoint;
+        formattedName = getContext().getString(R.string.items_powerpoint_formatted_name);
     }
 
     @Override
@@ -20,8 +21,4 @@ public class PowerpointItem extends FileItem {
         fragment = new DefaultFragment();
     }
 
-    @Override
-    public String getFormattedType() {
-        return "MS Powerpoint Document";
-    }
 }
