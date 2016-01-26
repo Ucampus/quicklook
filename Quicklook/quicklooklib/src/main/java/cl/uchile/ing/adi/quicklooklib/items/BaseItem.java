@@ -3,7 +3,7 @@ package cl.uchile.ing.adi.quicklooklib.items;
 import android.content.Context;
 import android.os.Bundle;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -290,7 +290,7 @@ public abstract class BaseItem {
         try {
             String itemPath = BaseItem.getDownloadPath()+getName();
             File f = new File(itemPath);
-            int copied;
+            long copied;
             if (!f.exists()) {
                 FileOutputStream fos = new FileOutputStream(itemPath);
                 copied = IOUtils.copy(new FileInputStream(getPath()), fos);

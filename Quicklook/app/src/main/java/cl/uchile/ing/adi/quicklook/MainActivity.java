@@ -18,7 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -115,7 +115,7 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
     private boolean copyAssetToDownload(String assetPath, String assetName, File destinationFile){
         try {
             FileOutputStream fos = new FileOutputStream(destinationFile);
-            int copied = IOUtils.copy(getAssets().open(assetPath+assetName), fos);
+            IOUtils.copy(getAssets().open(assetPath + assetName), fos);
             fos.close();
             return true;
         } catch (IOException e) {

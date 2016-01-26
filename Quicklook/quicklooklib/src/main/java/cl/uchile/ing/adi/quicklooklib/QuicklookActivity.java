@@ -29,7 +29,7 @@ import cl.uchile.ing.adi.quicklooklib.items.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
 import org.apache.commons.compress.utils.IOUtils;
-import org.apache.commons.io.FileUtils;
+import org.codehaus.plexus.util.FileUtils;
 
 public class QuicklookActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
