@@ -58,7 +58,7 @@ class RenderingAsyncTask extends AsyncTask<Void, PagePart, Void> {
         while (!isCancelled()) {
 
             // Proceed all tasks
-            while (!renderingTasks.isEmpty()) {
+            while (!renderingTasks.isEmpty() && !isCancelled()) {
                 RenderingTask task = renderingTasks.get(0);
                 PagePart part = proceed(task);
 

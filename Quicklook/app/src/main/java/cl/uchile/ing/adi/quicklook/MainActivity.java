@@ -117,12 +117,7 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
             FileOutputStream fos = new FileOutputStream(destinationFile);
             int copied = IOUtils.copy(getAssets().open(assetPath+assetName), fos);
             fos.close();
-            if(copied>0) {
-                DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-                dm.addCompletedDownload(assetName,assetName, true, mime(destinationFile), destinationFile.getAbsolutePath(), copied, false);
-                return true;
-            }
-            else return false;
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
             return false;

@@ -17,6 +17,8 @@ import cl.uchile.ing.adi.quicklooklib.R;
  */
 public class PdfFragment extends QuicklookFragment {
 
+    PDFView pdfView;
+
     public PdfFragment() {
         // Required empty public constructor
     }
@@ -27,7 +29,7 @@ public class PdfFragment extends QuicklookFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_pdf, container, false);
-        PDFView pdfView = (PDFView) v.findViewById(R.id.pdfview);
+        pdfView = (PDFView) v.findViewById(R.id.pdfview);
             pdfView.fromFile(new File(item.getPath()))
                     .defaultPage(0)
                     .showMinimap(false)

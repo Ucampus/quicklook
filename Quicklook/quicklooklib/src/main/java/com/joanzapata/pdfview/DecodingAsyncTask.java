@@ -18,6 +18,7 @@
  */
 package com.joanzapata.pdfview;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -39,16 +40,19 @@ class DecodingAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
     private PDFView pdfView;
 
+    private Context context;
+
     public DecodingAsyncTask(Uri uri, PDFView pdfView) {
         this.cancelled = false;
         this.pdfView = pdfView;
         this.uri = uri;
+        this.context = pdfView.getContext();
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         decodeService = new DecodeServiceBase(new PdfContext());
-        decodeService.setContentResolver(pdfView.getContext().getContentResolver());
+        decodeService.setContentResolver(context.getContentResolver());
 
         try {
             decodeService.open(uri);
