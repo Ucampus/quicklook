@@ -23,8 +23,8 @@ Este caso corresponde a los visualizadores de documentos o archivos en específi
 2. Archivo que debe extender la clase _FileItem_ y representa abstractamente al documento a visualizar. Se necesita implementar el constructor por defecto de FileItem, llamando a super y posteriormente definiendo la propiedad _image_ como el ícono del elemento, la propiedad _formattedname_ como el nombre a mostrar del elemento y la propiedad _fragment_ como el fragmento asociado.
 ### Expansión para visualización de contenedor
 Este caso corresponde a los visualizadores de contenedores de varios archivos, como por ejemplo los archivos comprimidos o archivos de texto que representan contenedores. Es necesario implementar lo siguiente:
-1.- Método retrieveItem que recibe el id del elemento en que se está, el nombre de la dirección de destino y el contexto de la aplicación. Este método debe tomar el objeto desde donde esté y dejarlo en la dirección solicitada de la carpeta de descargas.
-2.- Método getItemList, el cual consigue la lista completa de elementos que hay dentro del contenedor. Para crear estos elementos se usa el método _createForList(path,type,size,bundle)_ que recibe la dirección interna del elemento, su extensión, su tamaño y un bundle con propiedades extras que se pueden usar tanto en el fragmento asociado como en estos métodos.
+1. Método retrieveItem que recibe el id del elemento en que se está, el nombre de la dirección de destino y el contexto de la aplicación. Este método debe tomar el objeto desde donde esté y dejarlo en la dirección solicitada de la carpeta de descargas.
+2. Método getItemList, el cual consigue la lista completa de elementos que hay dentro del contenedor. Para crear estos elementos se usa el método _createForList(path,type,size,bundle)_ que recibe la dirección interna del elemento, su extensión, su tamaño y un bundle con propiedades extras que se pueden usar tanto en el fragmento asociado como en estos métodos.
 
 Por último, en ambos casos es necesario registrar el nuevo archivo para su uso. Para ello, basta con ejecutar la siguiente línea de código:
 
