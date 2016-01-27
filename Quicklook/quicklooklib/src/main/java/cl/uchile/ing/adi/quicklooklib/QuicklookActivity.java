@@ -196,11 +196,12 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param backstack if true, adds the previous fragment to backstack.
      */
     public void changeFragment(BaseItem item, boolean backstack){
-        updateActivity(item);
+        setFragment(item.getFragment());
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.quicklook_fragment, current, "QuickLook");
         if (backstack) t.addToBackStack(null);
         t.commitAllowingStateLoss();
+        updateActivity(item);
     }
 
 
@@ -209,7 +210,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item Item with new info for the actionbar.
      */
     private void updateActivity(BaseItem item) {
-        setFragment(item.getFragment());
         getSupportActionBar().setTitle(item.getTitle());
         getSupportActionBar().setSubtitle(item.getSubTitle());
 
@@ -231,6 +231,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item the item which is going to be displayed
      */
     public void onListFragmentCreation(BaseItem item) {
+        setFragment(item.getFragment());
         updateActivity(item);
     }
 
@@ -335,5 +336,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      */
     public static void setDownloadPath(String path) {
         BaseItem.setDownloadPath(path);
+    }
+
+    public void goBack() {
+        FragmentTransaction f = getSupportFragmentManager().beginTransaction();
+        getSupportFragmentManager().popBackStack();
+        f.commit();
     }
 }
