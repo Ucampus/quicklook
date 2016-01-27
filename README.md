@@ -26,8 +26,8 @@ Este caso corresponde a los visualizadores de documentos o archivos en específi
 
 ### Expansión para visualización de contenedor
 Este caso corresponde a los visualizadores de contenedores de varios archivos, como por ejemplo los archivos comprimidos o archivos de texto que representan contenedores. Es necesario implementar lo siguiente:
-* Método retrieveItem que recibe el id del elemento en que se está, el nombre de la dirección de destino y el contexto de la aplicación. Este método debe tomar el objeto desde donde esté y dejarlo en la dirección solicitada de la carpeta de descargas.
-* Método getItemList, el cual consigue la lista completa de elementos que hay dentro del contenedor. Para crear estos elementos se usa el método _createForList(path,type,size,bundle)_ que recibe la dirección interna del elemento, su extensión, su tamaño y un bundle con propiedades extras que se pueden usar tanto en el fragmento asociado como en estos métodos.
+* Método **retrieveItem** que recibe el id del elemento en que se está, el nombre de la dirección de destino y el contexto de la aplicación. Este método debe tomar el objeto desde donde esté y dejarlo en la dirección solicitada de la carpeta de descargas.
+* Método **getItemList**, el cual consigue la lista completa de elementos que hay dentro del contenedor. Para crear estos elementos se usa el método _createForList(path,type,size,bundle)_ que recibe la dirección interna del elemento, su extensión, su tamaño y un bundle con propiedades extras que se pueden usar tanto en el fragmento asociado como en estos métodos.
 
 Por último, en ambos casos es necesario registrar el nuevo archivo para su uso. Para ello, basta con ejecutar la siguiente línea de código:
 
