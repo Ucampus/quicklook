@@ -20,7 +20,7 @@ package com.joanzapata.pdfview.util;
 
 public interface Constants {
 
-    static final boolean DEBUG_MODE = true;
+    static final boolean DEBUG_MODE = false;
 
     /** Size of the minimum, in percent of the component size */
     static final float MINIMAP_MAX_SIZE = 200f;
