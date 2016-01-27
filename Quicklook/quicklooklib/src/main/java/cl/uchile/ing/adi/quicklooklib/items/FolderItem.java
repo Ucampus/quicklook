@@ -2,6 +2,7 @@ package cl.uchile.ing.adi.quicklooklib.items;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,12 +23,6 @@ public class FolderItem extends BaseItem implements IListItem {
         super(path, mimetype, size, extra);
         image = R.drawable.folder;
         formattedName = getContext().getString(R.string.items_folder_formatted_name);
-    }
-
-
-
-    @Override
-    protected void createFragment() {
         fragment =  new ListFragment();
     }
 
@@ -51,8 +46,8 @@ public class FolderItem extends BaseItem implements IListItem {
         return files;
     }
 
-    public RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener) {
-        return new FolderRecyclerViewAdapter((this).getElements(), mListener);
+    public RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener, ArrayList<BaseItem> elements) {
+        return new FolderRecyclerViewAdapter(elements, mListener);
 
     }
 
@@ -63,6 +58,10 @@ public class FolderItem extends BaseItem implements IListItem {
 
     public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem) {
         mListener.onListFragmentInteraction(mItem);
+    }
+
+    public void onVirtualClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem) {
+        FolderItem.onClick(mListener, mItem);
     }
 
     /**

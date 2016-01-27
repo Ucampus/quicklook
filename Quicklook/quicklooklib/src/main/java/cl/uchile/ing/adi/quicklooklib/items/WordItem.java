@@ -15,9 +15,4 @@ public class WordItem extends FileItem {
         image = R.drawable.word;
         formattedName = getContext().getString(R.string.items_word_formatted_name);
     }
-
-    @Override
-    protected void createFragment() {
-        fragment = new DefaultFragment();
-    }
 }

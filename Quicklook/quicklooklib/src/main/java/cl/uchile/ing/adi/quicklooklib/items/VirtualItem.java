@@ -3,6 +3,7 @@ package cl.uchile.ing.adi.quicklooklib.items;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
     public VirtualItem(String path, String mimetype, long size, Bundle extra) {
         super(splitVirtualPath(path)[0], mimetype, size, extra);
         this.virtualPath = splitVirtualPath(path)[1];
+        fragment =  new ListFragment();
     }
 
     /**
@@ -75,12 +77,6 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
      */
     public void setVirtualPath(String s) {
         this.virtualPath = s;
-    }
-
-
-    @Override
-    protected void createFragment() {
-        fragment =  new ListFragment();
     }
 
     @Override
@@ -155,14 +151,18 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
         }
     }
 
+    public void onVirtualClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem) {
+        VirtualItem.onClick(mListener, mItem);
+    }
+
     /**
      * Preapares the item list with all the items inside the virtual object
      * @return ArrayList with all the items inside virtual object.
      */
     public abstract ArrayList<BaseItem> getItemList();
 
-    public RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener) {
-        return new VirtualRecyclerViewAdapter(this.getElements(), mListener);
+    public RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener,ArrayList<BaseItem> elements) {
+        return new VirtualRecyclerViewAdapter(elements, mListener);
     }
 
     /**

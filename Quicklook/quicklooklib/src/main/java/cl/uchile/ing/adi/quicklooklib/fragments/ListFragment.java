@@ -4,11 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import cl.uchile.ing.adi.quicklooklib.R;
+import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
+import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.items.IListItem;
 
 /**
@@ -16,6 +21,8 @@ import cl.uchile.ing.adi.quicklooklib.items.IListItem;
  * class for showing elements inside compressed files.
  */
 public class ListFragment extends QuicklookFragment {
+
+    boolean visited = false;
 
     public ListFragment() {
     }
@@ -30,10 +37,27 @@ public class ListFragment extends QuicklookFragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
+            IListItem item = (IListItem) this.item;
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(((IListItem)(this.item)).getAdapter(mListener));
+            ArrayList<BaseItem> elements = item.getElements();
+            //If there is only one folder, enter to it automatically.
+            Log.d("onCreateView","ahora hay "+elements.size()+" elementos o:");
+            if (elements.size()==1 && (elements.get(0) instanceof FolderItem)) {
+                // can press back.
+                if (!visited) {
+                    BaseItem nextItem = elements.get(0);
+                    visited = true;
+                    mListener.goBack();
+                    item.onVirtualClick(mListener, nextItem);
+                } else {
+                    //Nothing to do here;
+                }
+                return view;
+            }
+            RecyclerView.Adapter adapter = item.getAdapter(mListener,elements);
+            recyclerView.setAdapter(adapter);
         }
         return view;
     }

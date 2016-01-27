@@ -15,10 +15,4 @@ public class PowerpointItem extends FileItem {
         image = R.drawable.powerpoint;
         formattedName = getContext().getString(R.string.items_powerpoint_formatted_name);
     }
-
-    @Override
-    protected void createFragment() {
-        fragment = new DefaultFragment();
-    }
-
 }

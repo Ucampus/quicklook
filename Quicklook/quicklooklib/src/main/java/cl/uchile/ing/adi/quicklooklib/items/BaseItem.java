@@ -77,20 +77,11 @@ public abstract class BaseItem {
     }
 
     /**
-     * Each implementation of BaseItem associates a fragment with itself. This
-     * method defines the fragment.
-     */
-    protected abstract void createFragment();
-
-    /**
      * Prepares the fragment if it's not prepared and returns it
      * @return the Fragment.
      */
     public QuicklookFragment getFragment() {
-        if (fragment == null) {
-            createFragment();
-            prepareFragment();
-        }
+        prepareFragment();
         return fragment;
     }
 

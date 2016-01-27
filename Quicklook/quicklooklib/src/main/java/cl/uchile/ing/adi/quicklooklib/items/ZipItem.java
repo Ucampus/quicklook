@@ -70,10 +70,6 @@ public class ZipItem extends VirtualItem {
         }
     }
 
-    public boolean isFolder() {
-        return false;
-    }
-
     public ArrayList<BaseItem> getItemList() {
         ArrayList<BaseItem> itemList = new ArrayList<>();
         try {

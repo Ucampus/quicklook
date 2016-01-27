@@ -14,11 +14,6 @@ public class PictureItem extends FileItem {
         super(path,mimetype,size,extra);
         image = R.drawable.image;
         formattedName = getContext().getString(R.string.items_picture_formatted_name);
-    }
-
-    @Override
-    protected void createFragment() {
         fragment = new WebFragment();
     }
-
 }

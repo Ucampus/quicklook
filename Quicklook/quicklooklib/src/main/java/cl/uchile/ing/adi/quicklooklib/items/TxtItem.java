@@ -14,10 +14,7 @@ public class TxtItem extends FileItem {
         super(path,mimetype,size,extra);
         image = R.drawable.txt;
         formattedName = getContext().getString(R.string.items_text_formatted_name);
-    }
-
-    @Override
-    protected void createFragment() {
         fragment = new WebFragment();
     }
 }
+

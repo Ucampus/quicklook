@@ -15,10 +15,4 @@ public class ExcelItem extends FileItem {
         image = R.drawable.excel;
         formattedName = getContext().getString(R.string.items_excel_formatted_name);
     }
-
-    @Override
-    protected void createFragment() {
-        fragment = new DefaultFragment();
-    }
-
 }
