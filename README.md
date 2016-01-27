@@ -1,4 +1,5 @@
 # ADI Quicklook
+
 ## ¿Qué es?
 **ADI Quicklook** es una *librería agnóstica y extensible* para Android 4.0 o superior, que permite **visualizar de forma rápida** archivos de varias extensiones comunes en la internet. Se creó para su uso con la aplicación de Android de la plataforma **U-Cursos**, de forma de poder visualizar sin necesidad de programas externos los archivos subidos por profesores, auxiliares y alumnos.
 
@@ -17,10 +18,12 @@ Se define como contenedores virtuales todos los elementos que contienen archivos
 
 ## Expansibilidad
 Es posible expandir la librería con tipos propios, sin necesidad de modificarla internamente. Existen dos tipos de expansión disponibles:
+
 ### Expansión para visualización de archivo
 Este caso corresponde a los visualizadores de documentos o archivos en específico. Es necesario crear dos archivos:
 * Archivo que debe extender la clase _QuicklookFragment_ y debe definir el método onCreateView (Igual que cualquier fragment), mostrando el elemento correspondiente (El cual existe en getItem).
 * Archivo que debe extender la clase _FileItem_ y representa abstractamente al documento a visualizar. Se necesita implementar el constructor por defecto de FileItem, llamando a super y posteriormente definiendo la propiedad _image_ como el ícono del elemento, la propiedad _formattedname_ como el nombre a mostrar del elemento y la propiedad _fragment_ como el fragmento asociado.
+* 
 ### Expansión para visualización de contenedor
 Este caso corresponde a los visualizadores de contenedores de varios archivos, como por ejemplo los archivos comprimidos o archivos de texto que representan contenedores. Es necesario implementar lo siguiente:
 * Método retrieveItem que recibe el id del elemento en que se está, el nombre de la dirección de destino y el contexto de la aplicación. Este método debe tomar el objeto desde donde esté y dejarlo en la dirección solicitada de la carpeta de descargas.
