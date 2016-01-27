@@ -106,7 +106,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
         else if (i == R.id.save) {
             saveItem();
-            onListFragmentInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
             return true;
         } else if (i == R.id.share) {
             shareItem();
@@ -273,6 +272,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         String mime =getMime(item.getPath());
         String newPath = item.copyItem(mime);
         Uri pathUri = Uri.parse("file://" + newPath);
+        onListFragmentInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
         return pathUri;
     }
 
@@ -285,7 +285,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
 
-    private void shareItem() {
+    public void shareItem() {
         Uri pathUri = saveItem();
         Intent intent = new Intent(Intent.ACTION_SEND);
         File f = new File(pathUri.getPath());
@@ -294,7 +294,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             intent.setType(mime);
             intent.putExtra(Intent.EXTRA_STREAM, pathUri);
             intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
-            intent.putExtra(Intent.EXTRA_TEXT,getResources().getString(R.string.item_share_text));
+            intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.item_share_text));
             startActivity(Intent.createChooser(intent, "Share"));
         } else {
 

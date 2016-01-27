@@ -1,6 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib.fragments;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -104,6 +105,10 @@ public abstract class QuicklookFragment extends Fragment {
          * @param container item which contains toRetrieve.
          */
         void onListFragmentRetrieval(BaseItem toRetrieve, VirtualItem container);
+
+        Uri saveItem();
+        void openItem();
+        void shareItem();
 
         /**
          * Retrieves the current fragment.

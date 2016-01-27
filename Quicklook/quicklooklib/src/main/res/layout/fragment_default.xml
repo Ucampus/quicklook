@@ -49,6 +49,44 @@
             android:layout_gravity="center"
             android:gravity="center"
             />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20px"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/share_item"
+                android:layout_margin="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/share_item"
+                android:scaleType="fitXY"
+                android:background="@drawable/quicklook_button"
+                />
+
+            <ImageButton
+                android:id="@+id/open_item"
+                android:layout_margin="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/open_item"
+                android:scaleType="fitXY"
+                android:background="@drawable/quicklook_button"
+                />
+            <ImageButton
+                android:id="@+id/save_item"
+                android:layout_margin="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/save_item"
+                android:scaleType="fitXY"
+                android:background="@drawable/quicklook_button"
+                />
+        </LinearLayout>
+
     </LinearLayout>
 
 
