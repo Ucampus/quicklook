@@ -2,7 +2,6 @@ package cl.uchile.ing.adi.quicklooklib.items;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,7 +48,6 @@ public class FolderItem extends BaseItem implements IListItem {
                 files.add(newItem);
             }
         }
-        Log.d("getElements: ", files.toString());
         return files;
     }
 

@@ -11,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,7 +23,6 @@ import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.items.FileItem;
-import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.items.IListItem;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
@@ -137,7 +135,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         File f = new File(innerPath);
         try {
             FileUtils.deleteDirectory(f);
-            Log.d("QuicklookActivity", "Directorio temporal borrado!");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -149,16 +146,13 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
         if (requestCode == WRITE_PERMISSIONS) {
             // Received permission result for storage permission.
-            Log.i(TAG, "Received response for storage permission request.");
 
             // Check if the only required permission has been granted
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // storage permission has been granted, preview can be displayed
-                Log.i(TAG, "STORAGE permission has now been granted. Showing preview.");
                 r.run();
             } else {
-                Log.i(TAG, "STORAGE permission was NOT granted.");
-                Snackbar.make(coordinator, "Permission error. Can't show files.",
+                Snackbar.make(coordinator, getResources().getString(R.string.quicklook_permission_error),
                         Snackbar.LENGTH_SHORT).show();
 
             }
@@ -182,12 +176,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         };
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "Storage permissions has NOT been granted. Requesting permissions.");
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     WRITE_PERMISSIONS);
         } else {
-            Log.i(TAG,
-                       "Storage permissions have already been granted. Displaying details.");
             r.run();
         }
     }
@@ -249,7 +240,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param info
      */
     public void onListFragmentInfo(String info) {
-        Snackbar.make(coordinator, "Info: "+info,
+        Snackbar.make(coordinator, info,
                 Snackbar.LENGTH_LONG).show();
     }
 
@@ -290,7 +281,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         Intent intent = new Intent(Intent.ACTION_VIEW);
         String mime = getMime(pathUri.getPath());
         intent.setDataAndType(pathUri, mime);
-        Log.d("openItem", pathUri.getPath());
         startActivity(Intent.createChooser(intent, "Open"));
     }
 
@@ -305,7 +295,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             intent.putExtra(Intent.EXTRA_STREAM, pathUri);
             intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
             intent.putExtra(Intent.EXTRA_TEXT,getResources().getString(R.string.item_share_text));
-            Log.d("shareItem", pathUri.getPath());
             startActivity(Intent.createChooser(intent, "Share"));
         } else {
 

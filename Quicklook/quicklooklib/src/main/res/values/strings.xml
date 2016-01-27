@@ -1,6 +1,9 @@
 <resources>
 
     <string name="app_name">QuicklookLib</string>
+
+    <string name="quicklook_permission_error">Error de permisos. No se pueden mostrar archivos.</string>
+
     <string name="default_file_name_placeholder">Filename</string>
     <string name="default_file_type_placeholder">File type</string>
     <string name="default_file_size_placeholder">Size</string>
