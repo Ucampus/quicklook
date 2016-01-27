@@ -7,6 +7,7 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 
+import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
@@ -15,7 +16,7 @@ import cl.uchile.ing.adi.quicklooklib.adapters.FolderRecyclerViewAdapter;
 /**
  * Represents a folder in the filesystem.
  */
-public class FolderItem extends BaseItem implements ListItem {
+public class FolderItem extends BaseItem implements IListItem {
 
 
     public FolderItem(String path, String mimetype, long size, Bundle extra) {

@@ -9,7 +9,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 /**
  * Interface for listable items.
  */
-public interface ListItem {
+public interface IListItem {
     ArrayList<BaseItem> getElements();
     RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener);
 }

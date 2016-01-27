@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import java.io.File;
 
+import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 

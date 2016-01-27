@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 
@@ -313,6 +314,5 @@ public abstract class BaseItem {
     public static Context getContext() {
         return context;
     }
-
 
 }

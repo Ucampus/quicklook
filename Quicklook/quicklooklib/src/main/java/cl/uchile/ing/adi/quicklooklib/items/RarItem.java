@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
+import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.R;
 
 /**

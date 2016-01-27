@@ -25,10 +25,9 @@ import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.items.FileItem;
 import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
-import cl.uchile.ing.adi.quicklooklib.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.items.IListItem;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
-import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
 
 public class QuicklookActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener,
@@ -109,7 +108,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
         else if (i == R.id.save) {
             saveItem();
-            onListFragmentInfo(String.format(getResources().getString(R.string.info_document_saved),BaseItem.getDownloadPath()));
+            onListFragmentInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
             return true;
         } else if (i == R.id.share) {
             shareItem();
@@ -124,7 +123,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if (!(this.current.getItem() instanceof FolderItem)) {
+        QuicklookFragment f = this.current;
+        if (!(f == null || f.getItem() instanceof IListItem)) {
             inflater.inflate(R.menu.item_menu, menu);
         }
         return true;
@@ -177,6 +177,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         r = new Runnable(){
             public void run() {
                 changeFragment(item,false);
+                invalidateOptionsMenu();
             }
         };
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -330,11 +331,13 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     /**
      * Registers a type to open.
-     * @param type
      * @param className
+     * @param types
      */
-    public static void registerType(String type, Class className) {
-        ItemFactory.getInstance().register(type, className);
+    public static void registerType(Class className, String... types) {
+        for (String type:types) {
+            ItemFactory.getInstance().register(className, type);
+        }
     }
 
     /**

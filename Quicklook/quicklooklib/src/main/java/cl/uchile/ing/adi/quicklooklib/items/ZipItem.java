@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.R;
 
 /**

@@ -8,6 +8,7 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 
+import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.adapters.VirtualRecyclerViewAdapter;
@@ -15,7 +16,7 @@ import cl.uchile.ing.adi.quicklooklib.adapters.VirtualRecyclerViewAdapter;
 /**
  * Represents a Virtual file in the filesystem, like a Zip.
  */
-public abstract class VirtualItem extends BaseItem implements ListItem {
+public abstract class VirtualItem extends BaseItem implements IListItem {
 
     // Separator, The path here is a combination of the zip path and
     // the inner zip path.
@@ -150,7 +151,7 @@ public abstract class VirtualItem extends BaseItem implements ListItem {
             long size = item.getSize();
             String type = parentItem.getType();
             Bundle extra = item.getExtra();
-            VirtualItem newItem = (VirtualItem)ItemFactory.getInstance().createItem(path, type, size,extra);
+            VirtualItem newItem = (VirtualItem) ItemFactory.getInstance().createItem(path, type, size,extra);
             mListener.onListFragmentInteraction(newItem);
         } else {
             mListener.onListFragmentRetrieval(item,parentItem);
@@ -229,7 +230,4 @@ public abstract class VirtualItem extends BaseItem implements ListItem {
     public String getSubTitle() {
         return this.getVirtualPath();
     }
-
-
-
 }

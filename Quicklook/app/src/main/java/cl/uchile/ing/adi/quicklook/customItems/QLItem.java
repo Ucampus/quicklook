@@ -12,7 +12,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
-import cl.uchile.ing.adi.quicklooklib.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
 /**
@@ -80,7 +80,7 @@ public class QLItem extends VirtualItem {
     }
 
     /**
-     *  Placeholder
+     *  Placeholder because we needed the entire item.
      * @param id Internal identifier of file
      * @param dirpath Output path of the retrieved file
      * @param context Context of application
@@ -92,7 +92,7 @@ public class QLItem extends VirtualItem {
     }
 
     @Override
-    public String getName() {
-        return getNameFromPath(path);
+    public String getTitle() {
+        return getName().split("\\.ql")[0];
     }
 }

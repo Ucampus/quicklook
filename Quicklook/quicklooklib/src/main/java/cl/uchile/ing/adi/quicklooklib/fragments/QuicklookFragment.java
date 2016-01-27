@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
-import cl.uchile.ing.adi.quicklooklib.items.ItemFactory;
+import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
 /**

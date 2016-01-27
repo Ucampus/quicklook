@@ -40,7 +40,7 @@ class RenderingAsyncTask extends AsyncTask<Void, PagePart, Void> {
 
     public RenderingAsyncTask(PDFView pdfView) {
         this.pdfView = pdfView;
-        this.renderingTasks = new ArrayList<RenderingTask>();
+        this.renderingTasks = new ArrayList<>();
     }
 
     public void addRenderingTask(int userPage, int page, float width, float height, RectF bounds, boolean thumbnail, int cacheOrder) {
