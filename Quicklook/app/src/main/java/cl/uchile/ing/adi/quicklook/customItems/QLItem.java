@@ -4,13 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.items.ItemFactory;
@@ -29,19 +28,23 @@ public class QLItem extends VirtualItem {
 
     @Override
     public ArrayList<BaseItem> getItemList() {
-    ArrayList<BaseItem> itemList = new ArrayList<>();
-        JSONParser parser = new JSONParser();
+        ArrayList<BaseItem> itemList = new ArrayList<>();
         try {
-            JSONArray list = (JSONArray)parser.parse(new FileReader(getPath()));
-            Iterator<JSONObject> iter = list.iterator();
-            while (iter.hasNext()) {
-                JSONObject actual = iter.next();
-                String path =(String)actual.get("name");
-                String type = loadQLType((String)actual.get("mime"), path);
-                long size = (Long)actual.get("size");
+            String s="";
+            BufferedReader br = new BufferedReader(new FileReader(getPath()));
+            String line;
+            while ((line=br.readLine())!=null) {
+                s+=line;
+            }
+            JSONArray list = new JSONArray(s);
+            for (int i=0;i<list.length();i++) {
+                JSONObject actual = list.getJSONObject(i);
+                String path = actual.getString("name");
+                String type = loadQLType(actual.getString("mime"), path);
+                long size = actual.getLong("size");
                 Bundle itemExtra = new Bundle();
-                itemExtra.putString("webPath",(String)actual.get("path"));
-                itemExtra.putString("mimetype",(String)actual.get("mime"));
+                itemExtra.putString("webPath",actual.getString("path"));
+                itemExtra.putString("mimetype",actual.getString("mime"));
                 BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size,itemExtra);
                 itemList.add(newItem);
             }
@@ -66,14 +69,14 @@ public class QLItem extends VirtualItem {
      */
     @Override
     public BaseItem retrieve(BaseItem toRetrieve, Context context) {
-            Intent intent = new Intent();
-            intent.setAction(QL_BROADCAST);
-            intent.putExtra("name",toRetrieve.getName());
-            intent.putExtra("mime",toRetrieve.getExtra().getString("mimetype"));
-            intent.putExtra("path",toRetrieve.getExtra().getString("webPath"));
-            intent.putExtra("size",toRetrieve.getSize());
-            context.sendBroadcast(intent);
-            return null;
+        Intent intent = new Intent();
+        intent.setAction(QL_BROADCAST);
+        intent.putExtra("name",toRetrieve.getName());
+        intent.putExtra("mime",toRetrieve.getExtra().getString("mimetype"));
+        intent.putExtra("path",toRetrieve.getExtra().getString("webPath"));
+        intent.putExtra("size",toRetrieve.getSize());
+        context.sendBroadcast(intent);
+        return null;
     }
 
     /**
