@@ -4,4 +4,20 @@
     <string name="default_file_name_placeholder">Nombre de Archivo</string>
     <string name="default_file_size_placeholder">Tamaño</string>
     <string name="default_file_type_placeholder">Tipo de archivo</string>
+    <string name="info_document_saved">Archivo guardado en carpeta %s</string>
+    <string name="info_pdf_load_failed">¡Carga de PDF falló!</string>
+    <string name="item_share_text">Enviado desde U-Cursos para Android</string>
+    <string name="item_share_title">Enviando archivo de U-Cursos</string>
+    <string name="items_default_formatted_name">Elemento por defecto</string>
+    <string name="items_excel_formatted_name">Planilla de Excel</string>
+    <string name="items_file_formatted_name">Archivo</string>
+    <string name="items_folder_formatted_name">Carpeta</string>
+    <string name="items_pdf_formatted_name">Documento PDF</string>
+    <string name="items_picture_formatted_name">Imagen</string>
+    <string name="items_powerpoint_formatted_name">Presentación de PowerPoint</string>
+    <string name="items_rar_formatted_name">Archivo Comprimido RAR</string>
+    <string name="items_tar_formatted_name">Archivo Comprimido TAR</string>
+    <string name="items_text_formatted_name">Archivo de Texto</string>
+    <string name="items_word_formatted_name">Documento de Word</string>
+    <string name="items_zip_formatted_name">Archivo Comprimido ZIP</string>
 </resources>

@@ -5,7 +5,11 @@
     <string name="default_file_type_placeholder">File type</string>
     <string name="default_file_size_placeholder">Size</string>
 
-    <string name="pdf_load_failed">PDF load failed!</string>
+    <string name="info_pdf_load_failed">PDF load failed!</string>
+    <string name="info_document_saved">File saved on %s folder</string>
+
+    <string name="item_share_title">Sending Quicklook file</string>
+    <string name="item_share_text">Hi! I\'m sending you a file from Quicklook ;)</string>
 
     <string name="items_default_formatted_name">Default Item</string>
     <string name="items_file_formatted_name">File</string>
@@ -13,12 +17,12 @@
     <string name="items_excel_formatted_name">Microsoft Excel Document</string>
     <string name="items_word_formatted_name">Microsoft Word Document</string>
     <string name="items_powerpoint_formatted_name">Microsoft PowerPoint Document</string>
-    <string name="items_pdf_formatted_name">Microsoft PDF Document</string>
+    <string name="items_pdf_formatted_name">Acrobat PDF Document</string>
 
     <string name="items_picture_formatted_name">Picture</string>
     <string name="items_rar_formatted_name">RAR Compressed File</string>
     <string name="items_tar_formatted_name">TAR Compressed File</string>
-    <string name="items_zip_formatted_name">Zip Compressed File</string>
+    <string name="items_zip_formatted_name">ZIP Compressed File</string>
     <string name="items_text_formatted_name">Text File</string>
 
 </resources>
