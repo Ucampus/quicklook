@@ -72,6 +72,7 @@ public class ItemFactory {
      * @return
      */
     public BaseItem createItem(String path, String type, long size, Bundle extra) {
+        type = type.toLowerCase();
         Class c = FileItem.class;
         BaseItem item = null;
         if (dictionary.containsKey(type)) {
