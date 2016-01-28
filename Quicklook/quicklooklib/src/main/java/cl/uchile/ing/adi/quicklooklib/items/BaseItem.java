@@ -26,7 +26,7 @@ public abstract class BaseItem {
     public static String ITEM_TYPE = "type";
     public static String ITEM_EXTRA = "extra";
 
-    public static String DOWNLOAD_PATH = "";
+    public static String DOWNLOAD_PATH;
     public static String CACHE_PATH;
 
     public static Context context;

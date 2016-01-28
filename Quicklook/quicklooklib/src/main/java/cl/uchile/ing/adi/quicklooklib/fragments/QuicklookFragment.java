@@ -119,6 +119,6 @@ public abstract class QuicklookFragment extends Fragment {
 
         void onListFragmentInfo(String message);
 
-        void goBack();
+        void removeFromBackStack(QuicklookFragment frag);
     }
 }

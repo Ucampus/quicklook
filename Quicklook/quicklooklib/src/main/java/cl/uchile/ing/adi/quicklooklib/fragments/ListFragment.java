@@ -23,7 +23,6 @@ import cl.uchile.ing.adi.quicklooklib.items.IListItem;
 public class ListFragment extends QuicklookFragment {
 
     boolean visited = false;
-
     public ListFragment() {
     }
 
@@ -45,16 +44,13 @@ public class ListFragment extends QuicklookFragment {
             //If there is only one folder, enter to it automatically.
             Log.d("onCreateView","ahora hay "+elements.size()+" elementos o:");
             if (elements.size()==1 && (elements.get(0) instanceof FolderItem)) {
-                // can press back.
+                Log.d("onCreateView","Visited ahora mismo es "+visited);
                 if (!visited) {
-                    BaseItem nextItem = elements.get(0);
+                    BaseItem nextItem = elements.get(0);mListener.removeFromBackStack(this);
                     visited = true;
-                    mListener.goBack();
                     item.onVirtualClick(mListener, nextItem);
-                } else {
-                    //Nothing to do here;
+                    return view;
                 }
-                return view;
             }
             RecyclerView.Adapter adapter = item.getAdapter(mListener,elements);
             recyclerView.setAdapter(adapter);

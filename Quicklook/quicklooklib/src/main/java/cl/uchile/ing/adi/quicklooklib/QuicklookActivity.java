@@ -8,9 +8,11 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,29 +47,13 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Create Quicklook internal work directory and set it
-        if (BaseItem.getCachePath()==null) {
-            BaseItem.setCachePath(getFilesDir().getAbsolutePath() + "/quicklook/");
-        }
-        File f = new File(BaseItem.getCachePath());
-        f.mkdirs();
         // Set context to items (localization)
         BaseItem.setContext(this);
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
-        onNewIntent(getIntent());
         //Only if fragment is not rendered
         if (savedInstanceState==null) {
-            long size = BaseItem.getSizeFromPath(this.path);
-            String type = FileItem.loadFileType(new File(this.path));
-            Bundle extra;
-            if (getIntent().hasExtra(BaseItem.ITEM_EXTRA)) {
-                extra = getIntent().getBundleExtra(BaseItem.ITEM_EXTRA);
-            } else {
-                extra = new Bundle();
-            }
-            BaseItem item = ItemFactory.getInstance().createItem(this.path, type, size,extra);
-            checkPermissionsAndChangeFragment(item);
+            onNewIntent(getIntent());
         }
         //Action bar back button
         try {
@@ -75,25 +61,52 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         //Set url of start item
+        boolean backstack = false;
         this.path = intent.getStringExtra("localurl");
-        //Set download path
-        String downloadPath;
-        if (intent.hasExtra("downloadpath")) {
-            downloadPath = intent.getStringExtra("downloadpath");
-        } else {
-            downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                    .getAbsolutePath()+"/Quicklook/";
+        generateFolders();
+        if (getIntent()!=intent) {
+            backstack=true;
         }
+        setIntent(intent);
+        long size = BaseItem.getSizeFromPath(this.path);
+        String type = FileItem.loadFileType(new File(this.path));
+        Bundle extra;
+        if (getIntent().hasExtra(BaseItem.ITEM_EXTRA)) {
+            extra = getIntent().getBundleExtra(BaseItem.ITEM_EXTRA);
+        } else {
+            extra = new Bundle();
+        }
+        BaseItem item = ItemFactory.getInstance().createItem(this.path, type, size,extra);
+        checkPermissionsAndChangeFragment(item,backstack);
+    }
+
+    private void generateFolders() {
+        //Generate download folder
+        if (BaseItem.getDownloadPath() == null) {
+            BaseItem.setDownloadPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                    .getAbsolutePath()+"/Quicklook/");
+        }
+        String downloadPath = BaseItem.getDownloadPath();
         //Create downloadPath folder if not exists.
-        File folder = new File(downloadPath);
-        if (!folder.exists()) folder.mkdirs();
+        File downloadFolder = new File(downloadPath);
+        if (!downloadFolder.exists()) downloadFolder.mkdirs();
         BaseItem.setDownloadPath(downloadPath);
+
+        //Generate cache folder
+        if (BaseItem.getCachePath()==null) {
+            BaseItem.setCachePath(getFilesDir().getAbsolutePath() + "/quicklook/");
+        }
+        //Create cachePath folder if not exists.
+        String cachePath=BaseItem.getCachePath();
+        File cacheFolder = new File(cachePath);
+        if (!cacheFolder.exists()) cacheFolder.mkdirs();
+        BaseItem.setCachePath(cachePath);
     }
 
     @Override
@@ -130,7 +143,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        String innerPath = getFilesDir().getAbsolutePath()+"/quicklook/";
+        String innerPath = BaseItem.getCachePath();
         File f = new File(innerPath);
         try {
             FileUtils.deleteDirectory(f);
@@ -166,10 +179,10 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * Checks if storage permissions exist
      * @param item Item to render after checking permissions.
      */
-    private void checkPermissionsAndChangeFragment(final BaseItem item) {
+    private void checkPermissionsAndChangeFragment(final BaseItem item, final boolean addToBackstack) {
         r = new Runnable(){
             public void run() {
-                changeFragment(item,false);
+                changeFragment(item,addToBackstack);
                 invalidateOptionsMenu();
             }
         };
@@ -198,8 +211,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     public void changeFragment(BaseItem item, boolean backstack){
         setFragment(item.getFragment());
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+        t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         t.replace(R.id.quicklook_fragment, current, "QuickLook");
-        if (backstack) t.addToBackStack(null);
+        if (backstack) {
+            t.addToBackStack(null);
+        }
         t.commitAllowingStateLoss();
         updateActivity(item);
     }
@@ -268,17 +284,21 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     // Button item functions
 
-    public Uri saveItem() {
+    public Uri saveItem(boolean inform) {
         BaseItem item = current.getItem();
         String mime =getMime(item.getPath());
         String newPath = item.copyItem(mime);
         Uri pathUri = Uri.parse("file://" + newPath);
-        onListFragmentInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
+        if (inform) onListFragmentInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
         return pathUri;
     }
 
+    public Uri saveItem() {
+        return saveItem(true);
+    }
+
     public void openItem() {
-        Uri pathUri = saveItem();
+        Uri pathUri = saveItem(false);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         String mime = getMime(pathUri.getPath());
         intent.setDataAndType(pathUri, mime);
@@ -287,7 +307,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
 
     public void shareItem() {
-        Uri pathUri = saveItem();
+        Uri pathUri = saveItem(false);
         Intent intent = new Intent(Intent.ACTION_SEND);
         File f = new File(pathUri.getPath());
         if (f.exists()) {
@@ -338,9 +358,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         BaseItem.setDownloadPath(path);
     }
 
-    public void goBack() {
-        FragmentTransaction f = getSupportFragmentManager().beginTransaction();
-        getSupportFragmentManager().popBackStack();
-        f.commit();
+    public void removeFromBackStack(QuicklookFragment frag) {
+        Log.d("removeBackstack", "lo sacare del backstack");
+        FragmentManager f = getSupportFragmentManager();
+        f.popBackStack();
     }
 }
