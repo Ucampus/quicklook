@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -359,7 +358,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     public void removeFromBackStack(QuicklookFragment frag) {
-        Log.d("removeBackstack", "lo sacare del backstack");
         FragmentManager f = getSupportFragmentManager();
         f.popBackStack();
     }

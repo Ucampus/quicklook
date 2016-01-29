@@ -322,6 +322,7 @@ public class PDFView extends SurfaceView {
 
     @Override
     protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
         recycle();
     }
 
@@ -368,7 +369,7 @@ public class PDFView extends SurfaceView {
         // abstraction of the screen position when rendering the parts.
 
         // Draws background
-        canvas.drawColor(Color.WHITE);
+        canvas.drawColor(Color.rgb(233,233,233));
 
         if (state != State.SHOWN) {
             return;

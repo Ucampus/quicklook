@@ -20,13 +20,13 @@ package com.joanzapata.pdfview.util;
 
 public interface Constants {
 
-    static final boolean DEBUG_MODE = false;
+    static final boolean DEBUG_MODE = true;
 
     /** Size of the minimum, in percent of the component size */
     static final float MINIMAP_MAX_SIZE = 200f;
 
     /** Number of pages loaded (default 3) */
-    static final int LOADED_SIZE = 3;
+    static final int LOADED_SIZE = 5;
 
     /** Between 0 and 1, the thumbnails quality (default 0.2) */
     static final float THUMBNAIL_RATIO = 1f;
@@ -36,10 +36,10 @@ public interface Constants {
      * Tinier : a little bit slower to have the whole page rendered but more reactive.
      * Bigger : user will have to wait longer to have the first visual results
      */
-    static final float PART_SIZE = 256;
+    static final float PART_SIZE = 1024;
 
     /** Transparency of masks around the main page (between 0 and 255, default 50) */
-    static final int MASK_ALPHA = 255;
+    static final int MASK_ALPHA = 50;
 
     /** The size of the grid of loaded images around the current point */
     static final int GRID_SIZE = 7;
@@ -62,9 +62,9 @@ public interface Constants {
          * A move must be quicker than this duration and longer than
          * this distance to be considered as a quick move
          */
-        static final int QUICK_MOVE_THRESHOLD_TIME = 500, //
+        static final int QUICK_MOVE_THRESHOLD_TIME = 400, //
 
-        QUICK_MOVE_THRESHOLD_DISTANCE = 25;
+        QUICK_MOVE_THRESHOLD_DISTANCE = 50;
 
     }
 

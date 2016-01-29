@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +41,7 @@ public class ListFragment extends QuicklookFragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             ArrayList<BaseItem> elements = item.getElements();
             //If there is only one folder, enter to it automatically.
-            Log.d("onCreateView","ahora hay "+elements.size()+" elementos o:");
             if (elements.size()==1 && (elements.get(0) instanceof FolderItem)) {
-                Log.d("onCreateView","Visited ahora mismo es "+visited);
                 if (!visited) {
                     BaseItem nextItem = elements.get(0);mListener.removeFromBackStack(this);
                     visited = true;
