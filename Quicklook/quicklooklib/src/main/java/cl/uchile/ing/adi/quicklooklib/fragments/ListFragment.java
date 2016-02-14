@@ -14,6 +14,7 @@ import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.items.IListItem;
+import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
 /**
  * Opens folders and lists the items inside them. There are extensions of this
@@ -35,7 +36,7 @@ public class ListFragment extends QuicklookFragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            IListItem item = (IListItem) this.item;
+            FolderItem item = (FolderItem) this.item;
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -45,7 +46,7 @@ public class ListFragment extends QuicklookFragment {
                 if (!visited) {
                     BaseItem nextItem = elements.get(0);mListener.removeFromBackStack(this);
                     visited = true;
-                    item.onVirtualClick(mListener, nextItem);
+                    mListener.makeTransition(nextItem);
                     return view;
                 }
             }

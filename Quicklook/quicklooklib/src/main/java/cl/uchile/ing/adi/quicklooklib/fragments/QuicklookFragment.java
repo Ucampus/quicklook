@@ -40,7 +40,8 @@ public abstract class QuicklookFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mListener.onListFragmentCreation(item);
+        mListener.setFragment(item.getFragment());
+        mListener.updateActionBar();
     }
 
     @Override
@@ -77,7 +78,7 @@ public abstract class QuicklookFragment extends Fragment {
     }
 
     public void showError(String cause) {
-        mListener.onListFragmentInfo(cause);
+        mListener.showInfo(cause);
     }
 
     /**
@@ -85,26 +86,17 @@ public abstract class QuicklookFragment extends Fragment {
      * by Main Activity of the library.
      */
     public interface OnListFragmentInteractionListener {
-
-        /**
-         * Manages the interaction between the fragments, i.e. the transition between
-         * them when exploring folders/zips/etc.
-         * @param item the item which is going to be displayed.
-         */
-        void onListFragmentInteraction(BaseItem item);
-
         /**
          * Updates the navbar text with the location of the file in the filesystem.
-         * @param item the item which is going to be displayed.
          */
-        void onListFragmentCreation(BaseItem item);
+        void updateActionBar();
 
         /**
          * Extracts a item inside a Compressed folder and opens it.
          * @param toRetrieve the item which is going to be displayed.
          * @param container item which contains toRetrieve.
          */
-        void onListFragmentRetrieval(BaseItem toRetrieve, VirtualItem container);
+        BaseItem retrieveElement(BaseItem toRetrieve, VirtualItem container);
 
         Uri saveItem();
         void openItem();
@@ -117,8 +109,12 @@ public abstract class QuicklookFragment extends Fragment {
 
         void setFragment(QuicklookFragment fragment);
 
-        void onListFragmentInfo(String message);
+        void showInfo(String message);
 
         void removeFromBackStack(QuicklookFragment frag);
+
+        void makeTransition(BaseItem mItem);
+
+        boolean areTasksRunning();
     }
 }

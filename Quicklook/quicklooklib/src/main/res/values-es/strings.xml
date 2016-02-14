@@ -20,4 +20,6 @@
     <string name="items_text_formatted_name">Archivo de Texto</string>
     <string name="items_word_formatted_name">Documento de Word</string>
     <string name="items_zip_formatted_name">Archivo Comprimido ZIP</string>
+    <string name="quicklook_permission_error">Error de permisos. No se pueden mostrar archivos.</string>
+    <string name="quicklook_loading_file">Cargando...</string>
 </resources>

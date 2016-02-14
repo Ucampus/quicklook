@@ -12,5 +12,5 @@ import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 public interface IListItem {
     ArrayList<BaseItem> getElements();
     RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener,ArrayList<BaseItem> elements);
-    void onVirtualClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem);
+    BaseItem onClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem);
 }

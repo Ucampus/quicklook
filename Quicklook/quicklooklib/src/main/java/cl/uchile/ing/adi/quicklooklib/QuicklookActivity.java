@@ -1,9 +1,12 @@
 package cl.uchile.ing.adi.quicklooklib;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -37,6 +40,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     private View coordinator;
     private QuicklookFragment current;
 
+    AsyncTask loadingTask;
+
     private static String TAG = "QuickLookPermissions";
     private static int WRITE_PERMISSIONS = 155;
 
@@ -47,7 +52,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set context to items (localization)
-        BaseItem.setContext(this);
+        BaseItem.setContext(getApplicationContext());
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
         //Only if fragment is not rendered
@@ -81,8 +86,14 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         } else {
             extra = new Bundle();
         }
-        BaseItem item = ItemFactory.getInstance().createItem(this.path, type, size,extra);
-        checkPermissionsAndChangeFragment(item,backstack);
+        BaseItem item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
+        checkPermissionsAndChangeFragment(item, backstack);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        invalidateOptionsMenu();
     }
 
     private void generateFolders() {
@@ -208,25 +219,26 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param backstack if true, adds the previous fragment to backstack.
      */
     public void changeFragment(BaseItem item, boolean backstack){
-        setFragment(item.getFragment());
-        FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        t.replace(R.id.quicklook_fragment, current, "QuickLook");
-        if (backstack) {
-            t.addToBackStack(null);
+        if (item!=null) {
+            setFragment(item.getFragment());
+            FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+            t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            t.replace(R.id.quicklook_fragment, current, "QuickLook");
+            if (backstack) {
+                t.addToBackStack(null);
+            }
+            t.commitAllowingStateLoss();
+            updateActionBar();
         }
-        t.commitAllowingStateLoss();
-        updateActivity(item);
     }
 
 
     /**
      * Updates... the action bar!
-     * @param item Item with new info for the actionbar.
      */
-    private void updateActivity(BaseItem item) {
-        getSupportActionBar().setTitle(item.getTitle());
-        getSupportActionBar().setSubtitle(item.getSubTitle());
+    public void updateActionBar() {
+        getSupportActionBar().setTitle(this.getItem().getTitle());
+        getSupportActionBar().setSubtitle(this.getItem().getSubTitle());
 
     }
 
@@ -237,24 +249,15 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item the item which is going to be displayed.
      */
 
-    public void onListFragmentInteraction(BaseItem item) {
-        changeFragment(item);
-    }
-
-    /**
-     * Manages the text in Action Bar, with current path in filesystem.
-     * @param item the item which is going to be displayed
-     */
-    public void onListFragmentCreation(BaseItem item) {
-        setFragment(item.getFragment());
-        updateActivity(item);
+    public BaseItem onListFragmentInteraction(BaseItem item) {
+        return item;
     }
 
     /**
      * Shows a snack bar with information.
      * @param info
      */
-    public void onListFragmentInfo(String info) {
+    public void showInfo(String info) {
         Snackbar.make(coordinator, info,
                 Snackbar.LENGTH_LONG).show();
     }
@@ -264,17 +267,18 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param toRetrieve the item which is going to be displayed.
      * @param container item which contains toRetrieve.
      */
-    public void onListFragmentRetrieval(BaseItem toRetrieve, VirtualItem container) {
-        BaseItem retrieved = container.retrieve(toRetrieve, getApplicationContext());
-        if (retrieved!=null) {
-            changeFragment(retrieved);
-        }
+    public BaseItem retrieveElement(BaseItem toRetrieve, VirtualItem container) {
+        return  container.retrieve(toRetrieve, getApplicationContext());
     }
 
    // Getters/Setters
 
     public QuicklookFragment getFragment() {
         return current;
+    }
+    
+    public BaseItem getItem() {
+        return current.getItem();
     }
 
     public void setFragment(QuicklookFragment fragment) {
@@ -288,7 +292,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         String mime =getMime(item.getPath());
         String newPath = item.copyItem(mime);
         Uri pathUri = Uri.parse("file://" + newPath);
-        if (inform) onListFragmentInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
+        if (inform) showInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
         return pathUri;
     }
 
@@ -360,5 +364,40 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     public void removeFromBackStack(QuicklookFragment frag) {
         FragmentManager f = getSupportFragmentManager();
         f.popBackStack();
+    }
+
+    @Override
+    public void makeTransition(final BaseItem mItem) {
+        final IListItem originalItem = (IListItem) (getItem());
+        if (!areTasksRunning()) {
+            loadingTask = new AsyncTask<Object, Object, BaseItem>() {
+                ProgressDialog pd;
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    pd = ProgressDialog.show(QuicklookActivity.this,
+                            getString(R.string.quicklook_loading_file),
+                            mItem.getTitle());
+                }
+
+                @Override
+                protected BaseItem doInBackground(Object... params) {
+                    return originalItem.onClick(QuicklookActivity.this, mItem);
+                }
+
+                @Override
+                protected void onPostExecute(BaseItem result) {
+                    super.onPostExecute(result);
+                    changeFragment(result);
+                    pd.dismiss();
+                }
+            };
+            loadingTask.execute();
+        }
+    }
+
+    public boolean areTasksRunning() {
+        return (loadingTask != null && loadingTask.getStatus() == AsyncTask.Status.RUNNING);
     }
 }

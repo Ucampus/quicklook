@@ -2,7 +2,6 @@ package cl.uchile.ing.adi.quicklooklib.items;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
-import cl.uchile.ing.adi.quicklooklib.adapters.FolderRecyclerViewAdapter;
+import cl.uchile.ing.adi.quicklooklib.adapters.RecyclerViewAdapter;
 
 /**
  * Represents a folder in the filesystem.
@@ -47,7 +46,7 @@ public class FolderItem extends BaseItem implements IListItem {
     }
 
     public RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener, ArrayList<BaseItem> elements) {
-        return new FolderRecyclerViewAdapter(elements, mListener);
+        return new RecyclerViewAdapter(elements, mListener);
 
     }
 
@@ -56,12 +55,9 @@ public class FolderItem extends BaseItem implements IListItem {
         return this.getPath();
     }
 
-    public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem) {
-        mListener.onListFragmentInteraction(mItem);
-    }
-
-    public void onVirtualClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem) {
-        FolderItem.onClick(mListener, mItem);
+    @Override
+    public BaseItem onClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem) {
+        return mItem;
     }
 
     /**

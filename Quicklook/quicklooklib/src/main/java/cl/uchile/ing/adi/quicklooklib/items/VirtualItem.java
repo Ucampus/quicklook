@@ -3,7 +3,6 @@ package cl.uchile.ing.adi.quicklooklib.items;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
-import cl.uchile.ing.adi.quicklooklib.adapters.VirtualRecyclerViewAdapter;
+import cl.uchile.ing.adi.quicklooklib.adapters.RecyclerViewAdapter;
 
 /**
  * Represents a Virtual file in the filesystem, like a Zip.
@@ -137,22 +136,19 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
      * @param mListener
      * @param item
      */
-    public static void onClick(QuicklookFragment.OnListFragmentInteractionListener mListener, BaseItem item) {
+    public BaseItem onClick(QuicklookFragment.OnListFragmentInteractionListener mListener, BaseItem item) {
         VirtualItem parentItem = (VirtualItem)mListener.getFragment().getItem();
+        BaseItem newItem;
         if (item instanceof FolderItem) {
             String path = item.getPath();
             long size = item.getSize();
             String type = parentItem.getType();
             Bundle extra = item.getExtra();
-            VirtualItem newItem = (VirtualItem) ItemFactory.getInstance().createItem(path, type, size,extra);
-            mListener.onListFragmentInteraction(newItem);
+            newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
         } else {
-            mListener.onListFragmentRetrieval(item,parentItem);
+            newItem = mListener.retrieveElement(item, parentItem);
         }
-    }
-
-    public void onVirtualClick(QuicklookFragment.OnListFragmentInteractionListener mListener,BaseItem mItem) {
-        VirtualItem.onClick(mListener, mItem);
+        return newItem;
     }
 
     /**
@@ -162,7 +158,7 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
     public abstract ArrayList<BaseItem> getItemList();
 
     public RecyclerView.Adapter getAdapter(QuicklookFragment.OnListFragmentInteractionListener mListener,ArrayList<BaseItem> elements) {
-        return new VirtualRecyclerViewAdapter(elements, mListener);
+        return new RecyclerViewAdapter(elements, mListener);
     }
 
     /**

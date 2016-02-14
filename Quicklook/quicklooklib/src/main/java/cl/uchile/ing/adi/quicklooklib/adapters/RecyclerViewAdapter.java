@@ -19,12 +19,12 @@ import java.util.List;
  * {@link RecyclerView.Adapter} that can display a {@link FileItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  */
-public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     protected final List<BaseItem> mValues;
     protected final OnListFragmentInteractionListener mListener;
 
-    public FolderRecyclerViewAdapter(List<BaseItem> items, OnListFragmentInteractionListener listener) {
+    public RecyclerViewAdapter(List<BaseItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -81,7 +81,7 @@ public class FolderRecyclerViewAdapter extends RecyclerView.Adapter<FolderRecycl
     }
 
     public void clickAction(ViewHolder holder) {
-        FolderItem.onClick(mListener,holder.mItem);
+        mListener.makeTransition(holder.mItem);
     }
 
 }

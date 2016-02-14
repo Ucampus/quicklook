@@ -2,7 +2,9 @@
 
     <string name="app_name">QuicklookLib</string>
 
-    <string name="quicklook_permission_error">Error de permisos. No se pueden mostrar archivos.</string>
+    <string name="quicklook_loading_file">Loading...</string>
+
+    <string name="quicklook_permission_error">Permission Error. Check permissions of application.</string>
 
     <string name="default_file_name_placeholder">Filename</string>
     <string name="default_file_type_placeholder">File type</string>
