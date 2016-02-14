@@ -43,8 +43,8 @@ class RenderingAsyncTask extends AsyncTask<Void, PagePart, Void> {
         this.renderingTasks = new ArrayList<>();
     }
 
-    public void addRenderingTask(int userPage, int page, float width, float height, RectF bounds, boolean thumbnail, int cacheOrder) {
-        RenderingTask task = new RenderingTask(width, height, bounds, userPage, page, thumbnail, cacheOrder);
+    public void addRenderingTask(int userPage, int page, float width, float height, RectF bounds) {
+        RenderingTask task = new RenderingTask(width, height, bounds, userPage, page);
         renderingTasks.add(task);
         wakeUp();
     }
@@ -55,28 +55,32 @@ class RenderingAsyncTask extends AsyncTask<Void, PagePart, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        while (!isCancelled()) {
+        try {
+                while (!isCancelled()) {
 
-            // Proceed all tasks
-            while (!renderingTasks.isEmpty() && !isCancelled()) {
-                RenderingTask task = renderingTasks.get(0);
-                PagePart part = proceed(task);
+                    // Proceed all tasks
+                    while (!renderingTasks.isEmpty() && !isCancelled()) {
+                        RenderingTask task = renderingTasks.get(0);
+                        PagePart part = proceed(task);
 
-                if (renderingTasks.remove(task)) {
-                    publishProgress(part);
-                } else {
-                    part.getRenderedBitmap().recycle();
+                        if (renderingTasks.remove(task)) {
+                            publishProgress(part);
+                        } else {
+                            part.getRenderedBitmap().recycle();
+                        }
+                    }
+
+                    // Wait for new task, return if canceled
+                    if (!waitForRenderingTasks() || isCancelled()) {
+                        return null;
+                    }
+
                 }
             }
-
-            // Wait for new task, return if canceled
-            if (!waitForRenderingTasks() || isCancelled()) {
-                return null;
-            }
-
+        catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
-
     }
 
     @Override
@@ -106,8 +110,7 @@ class RenderingAsyncTask extends AsyncTask<Void, PagePart, Void> {
 
         PagePart part = new PagePart(renderingTask.userPage, renderingTask.page, render, //
                 renderingTask.width, renderingTask.height, //
-                renderingTask.bounds, renderingTask.thumbnail, //
-                renderingTask.cacheOrder);
+                renderingTask.bounds);
 
         return part;
     }
@@ -135,7 +138,7 @@ class RenderingAsyncTask extends AsyncTask<Void, PagePart, Void> {
 
         int cacheOrder;
 
-        public RenderingTask(float width, float height, RectF bounds, int userPage, int page, boolean thumbnail, int cacheOrder) {
+        public RenderingTask(float width, float height, RectF bounds, int userPage, int page) {
             super();
             this.page = page;
             this.width = width;

@@ -24,6 +24,7 @@ import android.graphics.Paint.Style;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.SurfaceView;
 import com.joanzapata.pdfview.exception.FileNotFoundException;
 import com.joanzapata.pdfview.listener.OnDrawListener;
@@ -39,8 +40,6 @@ import org.vudroid.core.DecodeService;
 
 import java.io.File;
 import java.io.IOException;
-
-import static com.joanzapata.pdfview.util.Constants.Cache.CACHE_SIZE;
 
 /**
  * @author Joan Zapata
@@ -143,8 +142,8 @@ public class PDFView extends SurfaceView {
     /** Async task used during the loading phase to decode a PDF document */
     private DecodingAsyncTask decodingAsyncTask;
 
-    /** Async task always playing in the background and proceeding rendering tasks */
-    private RenderingAsyncTask renderingAsyncTask;
+    /** Cache task is separated from the rendering tasks*/
+    private RenderingAsyncTask onDemandAsyncTask;
 
     /** Call back object to call when the PDF is loaded */
     private OnLoadCompleteListener onLoadCompleteListener;
@@ -236,8 +235,9 @@ public class PDFView extends SurfaceView {
         decodingAsyncTask = new DecodingAsyncTask(uri, this);
         decodingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-        renderingAsyncTask = new RenderingAsyncTask(this);
-        renderingAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        onDemandAsyncTask = new RenderingAsyncTask(this);
+        onDemandAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     /**
@@ -305,9 +305,8 @@ public class PDFView extends SurfaceView {
 
     public void recycle() {
 
-        // Stop tasks
-        if (renderingAsyncTask != null) {
-            renderingAsyncTask.cancel(true);
+        if (onDemandAsyncTask != null) {
+            onDemandAsyncTask.cancel(true);
         }
         if (decodingAsyncTask != null) {
             decodingAsyncTask.cancel(true);
@@ -330,7 +329,6 @@ public class PDFView extends SurfaceView {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         animationManager.stopAll();
         calculateOptimalWidthAndHeight();
-        loadPages();
         if (swipeVertical)
         	moveTo(currentXOffset, calculateCenterOffsetForPage(currentFilteredPage));
         else
@@ -382,11 +380,6 @@ public class PDFView extends SurfaceView {
 
         // Draws thumb nails
         for (PagePart part : cacheManager.getThumbnails()) {
-            drawPart(canvas, part);
-        }
-
-        // Draws parts
-        for (PagePart part : cacheManager.getPageParts()) {
             drawPart(canvas, part);
         }
 
@@ -485,9 +478,8 @@ public class PDFView extends SurfaceView {
             return;
         }
 
-        // Cancel all current tasks
-        renderingAsyncTask.removeAllTasks();
-        cacheManager.makeANewSet();
+        // Cancel all current tasks, but thumb page loader.
+        onDemandAsyncTask.removeAllTasks();
 
         // Find current index in filtered user pages
         int index = currentPage;
@@ -497,155 +489,57 @@ public class PDFView extends SurfaceView {
 
         // Loop through the pages like [...][4][2][0][1][3][...]
         // loading as many parts as it can.
-        int parts = 0;
+
+        // Loas thumbnails
+        for (int i = 0; i+index < getPageCount() || index-i >=0; i++) {
+            if ((index + i) < getPageCount()) {
+                loadThumbPage(index + i, onDemandAsyncTask);
+            }
+            if ((index - i) >= 0 && i!=0) {
+                loadThumbPage(index - i, onDemandAsyncTask);
+            }
+        }
+
+        //Load the final parts.
+/**        int parts = 0;
         for (int i = 0; i <= Constants.LOADED_SIZE / 2 && parts < CACHE_SIZE; i++) {
             parts += loadPage(index + i, CACHE_SIZE - parts);
             if (i != 0 && parts < CACHE_SIZE) {
                 parts += loadPage(index - i, CACHE_SIZE - parts);
             }
-        }
+        }**/
 
         invalidate();
     }
 
-    /**
-     * Render a page, creating 1 to <i>nbOfPartsLoadable</i> page parts. <br><br>
-     * <p/>
-     * This is one of the trickiest method of this library. It finds
-     * the DocumentPage associated with the given UserPage, loads its
-     * thumbnail, cut this page into 256x256 blocs considering the
-     * current zoom level, calculate the bloc containing the center of
-     * the screen, and start loading these parts in a spiral {@link SpiralLoopManager},
-     * only if the given part is not already in the Cache, in which case it
-     * moves the part up in the cache.
-     * @param userPage          The user page to load.
-     * @param nbOfPartsLoadable Maximum number of parts it can load.
-     * @return The number of parts loaded.
-     */
-    private int loadPage(final int userPage, final int nbOfPartsLoadable) {
 
+
+    private void loadThumbPage(final int userPage, RenderingAsyncTask asyncTask) {
         // Finds the document page associated with the given userPage
+        Log.d("PdfView","Cargando pagina "+userPage);
         int documentPage = userPage;
         if (filteredUserPages != null) {
             if (userPage < 0 || userPage >= filteredUserPages.length) {
-                return 0;
+                return;
             } else {
                 documentPage = filteredUserPages[userPage];
             }
         }
-        final int documentPageFinal = documentPage;
         if (documentPage < 0 || userPage >= documentPageCount) {
-            return 0;
+            return;
         }
 
         // Render thumbnail of the page
-        if (!cacheManager.containsThumbnail(userPage, documentPage, //
+        if (!cacheManager.containsThumbnail(userPage, documentPage,
                 (int) (optimalPageWidth * Constants.THUMBNAIL_RATIO), //
-                (int) (optimalPageHeight * Constants.THUMBNAIL_RATIO), //
+                (int) (optimalPageHeight * Constants.THUMBNAIL_RATIO),
                 new RectF(0, 0, 1, 1))) {
-            renderingAsyncTask.addRenderingTask(userPage, documentPage, //
+            Log.d("PdfView","Página "+userPage+" no estaba en cache, agregando...");
+            asyncTask.addRenderingTask(userPage, documentPage, //
                     (int) (optimalPageWidth * Constants.THUMBNAIL_RATIO), //
                     (int) (optimalPageHeight * Constants.THUMBNAIL_RATIO), //
-                    new RectF(0, 0, 1, 1), true, 0);
+                    new RectF(0, 0, 1, 1));
         }
-
-        // When we want to render a 256x256 bloc, we also need to provide
-        // the bounds (left, top, right, bottom) of the rendered part in
-        // the PDF page. These four coordinates are ratios (0 -> 1), where
-        // (0,0) is the top left corner of the PDF page, and (1,1) is the
-        // bottom right corner.
-        float ratioX = 1f / (float) optimalPageWidth;
-        float ratioY = 1f / (float) optimalPageHeight;
-        final float partHeight = (Constants.PART_SIZE * ratioY) / zoom;
-        final float partWidth = (Constants.PART_SIZE * ratioX) / zoom;
-        final int nbRows = (int) Math.ceil(1f / partHeight);
-        final int nbCols = (int) Math.ceil(1f / partWidth);
-        final float pageRelativePartWidth = 1f / (float) nbCols;
-        final float pageRelativePartHeight = 1f / (float) nbRows;
-
-        // To improve user experience, we need to start displaying the
-        // 256x256 blocs with the middle of the screen. Imagine the cut
-        // page as a grid. This part calculates which cell of this grid
-        // is currently in the middle of the screen, given the current
-        // zoom level and the offsets.
-        float middleOfScreenX = (-currentXOffset + getWidth() / 2);
-        float middleOfScreenY = (-currentYOffset + getHeight() / 2);
-        float middleOfScreenPageX;
-        float middleOfScreenPageY;
-        if (swipeVertical) {
-        	middleOfScreenPageX = middleOfScreenX - userPage * toCurrentScale(optimalPageWidth);
-        	middleOfScreenPageY = middleOfScreenY;
-        } else {
-        	middleOfScreenPageY = middleOfScreenY - userPage * toCurrentScale(optimalPageHeight);
-        	middleOfScreenPageX = middleOfScreenX;
-        }
-        float middleOfScreenPageXRatio = middleOfScreenPageX / toCurrentScale(optimalPageWidth);
-        float middleOfScreenPageYRatio = middleOfScreenPageY / toCurrentScale(optimalPageHeight);
-        int startingRow = (int) (middleOfScreenPageYRatio * nbRows);
-        int startingCol = (int) (middleOfScreenPageXRatio * nbCols);
-
-        // Avoid outside values
-        startingRow = NumberUtils.limit(startingRow, 0, nbRows);
-        startingCol = NumberUtils.limit(startingCol, 0, nbCols);
-
-        // Prepare the loop listener
-        class SpiralLoopListenerImpl implements SpiralLoopManager.SpiralLoopListener {
-            int nbItemTreated = 0;
-
-            @Override
-            public boolean onLoop(int row, int col) {
-
-                // Create relative page bounds
-                float relX = pageRelativePartWidth * col;
-                float relY = pageRelativePartHeight * row;
-                float relWidth = pageRelativePartWidth;
-                float relHeight = pageRelativePartHeight;
-
-                // Adjust width and height to
-                // avoid being outside the page
-                float renderWidth = Constants.PART_SIZE / relWidth;
-                float renderHeight = Constants.PART_SIZE / relHeight;
-                if (relX + relWidth > 1) {
-                    relWidth = 1 - relX;
-                }
-                if (relY + relHeight > 1) {
-                    relHeight = 1 - relY;
-                }
-                renderWidth *= relWidth;
-                renderHeight *= relHeight;
-                RectF pageRelativeBounds = new RectF(relX, relY, relX + relWidth, relY + relHeight);
-
-                if (renderWidth != 0 && renderHeight != 0) {
-
-                    // Check it the calculated part is already contained in the Cache
-                    // If it is, this call will insure the part will go to the right
-                    // place in the cache and won't be deleted if the cache need space.
-                    if (!cacheManager.upPartIfContained(userPage, documentPageFinal, //
-                            renderWidth, renderHeight, pageRelativeBounds, nbItemTreated)) {
-
-                        // If not already in cache, register the rendering
-                        // task for further execution.
-                        renderingAsyncTask.addRenderingTask(userPage, documentPageFinal, //
-                                renderWidth, renderHeight, pageRelativeBounds, false, nbItemTreated);
-                    }
-
-                }
-
-                nbItemTreated++;
-                if (nbItemTreated >= nbOfPartsLoadable) {
-                    // Return false to stop the loop
-                    return false;
-                }
-                return true;
-            }
-        }
-
-        // Starts the loop
-        SpiralLoopListenerImpl spiralLoopListener;
-        new SpiralLoopManager(spiralLoopListener = new SpiralLoopListenerImpl())//
-                .startLoop(nbRows, nbCols, startingRow, startingCol);
-
-        return spiralLoopListener.nbItemTreated;
     }
 
     /** Called when the PDF is loaded */
@@ -677,11 +571,7 @@ public class PDFView extends SurfaceView {
      * @param part The created PagePart.
      */
     public void onBitmapRendered(PagePart part) {
-        if (part.isThumbnail()) {
-            cacheManager.cacheThumbnail(part);
-        } else {
-            cacheManager.cachePart(part);
-        }
+        cacheManager.cacheThumbnail(part);
         invalidate();
     }
 

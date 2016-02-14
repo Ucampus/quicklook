@@ -20,36 +20,36 @@ package com.joanzapata.pdfview.util;
 
 public interface Constants {
 
-    static final boolean DEBUG_MODE = true;
+    static final boolean DEBUG_MODE = false;
 
     /** Size of the minimum, in percent of the component size */
     static final float MINIMAP_MAX_SIZE = 200f;
 
     /** Number of pages loaded (default 3) */
-    static final int LOADED_SIZE = 5;
+    static final int LOADED_SIZE = 10;
 
     /** Between 0 and 1, the thumbnails quality (default 0.2) */
     static final float THUMBNAIL_RATIO = 1f;
 
     /**
-     * The size of the rendered parts (default 256)
+     * The height of the rendered parts (default 256)
      * Tinier : a little bit slower to have the whole page rendered but more reactive.
      * Bigger : user will have to wait longer to have the first visual results
      */
-    static final float PART_SIZE = 1024;
+    static final float PART_SIZE = 200;
 
     /** Transparency of masks around the main page (between 0 and 255, default 50) */
     static final int MASK_ALPHA = 50;
 
     /** The size of the grid of loaded images around the current point */
-    static final int GRID_SIZE = 7;
+    static final int GRID_SIZE = (int)(25600/PART_SIZE);
 
     public interface Cache {
 
         /** The size of the cache (number of bitmaps kept) */
-        static final int CACHE_SIZE = (int) Math.pow(GRID_SIZE, 2d);
+        static final int CACHE_SIZE = (int) GRID_SIZE;
 
-        static final int THUMBNAILS_CACHE_SIZE =4;
+        static final int THUMBNAILS_CACHE_SIZE =1000;
     }
 
     public interface Pinch {

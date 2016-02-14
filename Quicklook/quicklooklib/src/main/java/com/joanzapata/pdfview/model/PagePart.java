@@ -33,22 +33,15 @@ public class PagePart {
 
     private RectF pageRelativeBounds;
 
-    private boolean thumbnail;
 
-    private int cacheOrder;
-
-    public PagePart(int userPage, int page, Bitmap renderedBitmap, float width, float height, RectF pageRelativeBounds, boolean thumbnail, int cacheOrder) {
+    public PagePart(int userPage, int page, Bitmap renderedBitmap, float width, float height, RectF pageRelativeBounds) {
         super();
         this.userPage = userPage;
         this.page = page;
         this.renderedBitmap = renderedBitmap;
         this.pageRelativeBounds = pageRelativeBounds;
-        this.thumbnail = thumbnail;
-        this.cacheOrder = cacheOrder;
-    }
-
-    public int getCacheOrder() {
-        return cacheOrder;
+        this.width = width;
+        this.height = height;
     }
 
     public int getPage() {
@@ -73,14 +66,6 @@ public class PagePart {
 
     public float getHeight() {
         return height;
-    }
-
-    public boolean isThumbnail() {
-        return thumbnail;
-    }
-
-    public void setCacheOrder(int cacheOrder) {
-        this.cacheOrder = cacheOrder;
     }
 
     @Override
