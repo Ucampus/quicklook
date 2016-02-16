@@ -5,11 +5,10 @@
     tools:context=".fragments.PdfFragment"
     android:background="#bababa">
 
-    <com.joanzapata.pdfview.PDFView
+    <com.shockwave.pdfium.PdfView
         android:id="@+id/pdfview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#bababa"/>
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/pdf_pages"

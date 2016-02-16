@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,22 +37,23 @@ public class ListFragment extends QuicklookFragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            FolderItem item = (FolderItem) this.item;
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            ArrayList<BaseItem> elements = item.getElements();
-            //If there is only one folder, enter to it automatically.
-            if (elements.size()==1 && (elements.get(0) instanceof FolderItem)) {
-                if (!visited) {
-                    BaseItem nextItem = elements.get(0);mListener.removeFromBackStack(this);
-                    visited = true;
-                    mListener.makeTransition(nextItem);
-                    return view;
+                IListItem item = (IListItem) this.item;
+                Context context = view.getContext();
+                RecyclerView recyclerView = (RecyclerView) view;
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                ArrayList<BaseItem> elements = item.getElements();
+                //If there is only one folder, enter to it automatically.
+                if (elements.size() == 1 && (elements.get(0) instanceof FolderItem)) {
+                    if (!visited) {
+                        BaseItem nextItem = elements.get(0);
+                        mListener.removeFromBackStack(this);
+                        visited = true;
+                        mListener.makeTransition(nextItem);
+                        return view;
+                    }
                 }
-            }
-            RecyclerView.Adapter adapter = item.getAdapter(mListener,elements);
-            recyclerView.setAdapter(adapter);
+                RecyclerView.Adapter adapter = item.getAdapter(mListener, elements);
+                recyclerView.setAdapter(adapter);
         }
         return view;
     }

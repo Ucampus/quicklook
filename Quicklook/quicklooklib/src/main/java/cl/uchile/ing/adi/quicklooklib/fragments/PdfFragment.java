@@ -1,14 +1,16 @@
 package cl.uchile.ing.adi.quicklooklib.fragments;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.joanzapata.pdfview.PDFView;
-import com.joanzapata.pdfview.listener.OnErrorOccurredListener;
-import com.joanzapata.pdfview.listener.OnPageChangeListener;
+import com.shockwave.pdfium.PdfView;
+import com.shockwave.pdfium.listener.OnErrorOccurredListener;
+import com.shockwave.pdfium.listener.OnPageChangedListener;
 
 import java.io.File;
 
@@ -19,7 +21,9 @@ import cl.uchile.ing.adi.quicklooklib.R;
  */
 public class PdfFragment extends QuicklookFragment {
 
-    PDFView pdfView;
+    PdfView pdfView;
+    TextView pages;
+    View v;
 
     public PdfFragment() {
         // Required empty public constructor
@@ -30,26 +34,27 @@ public class PdfFragment extends QuicklookFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View v =  inflater.inflate(R.layout.fragment_pdf, container, false);
-        pdfView = (PDFView) v.findViewById(R.id.pdfview);
-            pdfView.fromFile(new File(item.getPath()))
-                    .defaultPage(0)
-                    .showMinimap(false)
-                    .enableSwipe(true)
+        v=  inflater.inflate(R.layout.fragment_pdf, container, false);
+        pages = (TextView) v.findViewById(R.id.pdf_pages);
+        pdfView = (PdfView) v.findViewById(R.id.pdfview);
+            pdfView.fromUri(Uri.parse(item.getPath()))
                     .onErrorOccured(new OnErrorOccurredListener() {
                         public void errorOccured() {
                             showError(getContext().getString(R.string.info_pdf_load_failed));
                         }
-                    }).onPageChange(new OnPageChangeListener() {
+                    }).onPageChanged(new OnPageChangedListener() {
                 @Override
-                public void onPageChanged(int page, int pageCount) {
-                    TextView pages = (TextView) v.findViewById(R.id.pdf_pages);
-                    String actualPage = "" + page + "/" + pageCount;
-                    pages.setText(actualPage);
+                public void pageChanged(int page, int pageCount) {
+                    PdfFragment.this.updatePageCounter(page,pageCount);
                 }
             })
-                    .swipeVertical(true)
                     .load();
         return v;
+    }
+
+    public void updatePageCounter(int page, int pageCount) {
+        Log.d("Quicklook", "Page changed!");
+        String actualPage = "" + page + "/" + pageCount;
+        pages.setText(actualPage);
     }
 }
