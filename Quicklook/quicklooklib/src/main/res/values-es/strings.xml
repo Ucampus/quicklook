@@ -22,4 +22,7 @@
     <string name="items_zip_formatted_name">Archivo Comprimido ZIP</string>
     <string name="quicklook_permission_error">Error de permisos. No se pueden mostrar archivos.</string>
     <string name="quicklook_loading_file">Cargando...</string>
+    <string name="quicklook_save">Guardar</string>
+    <string name="quicklook_open">Abrir con...</string>
+    <string name="quicklook_share">Compartir</string>
 </resources>
