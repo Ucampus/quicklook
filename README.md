@@ -42,5 +42,5 @@ Opcionalmente se puede personalizar las rutas a utilizar para los archivos tempo
 * [Junrar 0.7](https://github.com/junrar/junrar);
 * [Apache Commons IO 2.4](http://commons.apache.org/proper/commons-io/);
 * [Apache Commons Compress 1.10](https://commons.apache.org/proper/commons-compress/);
-* [PDFView de Joan Zapata](https://github.com/JoanZapata/android-pdfview);
+* [pdfium-view-android de Eduardo Riveros, basado en trabajos de mshockwave y JoanZapata](https://github.com/adderou/pdfium-view-android);
 
