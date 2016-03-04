@@ -5,18 +5,18 @@
         android:id="@+id/save"
         android:orderInCategory="20"
         app:showAsAction="never"
-        android:title="Save">
+        android:title="@string/quicklook_save">
     </item>
     <item
         android:id="@+id/open_with"
         app:showAsAction="never"
         android:orderInCategory="9999"
-        android:title="Open with...">
+        android:title="@string/quicklook_open">
     </item>
     <item
         android:id="@+id/share"
         app:showAsAction="never"
         android:orderInCategory="9999"
-        android:title="Share">
+        android:title="@string/quicklook_share">
     </item>
 </menu>

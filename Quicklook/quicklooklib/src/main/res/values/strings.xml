@@ -27,5 +27,8 @@
     <string name="items_tar_formatted_name">TAR Compressed File</string>
     <string name="items_zip_formatted_name">ZIP Compressed File</string>
     <string name="items_text_formatted_name">Text File</string>
+    <string name="quicklook_save">Save</string>
+    <string name="quicklook_open">Open with...</string>
+    <string name="quicklook_share">Share</string>
 
 </resources>

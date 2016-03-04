@@ -96,6 +96,7 @@ public class PdfView extends SurfaceView {
         };
 
         this.getHolder().addCallback(new SurfaceHolder.Callback() {
+
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 if (isRenderable) {
@@ -107,22 +108,28 @@ public class PdfView extends SurfaceView {
 
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-               if (isRenderable) {
-                   Log.w(TAG, "Surface Changed");
-                   updateSurface(holder);
-                   if (mPdfDoc != null) {
-                       mRenderPageWorker.submit(mRenderRunnable);
-                   }
-               }
+                if (isRenderable) {
+                    Log.w(TAG, "Surface Changed");
+                    updateSurface(holder);
+                    if (mPdfDoc != null) {
+                        mRenderPageWorker.submit(mRenderRunnable);
+                    }
+                }
             }
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                isSurfaceCreated = false;
-                recycle();
-                Log.w(TAG, "Surface Destroy");
+                Log.v(TAG, "Surface destroyed");
             }
         });
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        isSurfaceCreated = false;
+        recycle();
+        Log.w(TAG, "Surface detached");
     }
 
     private void loadDocument(Uri fileUri) {
@@ -348,10 +355,6 @@ public class PdfView extends SurfaceView {
         }
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-    }
 
     public Configurator fromUri(Uri uri) {
         return new Configurator(uri);

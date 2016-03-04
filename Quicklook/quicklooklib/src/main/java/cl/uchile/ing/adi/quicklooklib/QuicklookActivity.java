@@ -39,7 +39,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     private Runnable r;
     private View coordinator;
     private QuicklookFragment current;
-
+    ProgressDialog pd;
     AsyncTask loadingTask;
 
     private static String TAG = "QuickLookPermissions";
@@ -71,6 +71,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         //Set url of start item
+        if (pd!=null) pd.dismiss();
         boolean backstack = false;
         this.path = intent.getStringExtra("localurl");
         generateFolders();
@@ -263,7 +264,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     /**
-     * Action when item is retrieved... ¿Can we join it with interaction?
+     * Action when item is retrieved...
      * @param toRetrieve the item which is going to be displayed.
      * @param container item which contains toRetrieve.
      */
@@ -305,7 +306,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         Intent intent = new Intent(Intent.ACTION_VIEW);
         String mime = getMime(pathUri.getPath());
         intent.setDataAndType(pathUri, mime);
-        startActivity(Intent.createChooser(intent, "Open"));
+        startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_open)));
     }
 
 
@@ -319,7 +320,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             intent.putExtra(Intent.EXTRA_STREAM, pathUri);
             intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
             intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.item_share_text));
-            startActivity(Intent.createChooser(intent, "Share"));
+            startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_share)));
         } else {
 
         }
@@ -371,7 +372,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         final IListItem originalItem = (IListItem) (getItem());
         if (!areTasksRunning()) {
             loadingTask = new AsyncTask<Object, Object, BaseItem>() {
-                ProgressDialog pd;
 
                 @Override
                 protected void onPreExecute() {
@@ -389,8 +389,10 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 @Override
                 protected void onPostExecute(BaseItem result) {
                     super.onPostExecute(result);
-                    changeFragment(result);
-                    pd.dismiss();
+                    if (result!=null) {
+                        changeFragment(result);
+                        pd.dismiss();
+                    }
                 }
             };
             loadingTask.execute();
