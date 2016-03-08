@@ -20,13 +20,13 @@ package com.shockwave.pdfium.util;
 
 public interface Constants {
 
-    static final boolean DEBUG_MODE = true;
+    static final boolean DEBUG_MODE = false;
 
     static final float MAXIMUM_ZOOM = 10;
 
     static final float MINIMUM_ZOOM = 1;
 
-    static final int QUICK_MOVE_THRESHOLD_TIME = 400, //
+    static final int QUICK_MOVE_THRESHOLD_TIME = 500, //
 
     QUICK_MOVE_THRESHOLD_DISTANCE = 50;
 

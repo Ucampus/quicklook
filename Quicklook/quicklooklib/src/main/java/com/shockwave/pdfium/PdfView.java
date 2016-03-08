@@ -179,7 +179,7 @@ public class PdfView extends SurfaceView {
         float screenHeight = mPdfSurfaceHolder.getSurfaceFrame().height();
 
         /**Portrait**/
-        if(screenWidth < screenHeight){
+        //if(screenWidth < screenHeight){
             if( (pageWidth / pageHeight) < (screenWidth / screenHeight) ){
                 //Situation one: fit height
                 pageWidth *= (screenHeight / pageHeight);
@@ -199,9 +199,7 @@ public class PdfView extends SurfaceView {
                 mPageRect.bottom = (int)(mPageRect.top + pageHeight);
                 mPageRect.right = (int)pageWidth;
             }
-        }else{
-
-            /**Landscape**/
+        /**}else{
             if( pageWidth > pageHeight ){
                 //Situation one: fit height
                 pageWidth *= (screenHeight / pageHeight);
@@ -221,7 +219,7 @@ public class PdfView extends SurfaceView {
                 mPageRect.bottom = (int)(mPageRect.top + pageHeight);
                 mPageRect.right = (int)pageWidth;
             }
-        }
+        }**/
 
         isZoomed = false;
         zoom = MINIMUM_ZOOM;

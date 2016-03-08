@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.shockwave.pdfium.PdfView;
@@ -37,18 +38,34 @@ public class PdfFragment extends QuicklookFragment {
         v=  inflater.inflate(R.layout.fragment_pdf, container, false);
         pages = (TextView) v.findViewById(R.id.pdf_pages);
         pdfView = (PdfView) v.findViewById(R.id.pdfview);
-            pdfView.fromUri(Uri.parse(item.getPath()))
-                    .onErrorOccured(new OnErrorOccurredListener() {
-                        public void errorOccured() {
-                            showError(getContext().getString(R.string.info_pdf_load_failed));
-                        }
-                    }).onPageChanged(new OnPageChangedListener() {
-                @Override
-                public void pageChanged(int page, int pageCount) {
-                    PdfFragment.this.updatePageCounter(page,pageCount);
-                }
-            })
-                    .load();
+        ImageButton prevButton = (ImageButton) v.findViewById(R.id.back_button);
+        ImageButton nextButton = (ImageButton) v.findViewById(R.id.forward_button);
+
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prevPage(v);
+            }
+        });
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextPage(v);
+            }
+        });
+
+        pdfView.fromUri(Uri.parse(item.getPath()))
+                .onErrorOccured(new OnErrorOccurredListener() {
+                    public void errorOccured() {
+                        showError(getContext().getString(R.string.info_pdf_load_failed));
+                    }
+                }).onPageChanged(new OnPageChangedListener() {
+                    @Override
+                    public void pageChanged(int page, int pageCount) {
+                        PdfFragment.this.updatePageCounter(page,pageCount);
+                    }
+                })
+                .load();
         return v;
     }
 
@@ -56,5 +73,13 @@ public class PdfFragment extends QuicklookFragment {
         Log.d("Quicklook", "Page changed!");
         String actualPage = "" + page + "/" + pageCount;
         pages.setText(actualPage);
+    }
+
+    public void prevPage(View v) {
+        pdfView.prevPage();
+    }
+
+    public void nextPage(View v) {
+        pdfView.nextPage();
     }
 }
