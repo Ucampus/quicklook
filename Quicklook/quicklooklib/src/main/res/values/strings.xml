@@ -1,7 +1,5 @@
 <resources>
 
-    <string name="app_name">QuicklookLib</string>
-
     <string name="quicklook_loading_file">Loading...</string>
 
     <string name="quicklook_permission_error">Permission Error. Check permissions of application.</string>

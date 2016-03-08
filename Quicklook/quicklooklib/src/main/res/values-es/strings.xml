@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Librería de Quicklook</string>
     <string name="default_file_name_placeholder">Nombre de Archivo</string>
     <string name="default_file_size_placeholder">Tamaño</string>
     <string name="default_file_type_placeholder">Tipo de archivo</string>
