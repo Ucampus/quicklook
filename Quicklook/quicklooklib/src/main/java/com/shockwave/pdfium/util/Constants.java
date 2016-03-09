@@ -26,8 +26,8 @@ public interface Constants {
 
     static final float MINIMUM_ZOOM = 1;
 
-    static final int QUICK_MOVE_THRESHOLD_TIME = 500, //
+    static final int QUICK_MOVE_THRESHOLD_TIME = 300, //
 
-    QUICK_MOVE_THRESHOLD_DISTANCE = 50;
+    QUICK_MOVE_THRESHOLD_DISTANCE = 200;
 
 }

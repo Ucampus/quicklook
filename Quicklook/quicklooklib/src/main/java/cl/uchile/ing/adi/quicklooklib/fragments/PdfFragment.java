@@ -90,15 +90,12 @@ public class PdfFragment extends QuicklookFragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                Log.d("SB", "" + sb.getX() + " - " + sb.getY());
-                Log.d("pages", "" + pages.getX() + " - " + pages.getY());
-
+                onProgressChanged(seekBar,seekBar.getProgress(),false);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 pages.setVisibility(View.GONE);
-                Log.d("pages", "" + pages.getX() + " - " + pages.getY());
                 PdfFragment.this.goToPage(seekBar.getProgress());
             }
         });
