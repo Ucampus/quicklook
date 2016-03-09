@@ -2,15 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.PdfFragment"
     android:background="#bababa">
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="left">
 
-        <LinearLayout
+            <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:padding="5dp"
@@ -49,14 +50,40 @@
                 android:src="@drawable/right_arrow"
                 android:background="@drawable/nav_button"
                 />
-        </LinearLayout>
+        </LinearLayout>-->
 
         <com.shockwave.pdfium.PdfView
             android:id="@+id/pdfview"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="match_parent"/>
+            <!--android:layout_height="0dp"
+            android:layout_weight="1" -->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pdf_pages"
+        android:text="hola"
+        android:gravity="center"
+        android:textColor="#ffffffff"
+        android:textSize="22sp"
+        android:background="@drawable/hover_circle_shape"
+        android:visibility="gone"/>
+
+    <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="right">
+
+        <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:thumb="@drawable/thumb_slider_image"
+            app:seekBarRotation="CW90" />
+
+    </com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper>
 
 </FrameLayout>

@@ -80,7 +80,7 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
         if (!isZoomed()) {
             if (DEBUG_MODE) Log.d("DragPinchManager","Changing page by flicking...");
             float distance;
-            distance = x - startDragX;
+            distance = y - startDragY;
             long time = System.currentTimeMillis() - startDragTime;
             int diff = distance > 0 ? -1 : +1;
             if (isQuickMove(distance, time) || isPageChange(distance)) {

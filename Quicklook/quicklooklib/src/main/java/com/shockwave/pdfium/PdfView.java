@@ -19,6 +19,7 @@ import android.view.SurfaceView;
 import com.shockwave.pdfium.listener.OnErrorOccurredListener;
 import com.shockwave.pdfium.listener.OnLoadCompleteListener;
 import com.shockwave.pdfium.listener.OnPageChangedListener;
+import com.shockwave.pdfium.listener.OnZoomChangedListener;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -64,6 +65,7 @@ public class PdfView extends SurfaceView {
     private Runnable mRenderRunnable;
 
     private OnPageChangedListener onPageChangedListener;
+    private OnZoomChangedListener onZoomChangedListener;
     private OnErrorOccurredListener onErrorOccurredListener;
     private OnLoadCompleteListener onLoadCompleteListener;
 
@@ -228,6 +230,9 @@ public class PdfView extends SurfaceView {
             pd.dismiss();
             pd = null;
         }
+        if (onZoomChangedListener !=null) {
+            onZoomChangedListener.zoomChanged(isZoomed, getZoom());
+        }
     }
 
     private void rectF2Rect(RectF inRectF, Rect outRect){
@@ -277,6 +282,9 @@ public class PdfView extends SurfaceView {
                 moveY = mScreenRect.height() - mPageRect.bottom;
             }
             moveRelative(moveX,moveY,false);
+        }
+        if (onZoomChangedListener !=null) {
+            onZoomChangedListener.zoomChanged(isZoomed, getZoom());
         }
     }
 
@@ -402,6 +410,10 @@ public class PdfView extends SurfaceView {
         this.onPageChangedListener = onPageChangedListener;
     }
 
+    private void setOnZoomChangedListener(OnZoomChangedListener onZoomChangedListener) {
+        this.onZoomChangedListener = onZoomChangedListener;
+    }
+
     private void setOnErrorOccuredListener(OnErrorOccurredListener onErrorOccurredListener) {
         this.onErrorOccurredListener = onErrorOccurredListener;
     }
@@ -419,6 +431,8 @@ public class PdfView extends SurfaceView {
         private OnLoadCompleteListener onLoadCompleteListener;
 
         private OnPageChangedListener onPageChangedListener;
+
+        private OnZoomChangedListener onZoomChangedListener;
 
         private OnErrorOccurredListener onErrorOccurredListener;
 
@@ -441,10 +455,16 @@ public class PdfView extends SurfaceView {
             return this;
         }
 
+        public Configurator onZoomChanged(OnZoomChangedListener onZoomChangedListener) {
+            this.onZoomChangedListener = onZoomChangedListener;
+            return this;
+        }
+
         public void load() {
             PdfView.this.setOnLoadCompleteListener(onLoadCompleteListener);
             PdfView.this.setOnPageChangedListener(onPageChangedListener);
             PdfView.this.setOnErrorOccuredListener(onErrorOccurredListener);
+            PdfView.this.setOnZoomChangedListener(onZoomChangedListener);
             PdfView.this.loadDocument(uri);
         }
     }
