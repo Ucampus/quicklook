@@ -41,6 +41,8 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
 
     private long startDragTime;
 
+    private int startBorder;
+
     private float startDragX;
     private float startDragY;
 
@@ -66,6 +68,7 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
         startDragTime = System.currentTimeMillis();
         startDragX = x;
         startDragY = y;
+        startBorder = pdfView.closerBorder();
     }
 
     @Override
@@ -77,14 +80,22 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
     @Override
     public void endDrag(float x, float y) {
         if (DEBUG_MODE) Log.d("DragPinchManager", "End Drag");
-        if (!isZoomed()) {
+        if (true) {
             if (DEBUG_MODE) Log.d("DragPinchManager","Changing page by flicking...");
             float distance;
             distance = y - startDragY;
             long time = System.currentTimeMillis() - startDragTime;
             int diff = distance > 0 ? -1 : +1;
-            if (isQuickMove(distance, time) || isPageChange(distance)) {
+            int closerBorder = pdfView.closerBorder();
+            if (isPageChange(distance) && isLongMove(distance) && closerBorder == startBorder) {
                 pdfView.goToPage((pdfView.getCurrentPage() - 1) + diff);
+                if (closerBorder==PdfView.TOP_BORDER) {
+                    pdfView.goToBottom();
+                } else if (closerBorder==PdfView.BOTTOM_BORDER) {
+                    pdfView.goToTop();
+                } else if (closerBorder==PdfView.BOTH_BORDERS) {
+                    pdfView.resetPageFit();
+                }
             }
         }
     }
@@ -94,7 +105,12 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
     }
 
     private boolean isPageChange(float distance) {
-        return Math.abs(distance) > Math.abs((pdfView.getScreenRect().width()) / 2);
+        //return Math.abs(distance) > Math.abs((pdfView.getScreenRect().width()) / 2);
+        return pdfView.closerBorder()>0;
+    }
+
+    private boolean isLongMove(float dx) {
+        return Math.abs(dx) >= QUICK_MOVE_THRESHOLD_DISTANCE;
     }
 
     private boolean isQuickMove(float dx, long dt) {

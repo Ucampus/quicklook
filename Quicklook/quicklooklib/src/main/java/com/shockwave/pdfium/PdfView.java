@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PixelFormat;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -31,6 +32,11 @@ import static com.shockwave.pdfium.util.Constants.*;
 
 
 public class PdfView extends SurfaceView {
+
+    static int TOP_BORDER = 1;
+    static int BOTTOM_BORDER = 2;
+    static int BOTH_BORDERS = 3;
+    static int NO_BORDER = 0;
 
     private Context c;
 
@@ -83,7 +89,9 @@ public class PdfView extends SurfaceView {
             public void run() {
                 if (isRenderable) {
                     loadPageIfNeed(mCurrentPageIndex);
-                    resetPageFit();
+                    if (PdfView.this.getZoom()<=1) {
+                        resetPageFit();
+                    }
                     mPreLoadPageWorker.submit(new Runnable() {
                         @Override
                         public void run() {
@@ -154,7 +162,7 @@ public class PdfView extends SurfaceView {
             if (onErrorOccurredListener != null) {
                 onErrorOccurredListener.errorOccured();
             }
-            this.setBackgroundColor(Color.parseColor("#CACACA"));
+            this.setBackgroundColor(Color.parseColor("#FFFFFF"));
             isRenderable = false;
             mDocFileStream = null;
             mPdfDoc = null;
@@ -173,6 +181,25 @@ public class PdfView extends SurfaceView {
         mScreenRect.set(holder.getSurfaceFrame());
     }
 
+    protected void setPagePosition(int top, int left) {
+        int width = mPageRect.width();
+        int height = mPageRect.height();
+        mPageRect.top = top;
+        mPageRect.bottom = top + height;
+        mPageRect.left = left;
+        mPageRect.right = left + width;
+        render();
+    }
+
+    public void goToTop() {
+        setPagePosition(0,mPageRect.left);
+    }
+
+    public void goToBottom() {
+        int bottom = mPdfSurfaceHolder.getSurfaceFrame().height();
+        setPagePosition(bottom - mPageRect.height(),mPageRect.left);
+    }
+
     protected void resetPageFit(){
         int pageIndex = mCurrentPageIndex;
         float pageWidth = mPdfCore.getPageWidth(mPdfDoc, pageIndex);
@@ -181,7 +208,7 @@ public class PdfView extends SurfaceView {
         float screenHeight = mPdfSurfaceHolder.getSurfaceFrame().height();
 
         /**Portrait**/
-        //if(screenWidth < screenHeight){
+        if(screenWidth < screenHeight){
             if( (pageWidth / pageHeight) < (screenWidth / screenHeight) ){
                 //Situation one: fit height
                 pageWidth *= (screenHeight / pageHeight);
@@ -201,7 +228,7 @@ public class PdfView extends SurfaceView {
                 mPageRect.bottom = (int)(mPageRect.top + pageHeight);
                 mPageRect.right = (int)pageWidth;
             }
-        /**}else{
+        }else{
             if( pageWidth > pageHeight ){
                 //Situation one: fit height
                 pageWidth *= (screenHeight / pageHeight);
@@ -221,7 +248,7 @@ public class PdfView extends SurfaceView {
                 mPageRect.bottom = (int)(mPageRect.top + pageHeight);
                 mPageRect.right = (int)pageWidth;
             }
-        }**/
+        }
 
         isZoomed = false;
         zoom = MINIMUM_ZOOM;
@@ -240,6 +267,17 @@ public class PdfView extends SurfaceView {
         outRect.right = (int)inRectF.right;
         outRect.top = (int)inRectF.top;
         outRect.bottom = (int)inRectF.bottom;
+    }
+
+    protected int closerBorder() {
+        if (mPageRect.top>=0 && mPageRect.bottom <= mPdfSurfaceHolder.getSurfaceFrame().height()) {
+            return BOTH_BORDERS;
+        } if (mPageRect.top>=0) {
+            return TOP_BORDER;
+        } if (mPageRect.bottom<=mPdfSurfaceHolder.getSurfaceFrame().height()) {
+            return BOTTOM_BORDER;
+        }
+            return NO_BORDER;
     }
 
     public boolean isZoomed() {
@@ -367,7 +405,7 @@ public class PdfView extends SurfaceView {
     }
 
     public void loadPage() {
-        pd = ProgressDialog.show(c, "", "Cargando página "+getCurrentPage()+" de "+getPageCount());
+        //pd = ProgressDialog.show(c, "", "Cargando página "+getCurrentPage()+" de "+getPageCount());
         if (mPdfDoc != null) {
             mRenderPageWorker.submit(mRenderRunnable);
         }
