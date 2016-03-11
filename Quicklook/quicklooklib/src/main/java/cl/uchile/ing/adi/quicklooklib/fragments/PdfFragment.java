@@ -1,8 +1,10 @@
 package cl.uchile.ing.adi.quicklooklib.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -125,7 +127,6 @@ public class PdfFragment extends QuicklookFragment {
         pages.setY(val);
         pages.setX(pdfView.getWidth() - 6 * seekBar.getThumbOffset());
     }
-
 
 
 }

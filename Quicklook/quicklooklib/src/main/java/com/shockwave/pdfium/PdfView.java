@@ -8,7 +8,9 @@ import android.graphics.PixelFormat;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -16,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.WindowManager;
 
 import com.shockwave.pdfium.listener.OnErrorOccurredListener;
 import com.shockwave.pdfium.listener.OnLoadCompleteListener;
@@ -26,6 +29,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import cl.uchile.ing.adi.quicklooklib.R;
 
 import static com.shockwave.pdfium.util.Constants.*;
 
@@ -65,6 +70,8 @@ public class PdfView extends SurfaceView {
     private boolean isRenderable = true;
 
 
+    private AsyncTask loadingTask;
+
     private final ExecutorService mPreLoadPageWorker = Executors.newSingleThreadExecutor();
     private final ExecutorService mRenderPageWorker = Executors.newSingleThreadExecutor();
 
@@ -92,7 +99,7 @@ public class PdfView extends SurfaceView {
                     if (PdfView.this.getZoom()<=1) {
                         resetPageFit();
                     }
-                    mPreLoadPageWorker.submit(new Runnable() {
+                    /**mPreLoadPageWorker.submit(new Runnable() {
                         @Override
                         public void run() {
                             loadPageIfNeed(mCurrentPageIndex + 1);
@@ -100,7 +107,7 @@ public class PdfView extends SurfaceView {
                             loadPageIfNeed(mCurrentPageIndex + 2);
                             loadPageIfNeed(mCurrentPageIndex - 2);
                         }
-                    });
+                    });**/
                 }
             }
         };
@@ -112,7 +119,6 @@ public class PdfView extends SurfaceView {
                 if (isRenderable) {
                     isSurfaceCreated = true;
                     updateSurface(holder);
-                    loadPage();
                 }
             }
 
@@ -121,9 +127,7 @@ public class PdfView extends SurfaceView {
                 if (isRenderable) {
                     Log.w(TAG, "Surface Changed");
                     updateSurface(holder);
-                    if (mPdfDoc != null) {
-                        mRenderPageWorker.submit(mRenderRunnable);
-                    }
+                    loadPage();
                 }
             }
 
@@ -253,10 +257,6 @@ public class PdfView extends SurfaceView {
         isZoomed = false;
         zoom = MINIMUM_ZOOM;
         render();
-        if (pd!=null) {
-            pd.dismiss();
-            pd = null;
-        }
         if (onZoomChangedListener !=null) {
             onZoomChangedListener.zoomChanged(isZoomed, getZoom());
         }
@@ -405,13 +405,10 @@ public class PdfView extends SurfaceView {
     }
 
     public void loadPage() {
-        //pd = ProgressDialog.show(c, "", "Cargando página "+getCurrentPage()+" de "+getPageCount());
-        if (mPdfDoc != null) {
-            mRenderPageWorker.submit(mRenderRunnable);
-        }
-        if (onPageChangedListener !=null) {
-            onPageChangedListener.pageChanged(getCurrentPage(), mPageCount);
-        }
+            makeTransition();
+            if (onPageChangedListener != null) {
+                onPageChangedListener.pageChanged(mCurrentPageIndex+1, mPageCount);
+            }
     }
 
     public void goToPage(int index) {
@@ -514,5 +511,42 @@ public class PdfView extends SurfaceView {
                     mPageRect.width(), mPageRect.height());
         }
     }
+
+    public void makeTransition() {
+        if (!areTasksRunning()) {
+            loadingTask = new AsyncTask<Object, Object, Object>() {
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    pd = ProgressDialog.show(c,"Loading","");
+                    pd.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                    pd.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                    pd.setContentView(R.layout.pd_layout);
+
+                }
+
+                @Override
+                protected Object doInBackground(Object... params) {
+                    if (mPdfDoc != null) {
+                        mRenderRunnable.run();
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Object o) {
+                    super.onPostExecute(o);
+                    pd.dismiss();
+                }
+            };
+            loadingTask.execute();
+        }
+    }
+
+    public boolean areTasksRunning() {
+        return (loadingTask != null && loadingTask.getStatus() == AsyncTask.Status.RUNNING);
+    }
+
 
 }

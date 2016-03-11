@@ -28,6 +28,8 @@ public interface Constants {
 
     static final int QUICK_MOVE_THRESHOLD_TIME = 300, //
 
-    QUICK_MOVE_THRESHOLD_DISTANCE = 100;
+    QUICK_MOVE_THRESHOLD_DISTANCE = 125,
+
+    QUICK_MOVE_X_THRESHOLD_DISTANCE = 75;
 
 }

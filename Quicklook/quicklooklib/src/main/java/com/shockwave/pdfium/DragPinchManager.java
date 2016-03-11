@@ -87,7 +87,7 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
             long time = System.currentTimeMillis() - startDragTime;
             int diff = distance > 0 ? -1 : +1;
             int closerBorder = pdfView.closerBorder();
-            if (isPageChange(distance) && isLongMove(distance) && closerBorder == startBorder) {
+            if (isPageChange(distance) && isLongMove(distance,(x-startDragX)) && closerBorder == startBorder) {
                 pdfView.goToPage((pdfView.getCurrentPage() - 1) + diff);
                 if (closerBorder==PdfView.TOP_BORDER) {
                     pdfView.goToBottom();
@@ -109,8 +109,9 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
         return pdfView.closerBorder()>0;
     }
 
-    private boolean isLongMove(float dx) {
-        return Math.abs(dx) >= QUICK_MOVE_THRESHOLD_DISTANCE;
+    private boolean isLongMove(float distance,float x) {
+        return Math.abs(distance) >= QUICK_MOVE_THRESHOLD_DISTANCE &&
+                Math.abs(x) < QUICK_MOVE_X_THRESHOLD_DISTANCE;
     }
 
     private boolean isQuickMove(float dx, long dt) {
