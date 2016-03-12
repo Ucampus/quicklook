@@ -112,7 +112,7 @@ public class PdfiumCore {
     public void renderPage(PdfDocument doc, Surface surface, int pageIndex,
                            int startX, int startY, int drawSizeX, int drawSizeY){
         synchronized (doc.Lock){
-            if (doc.mNativeDocPtr!=-1) {
+            if (doc.mNativeDocPtr!=-1 && !(doc.mNativeDocPtr == null)) {
                 try {
                     //nativeRenderPage(doc.mNativePagesPtr.get(pageIndex), surface, mCurrentDpi);
                     nativeRenderPage(doc.mNativePagesPtr.get(pageIndex), surface, mCurrentDpi,

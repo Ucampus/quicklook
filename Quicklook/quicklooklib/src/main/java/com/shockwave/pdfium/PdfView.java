@@ -72,8 +72,6 @@ public class PdfView extends SurfaceView {
 
     private AsyncTask loadingTask;
 
-    private final ExecutorService mPreLoadPageWorker = Executors.newSingleThreadExecutor();
-    private final ExecutorService mRenderPageWorker = Executors.newSingleThreadExecutor();
 
     private Runnable mRenderRunnable;
 
@@ -127,7 +125,7 @@ public class PdfView extends SurfaceView {
                 if (isRenderable) {
                     Log.w(TAG, "Surface Changed");
                     updateSurface(holder);
-                    loadPage();
+                    loadPage(mCurrentPageIndex,BOTH_BORDERS);
                 }
             }
 
@@ -196,12 +194,12 @@ public class PdfView extends SurfaceView {
     }
 
     public void goToTop() {
-        setPagePosition(0,mPageRect.left);
+        setPagePosition(0, mPageRect.left);
     }
 
     public void goToBottom() {
         int bottom = mPdfSurfaceHolder.getSurfaceFrame().height();
-        setPagePosition(bottom - mPageRect.height(),mPageRect.left);
+        setPagePosition(bottom - mPageRect.height(), mPageRect.left);
     }
 
     protected void resetPageFit(){
@@ -404,19 +402,16 @@ public class PdfView extends SurfaceView {
         return new Configurator(uri);
     }
 
-    public void loadPage() {
-            makeTransition();
-            if (onPageChangedListener != null) {
-                onPageChangedListener.pageChanged(mCurrentPageIndex+1, mPageCount);
-            }
+    public void goToPage(int index) {
+        goToPage(index,BOTH_BORDERS);
     }
 
-    public void goToPage(int index) {
+    public void goToPage(int index, int transitionType) {
         if(index >= 0 && index < mPageCount) {
-            mCurrentPageIndex = index;
-            loadPage();
+            loadPage(index,transitionType);
         }
     }
+
     public void nextPage() {
         goToPage(mCurrentPageIndex+1);
     }
@@ -512,14 +507,14 @@ public class PdfView extends SurfaceView {
         }
     }
 
-    public void makeTransition() {
+    public void loadPage(final int indexPage, final int transitionType) {
         if (!areTasksRunning()) {
             loadingTask = new AsyncTask<Object, Object, Object>() {
 
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    pd = ProgressDialog.show(c,"Loading","");
+                    pd = ProgressDialog.show(c, "Loading", "");
                     pd.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
                     pd.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     pd.setContentView(R.layout.pd_layout);
@@ -529,6 +524,7 @@ public class PdfView extends SurfaceView {
                 @Override
                 protected Object doInBackground(Object... params) {
                     if (mPdfDoc != null) {
+                        mCurrentPageIndex = indexPage;
                         mRenderRunnable.run();
                     }
                     return null;
@@ -537,6 +533,16 @@ public class PdfView extends SurfaceView {
                 @Override
                 protected void onPostExecute(Object o) {
                     super.onPostExecute(o);
+                    if (transitionType == BOTH_BORDERS) {
+                        resetPageFit();
+                    } else if (transitionType == TOP_BORDER) {
+                        goToBottom();
+                    } else if (transitionType == BOTTOM_BORDER) {
+                        goToTop();
+                    }
+                    if (onPageChangedListener != null) {
+                        onPageChangedListener.pageChanged(mCurrentPageIndex + 1, mPageCount);
+                    }
                     pd.dismiss();
                 }
             };

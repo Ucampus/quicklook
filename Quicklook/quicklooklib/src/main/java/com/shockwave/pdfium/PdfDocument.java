@@ -9,7 +9,7 @@ public class PdfDocument {
 
     /*package*/ PdfDocument(){}
 
-    /*package*/ long mNativeDocPtr;
+    /*package*/ Long mNativeDocPtr;
 
     /*package*/ final Map<Integer, Long> mNativePagesPtr = new ArrayMap<>();
     public boolean hasPage(int index){ return mNativePagesPtr.containsKey(index); }

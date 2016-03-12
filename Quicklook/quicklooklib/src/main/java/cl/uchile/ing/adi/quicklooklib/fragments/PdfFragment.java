@@ -124,8 +124,13 @@ public class PdfFragment extends QuicklookFragment {
         pages.setVisibility(View.VISIBLE);
         int val = (progress * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
         pages.setText("" + (progress + 1));
-        pages.setY(val);
-        pages.setX(pdfView.getWidth() - 6 * seekBar.getThumbOffset());
+        if (pdfView.getZoom()==1) {
+            pages.setY(val);
+            pages.setX(pdfView.getWidth() - 6 * seekBar.getThumbOffset());
+        } else {
+            pages.setY(40);
+            pages.setX(pdfView.getWidth() - 5 * seekBar.getThumbOffset());
+        }
     }
 
 
