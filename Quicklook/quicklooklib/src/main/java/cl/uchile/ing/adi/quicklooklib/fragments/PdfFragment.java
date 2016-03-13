@@ -67,13 +67,14 @@ public class PdfFragment extends QuicklookFragment {
                 }).onPageChanged(new OnPageChangedListener() {
             @Override
             public void pageChanged(int page, int pageCount) {
-                h.removeCallbacks(hideCounter);
-                sb.setProgress(page - 1);
-                pages.setVisibility(View.VISIBLE);
-                int progress = sb.getProgress();
-                showPageCounter(sb,progress);
-                h.postDelayed(hideCounter,2000);
-
+                if (sb.getMax() > 0) {
+                    h.removeCallbacks(hideCounter);
+                    sb.setProgress(page - 1);
+                    pages.setVisibility(View.VISIBLE);
+                    int progress = sb.getProgress();
+                    showPageCounter(sb,progress);
+                    h.postDelayed(hideCounter,2000);
+                }
             }
         }).onZoomChanged(new OnZoomChangedListener() {
             @Override
@@ -121,15 +122,17 @@ public class PdfFragment extends QuicklookFragment {
     }
 
     public void showPageCounter(SeekBar seekBar, int progress) {
-        pages.setVisibility(View.VISIBLE);
-        int val = (progress * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
-        pages.setText("" + (progress + 1));
-        if (pdfView.getZoom()==1) {
-            pages.setY(val);
-            pages.setX(pdfView.getWidth() - 6 * seekBar.getThumbOffset());
-        } else {
-            pages.setY(40);
-            pages.setX(pdfView.getWidth() - 5 * seekBar.getThumbOffset());
+        if (seekBar.getMax() > 0) {
+            pages.setVisibility(View.VISIBLE);
+            int val = (progress * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
+            pages.setText("" + (progress + 1));
+            if (pdfView.getZoom() == 1) {
+                pages.setY(val);
+                pages.setX(pdfView.getWidth() - 6 * seekBar.getThumbOffset());
+            } else {
+                pages.setY(40);
+                pages.setX(pdfView.getWidth() - 5 * seekBar.getThumbOffset());
+            }
         }
     }
 
