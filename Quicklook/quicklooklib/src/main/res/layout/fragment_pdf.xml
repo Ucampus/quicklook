@@ -30,7 +30,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/pdf_pages"
         android:text="1"
-        android:layout_gravity="bottom"
         android:gravity="center"
         android:textColor="#ffffffff"
         android:textSize="22sp"
