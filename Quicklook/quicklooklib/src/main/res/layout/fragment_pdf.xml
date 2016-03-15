@@ -6,21 +6,10 @@
     tools:context=".fragments.PdfFragment"
     android:background="#ffffffff">
 
-        <com.shockwave.pdfium.PdfView
-            android:id="@+id/pdfview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/pdf_pages"
-        android:text="hola"
-        android:gravity="center"
-        android:textColor="#ffffffff"
-        android:textSize="22sp"
-        android:background="@drawable/hover_circle_shape"
-        android:visibility="gone"/>
+    <com.shockwave.pdfium.PdfView
+        android:id="@+id/pdfview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
         android:layout_width="wrap_content"
@@ -29,11 +18,23 @@
 
         <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar
             android:id="@+id/seek_bar"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:thumb="@drawable/thumb_slider_image"
             app:seekBarRotation="CW90" />
 
     </com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pdf_pages"
+        android:text="1"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:textColor="#ffffffff"
+        android:textSize="22sp"
+        android:background="@drawable/hover_circle_shape"
+        android:visibility="gone"/>
 
 </FrameLayout>

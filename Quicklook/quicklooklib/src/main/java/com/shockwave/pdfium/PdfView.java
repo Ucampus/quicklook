@@ -143,6 +143,8 @@ public class PdfView extends SurfaceView {
         isSurfaceCreated = false;
         recycle();
         Log.w(TAG, "Surface detached");
+        isRenderable = false;
+        zoom = 1;
     }
 
     private void loadDocument(Uri fileUri) {
@@ -555,6 +557,4 @@ public class PdfView extends SurfaceView {
     public boolean areTasksRunning() {
         return (loadingTask != null && loadingTask.getStatus() == AsyncTask.Status.RUNNING);
     }
-
-
 }

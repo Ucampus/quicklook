@@ -23,6 +23,7 @@ import android.util.Log;
 
 import com.shockwave.pdfium.util.DragPinchListener;
 import com.shockwave.pdfium.util.DragPinchListener.OnDoubleTapListener;
+import com.shockwave.pdfium.util.DragPinchListener.OnTapListener;
 import com.shockwave.pdfium.util.DragPinchListener.OnDragListener;
 import com.shockwave.pdfium.util.DragPinchListener.OnPinchListener;
 
@@ -33,7 +34,7 @@ import static com.shockwave.pdfium.util.Constants.*;
  *         This Manager takes care of moving the pdfView,
  *         set its zoom track user actions.
  */
-class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapListener {
+class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapListener, OnTapListener {
 
     private PdfView pdfView;
 
@@ -52,6 +53,7 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
         dragPinchListener.setOnDragListener(this);
         dragPinchListener.setOnPinchListener(this);
         dragPinchListener.setOnDoubleTapListener(this);
+        dragPinchListener.setOnTapListener(this);
         pdfView.setOnTouchListener(dragPinchListener);
     }
 
@@ -80,16 +82,15 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
     @Override
     public void endDrag(float x, float y) {
         if (DEBUG_MODE) Log.d("DragPinchManager", "End Drag");
-        if (DEBUG_MODE) Log.d("DragPinchManager","Changing page by flicking...");
         float distance;
         distance = y - startDragY;
         long time = System.currentTimeMillis() - startDragTime;
         int diff = distance > 0 ? -1 : +1;
         int closerBorder = pdfView.closerBorder();
-        if (pdfView.getZoom() <= 1 ||
+        if ((pdfView.getZoom() <= 1 && isLongMove(distance,(x-startDragX))) ||
                 (isPageChange(distance) && isLongMove(distance,(x-startDragX)) && closerBorder == startBorder)) {
             pdfView.goToPage((pdfView.getCurrentPage() - 1) + diff, closerBorder);
-
+            if (DEBUG_MODE) Log.d("DragPinchManager","Changing page by flicking...");
         }
     }
 
@@ -103,6 +104,7 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
     }
 
     private boolean isLongMove(float distance,float x) {
+        if (DEBUG_MODE) Log.d("DragPinchManager","Move of y="+distance+ "and x="+x);
         return Math.abs(distance) >= QUICK_MOVE_THRESHOLD_DISTANCE &&
                 Math.abs(x) < QUICK_MOVE_X_THRESHOLD_DISTANCE;
     }
@@ -118,5 +120,10 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
         if (isZoomed()) {
             pdfView.resetPageFit();
         }
+    }
+
+    @Override
+    public void onTap(float x, float y) {
+
     }
 }

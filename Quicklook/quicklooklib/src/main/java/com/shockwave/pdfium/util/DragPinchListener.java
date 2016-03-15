@@ -105,6 +105,17 @@ public class DragPinchListener implements OnTouchListener {
 
     }
 
+    public interface OnTapListener {
+
+        /**
+         * Called when a tap happens.
+         * @param x X-offset of event.
+         * @param y Y-offset of event.
+         */
+        void onTap(float x, float y);
+
+    }
+
     enum State {NONE, ZOOM, DRAG}
 
     private State state = State.NONE;
@@ -120,6 +131,8 @@ public class DragPinchListener implements OnTouchListener {
     private OnPinchListener onPinchListener;
 
     private OnDoubleTapListener onDoubleTapListener;
+
+    private OnTapListener onTapListener;
 
     private float lastDownX, lastDownY;
 
@@ -162,16 +175,20 @@ public class DragPinchListener implements OnTouchListener {
                 if (isClick(event, lastDownX, lastDownY, event.getX(), event.getY())) {
                     long time = System.currentTimeMillis();
                     handlerClick.removeCallbacks(runnableClick);
-                    if (onDoubleTapListener != null) {
-                        if (time - lastClickTime < MAX_DOUBLE_CLICK_TIME) {
+                    if (time - lastClickTime < MAX_DOUBLE_CLICK_TIME) {
+                        if (onDoubleTapListener != null) {
                             onDoubleTapListener.onDoubleTap(event.getX(), event.getY());
                             lastClickTime = 0;
                         } else {
-                            lastClickTime = System.currentTimeMillis();
-                            handlerClick.postDelayed(runnableClick, MAX_CLICK_TIME);
+                            handlerClick.postDelayed(runnableClick,0);
                         }
                     } else {
-                        handlerClick.postDelayed(runnableClick,0);
+                        if (onTapListener != null) {
+                            onTapListener.onTap(event.getX(), event.getY());
+                            lastClickTime = 0;
+                        }
+                        lastClickTime = System.currentTimeMillis();
+                        handlerClick.postDelayed(runnableClick, MAX_CLICK_TIME);
                     }
                 }
                 break;
@@ -292,5 +309,10 @@ public class DragPinchListener implements OnTouchListener {
     public void setOnDoubleTapListener(OnDoubleTapListener onDoubleTapListener) {
         this.onDoubleTapListener = onDoubleTapListener;
     }
+
+    public void setOnTapListener(OnTapListener onTapListener) {
+        this.onTapListener = onTapListener;
+    }
+
 
 }

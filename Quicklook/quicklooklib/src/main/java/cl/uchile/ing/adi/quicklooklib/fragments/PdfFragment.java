@@ -97,13 +97,13 @@ public class PdfFragment extends QuicklookFragment {
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                showPageCounter(seekBar,seekBar.getProgress());
+                showPageCounter(seekBar, seekBar.getProgress());
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 h.removeCallbacks(hideCounter);
-                showPageCounter(seekBar,seekBar.getProgress());
+                showPageCounter(seekBar, seekBar.getProgress());
             }
 
             @Override
@@ -117,6 +117,7 @@ public class PdfFragment extends QuicklookFragment {
         return v;
     }
 
+
     public void goToPage(int page) {
         pdfView.goToPage(page);
     }
@@ -125,14 +126,10 @@ public class PdfFragment extends QuicklookFragment {
         if (seekBar.getMax() > 0) {
             pages.setVisibility(View.VISIBLE);
             int val = (progress * (seekBar.getWidth() - 2 * seekBar.getThumbOffset())) / seekBar.getMax();
+            int correction = ((progress*100)/seekBar.getMax())> 50 ? -1 : 1;
             pages.setText("" + (progress + 1));
-            if (pdfView.getZoom() == 1) {
-                pages.setY(val);
-                pages.setX(pdfView.getWidth() - 6 * seekBar.getThumbOffset());
-            } else {
-                pages.setY(40);
-                pages.setX(pdfView.getWidth() - 5 * seekBar.getThumbOffset());
-            }
+            pages.setY(val-20+correction*40);
+            pages.setX(pdfView.getWidth() - 6 * seekBar.getThumbOffset());
         }
     }
 
