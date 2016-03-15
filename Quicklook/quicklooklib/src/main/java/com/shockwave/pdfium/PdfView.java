@@ -519,7 +519,7 @@ public class PdfView extends SurfaceView {
                     pd.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
                     pd.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     pd.setContentView(R.layout.pd_layout);
-                    pd.getWindow().setGravity(Gravity.BOTTOM);
+                    pd.getWindow().setGravity(Gravity.LEFT | Gravity.BOTTOM);
 
                 }
 
