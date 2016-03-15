@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
@@ -518,6 +519,7 @@ public class PdfView extends SurfaceView {
                     pd.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
                     pd.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                     pd.setContentView(R.layout.pd_layout);
+                    pd.getWindow().setGravity(Gravity.BOTTOM);
 
                 }
 
