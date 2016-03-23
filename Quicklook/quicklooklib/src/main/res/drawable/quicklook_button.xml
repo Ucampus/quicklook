@@ -5,10 +5,10 @@
     <item android:state_pressed="true" >
         <shape>
             <solid
-                android:color="@color/colorPrimaryDark" />
+                android:color="@color/primary_dark" />
             <stroke
                 android:width="3dp"
-                android:color="@color/colorPrimaryDark" />
+                android:color="@color/primary_dark" />
             <corners
                 android:radius="3dp" />
             <padding
@@ -22,10 +22,10 @@
     <item android:state_focused="true" >
         <shape>
             <solid
-                android:color="@color/colorAccent" />
+                android:color="@color/accent" />
             <stroke
                 android:width="3dp"
-                android:color="@color/colorAccent" />
+                android:color="@color/accent" />
             <corners
                 android:radius="3dp" />
             <padding
@@ -39,10 +39,10 @@
     <item>
         <shape>
             <solid
-                android:color="@color/colorPrimary" />
+                android:color="@color/primary" />
             <stroke
                 android:width="3dp"
-                android:color="@color/colorPrimary" />
+                android:color="@color/primary" />
             <corners
                 android:radius="3dp" />
             <padding

@@ -36,4 +36,11 @@
         android:background="@drawable/hover_circle_shape"
         android:visibility="gone"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#FFFF00FF">
+
+    </LinearLayout>
+
 </FrameLayout>
