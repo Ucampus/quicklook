@@ -95,9 +95,9 @@ public class PdfView extends SurfaceView {
             public void run() {
                 if (isRenderable) {
                     loadPageIfNeed(mCurrentPageIndex);
-                    if (PdfView.this.getZoom()<=1) {
-                        resetPageFit();
-                    }
+                    //if (PdfView.this.getZoom()<=1) {
+                    //    resetPageFit();
+                    //}
                     /**mPreLoadPageWorker.submit(new Runnable() {
                         @Override
                         public void run() {
