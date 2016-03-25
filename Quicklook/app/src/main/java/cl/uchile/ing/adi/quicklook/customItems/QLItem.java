@@ -42,7 +42,7 @@ public class QLItem extends VirtualItem {
                 long size = actual.getLong("size");
                 Bundle itemExtra = new Bundle();
                 itemExtra.putString("webPath",actual.getString("path"));
-                itemExtra.putString("mime-type",actual.getString("mime"));
+                itemExtra.putString("webMimetype",actual.getString("mime"));
                 BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size,itemExtra);
                 itemList.add(newItem);
             }
@@ -70,7 +70,7 @@ public class QLItem extends VirtualItem {
         Intent intent = new Intent();
         intent.setAction(QL_BROADCAST);
         intent.putExtra("name",toRetrieve.getName());
-        intent.putExtra("mime",toRetrieve.getExtra().getString("mime-type"));
+        intent.putExtra("mime",toRetrieve.getExtra().getString("webMimetype"));
         intent.putExtra("path",toRetrieve.getExtra().getString("webPath"));
         intent.putExtra("size",toRetrieve.getSize());
         context.sendBroadcast(intent);

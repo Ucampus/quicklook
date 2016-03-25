@@ -40,8 +40,8 @@ public class ItemFactory {
 
     private ItemFactory() {
         // Here we register the types of files:
-        register(FolderItem.class, FOLDER_MIMETYPE);
-        register(FileItem.class, DEFAULT_MIMETYPE);
+        register(FolderItem.class, FOLDER_MIMETYPE, "mime:"+FOLDER_MIMETYPE);
+        register(FileItem.class, DEFAULT_MIMETYPE, "mime:"+DEFAULT_MIMETYPE);
         register(PDFItem.class, "pdf");
         register(ZipItem.class, "zip");
         register(PictureItem.class, "jpeg", "png", "gif", "jpg","mime:image");
