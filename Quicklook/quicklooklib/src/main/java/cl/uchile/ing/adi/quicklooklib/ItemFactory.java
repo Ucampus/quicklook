@@ -32,7 +32,7 @@ public class ItemFactory {
 
     /**
      * Returns an instance of the class.
-     * @return
+     * @return ItemFactory
      */
     public static ItemFactory getInstance() {
         return ourInstance;
@@ -44,8 +44,8 @@ public class ItemFactory {
         register(FileItem.class, DEFAULT_MIMETYPE);
         register(PDFItem.class, "pdf");
         register(ZipItem.class, "zip");
-        register(PictureItem.class, "jpeg", "png", "gif", "jpg");
-        register(TxtItem.class, "txt","php","html");
+        register(PictureItem.class, "jpeg", "png", "gif", "jpg","mime:image");
+        register(TxtItem.class, "txt","php","html","mime:text","mime:application/json");
         register(TarItem.class, "tar", "gz");
         register(RarItem.class, "rar");
         register(WordItem.class, "doc", "docx");
@@ -69,19 +69,29 @@ public class ItemFactory {
      * @param path path of the item.
      * @param type mimetype of the item.
      * @param size size of the item.
-     * @return
      */
     public BaseItem createItem(String path, String type, long size, Bundle extra) {
         type = type.toLowerCase();
         Class c = FileItem.class;
         BaseItem item = null;
-        if (dictionary.containsKey(type)) {
+        String extraMime = extra.getString("mime-type");
+        if (extraMime!=null) {
+            String mime = "mime:"+extraMime;
+            if (dictionary.containsKey(mime)) {
+                //Mime exacto
+                c = dictionary.get(mime);
+            } else if(dictionary.containsKey(mime.split("/")[0])) {
+                //mime aproximado.
+                c = dictionary.get(mime.split("/")[0]);
+            }
+        }
+        else if (dictionary.containsKey(type)) {
             c = dictionary.get(type);
         }
         try {
-            Constructor<?> constructor = c.getConstructor(String.class, String.class, long.class, Bundle.class);
+            Constructor<?> constructor;
+            constructor = c.getConstructor(String.class, String.class, long.class, Bundle.class);
             item = (BaseItem)constructor.newInstance(path,type,size,extra);
-            return item;
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -22,6 +22,7 @@ import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
 import cl.uchile.ing.adi.quicklook.customItems.QLItem;
@@ -45,7 +46,7 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
             public void onReceive(Context context, Intent intent) {
                 Log.d("MainActivity", "Oh, un broadcast... abrire quicklook de nuevo");
                 Log.d("MainActivity", intent.getStringExtra("path"));
-                openIntent(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath());
+                openIntent(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(),null);
             }
         };
         registerReceiver(br, new IntentFilter(QLItem.QL_BROADCAST));
@@ -55,7 +56,8 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
         final File downloadAsset = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/" + item);
         r = new Runnable() {
             public void run() {
-                String urlForAsset = null;
+                String urlForAsset = "";
+                String mimetype = null;
                 if(downloadAsset.exists()) {
                     urlForAsset = downloadAsset.getAbsolutePath();
                 }
@@ -64,7 +66,16 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
                         urlForAsset = downloadAsset.getAbsolutePath();
                     }
                 }
-                openIntent(urlForAsset);
+                HashMap<String,String> extensions = new HashMap<>();
+                extensions.put("c","text/c");
+                extensions.put("zxc","image/zxc");
+                //extensions.put("json","application/json");
+                String[] extsplit = urlForAsset.split("\\.");
+                String ext = extsplit[extsplit.length-1];
+                if (extensions.containsKey(ext)) {
+                    mimetype = extensions.get(ext);
+                }
+                openIntent(urlForAsset, mimetype);
             }
         };
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -82,9 +93,14 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
 
     }
 
-    public void openIntent(String urlForAsset) {
+    public void openIntent(String urlForAsset,String mimetype) {
         Intent i = new Intent(this, QuicklookActivity.class);
         i.putExtra("localurl", urlForAsset);
+        if (mimetype!=null) {
+            Bundle b = new Bundle();
+            b.putString("mime-type",mimetype);
+            i.putExtra("extra",b);
+        }
         String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         QuicklookActivity.registerType(QLItem.class, "ql");
         QuicklookActivity.setDownloadPath(s+"/hola/");

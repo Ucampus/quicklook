@@ -15,9 +15,7 @@ import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
-/**
- * Created by dudu on 18-01-2016.
- */
+
 public class QLItem extends VirtualItem {
 
     public static  final String QL_BROADCAST = "cl.uchile.ing.adi.QUICKLOOK_REQUEST";
@@ -44,7 +42,7 @@ public class QLItem extends VirtualItem {
                 long size = actual.getLong("size");
                 Bundle itemExtra = new Bundle();
                 itemExtra.putString("webPath",actual.getString("path"));
-                itemExtra.putString("mimetype",actual.getString("mime"));
+                itemExtra.putString("mime-type",actual.getString("mime"));
                 BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size,itemExtra);
                 itemList.add(newItem);
             }
@@ -65,14 +63,14 @@ public class QLItem extends VirtualItem {
      * Overwriting retrieve because we need the item
      * @param toRetrieve item inside this
      * @param context Current application context
-     * @return
+     * @return null because Item is going to be retrieved by broadcast receiver.
      */
     @Override
     public BaseItem retrieve(BaseItem toRetrieve, Context context) {
         Intent intent = new Intent();
         intent.setAction(QL_BROADCAST);
         intent.putExtra("name",toRetrieve.getName());
-        intent.putExtra("mime",toRetrieve.getExtra().getString("mimetype"));
+        intent.putExtra("mime",toRetrieve.getExtra().getString("mime-type"));
         intent.putExtra("path",toRetrieve.getExtra().getString("webPath"));
         intent.putExtra("size",toRetrieve.getSize());
         context.sendBroadcast(intent);
@@ -84,7 +82,7 @@ public class QLItem extends VirtualItem {
      * @param id Internal identifier of file
      * @param dirpath Output path of the retrieved file
      * @param context Context of application
-     * @return
+     * @return null because the item is not going to be retrieved by us.
      */
     @Override
     public String retrieveItem(String id, String dirpath, Context context) {

@@ -25,6 +25,7 @@ public abstract class BaseItem {
     public static String ITEM_PATH = "path";
     public static String ITEM_TYPE = "type";
     public static String ITEM_EXTRA = "extra";
+    public static String ITEM_MIME = "mime-type";
 
     public static String DOWNLOAD_PATH;
     public static String CACHE_PATH;
@@ -163,9 +164,8 @@ public abstract class BaseItem {
     }
 
     /**
-     * A estas alturas ya sabemos que el item no es carpeta
-     * @param path
-     * @return
+     * @param path path of file
+     * @return String representing extension of file
      */
     public static String loadType(String path) {
         String extension = getExtension(getNameFromPath(path.replace(" ", "_")));
@@ -204,7 +204,7 @@ public abstract class BaseItem {
 
     /**
      * Sets size value
-     * @param size
+     * @param size size of item
      */
     public void setSize(long size) {
         this.size = size;
@@ -227,7 +227,7 @@ public abstract class BaseItem {
 
     /**
      * Adds a banned word to banned word list.
-     * @param banned
+     * @param banned banned word
      */
     public static void addBannedWord(String banned) {
         BANNED_NAMES.add(banned);
@@ -235,7 +235,7 @@ public abstract class BaseItem {
 
     /**
      * Checks if a word is a banned word.
-     * @param banned
+     * @param banned word we want to check
      * @return true if the word is a banned word
      */
     public static boolean isBannedWord(String banned) {
@@ -260,7 +260,7 @@ public abstract class BaseItem {
 
     /**
      * Returns the download cache of files.
-     * @return
+     * @return cache path of files
      */
     public static String getCachePath() {
         return CACHE_PATH;
