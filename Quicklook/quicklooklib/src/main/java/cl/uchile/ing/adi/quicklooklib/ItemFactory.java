@@ -72,7 +72,7 @@ public class ItemFactory {
      */
     public BaseItem createItem(String path, String type, long size, Bundle extra) {
         type = type.toLowerCase();
-        Class c = FileItem.class;
+        Class c = null;
         BaseItem item = null;
         String extraMime = extra.getString("mime-type");
         if (extraMime!=null) {
@@ -85,9 +85,10 @@ public class ItemFactory {
                 c = dictionary.get(mime.split("/")[0]);
             }
         }
-        else if (dictionary.containsKey(type)) {
+        if (c==null && dictionary.containsKey(type)) {
             c = dictionary.get(type);
         }
+        if(c==null) c = FileItem.class;
         try {
             Constructor<?> constructor;
             constructor = c.getConstructor(String.class, String.class, long.class, Bundle.class);
