@@ -1,7 +1,12 @@
 package cl.uchile.ing.adi.quicklooklib.items;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.webkit.MimeTypeMap;
 
 import org.apache.commons.io.IOUtils;
 
@@ -10,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.R;
@@ -40,6 +46,8 @@ public abstract class BaseItem {
     protected QuicklookFragment fragment;
     protected int image;
     protected String formattedName;
+    private boolean openable;
+    private String mime;
 
     /**
      * Constructor of the class, metadata is inserted manually.
@@ -57,6 +65,16 @@ public abstract class BaseItem {
         this.image = R.drawable.document;
         //Formatted name for item
         this.formattedName = getContext().getString(R.string.items_default_formatted_name);
+
+        // check if openable
+        this.mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(type);
+        if( this.mime == null ) this.mime = "text/plain";
+
+        Intent i = new Intent( Intent.ACTION_VIEW );
+        i.setDataAndType(Uri.parse(path), mime);
+        PackageManager manager = getContext().getPackageManager();
+        List<ResolveInfo> infos = manager.queryIntentActivities(i, 0);
+        this.openable = (infos.size() > 0);
     }
 
     /**
@@ -89,7 +107,7 @@ public abstract class BaseItem {
     public void prepareFragment() {
         Bundle b = new Bundle();
         b.putString(ITEM_PATH,this.getPath());
-        b.putString(ITEM_TYPE,this.getType());
+        b.putString(ITEM_TYPE, this.getType());
         b.putBundle(ITEM_EXTRA,this.getExtra());
         fragment.setArguments(b);
         fragment.setItem(this);
@@ -306,4 +324,15 @@ public abstract class BaseItem {
         return context;
     }
 
+    public boolean isOpenable() {
+        return this.openable;
+    }
+
+    /**
+     * Returns the path of file.
+     * @return the path of file.
+     */
+    public String getMime() {
+        return this.mime;
+    }
 }

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -14,23 +15,22 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 
+import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
-import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.items.FileItem;
 import cl.uchile.ing.adi.quicklooklib.items.IListItem;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
-
-import org.apache.commons.io.FileUtils;
 
 public class QuicklookActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
@@ -143,11 +143,15 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
+        if( this.current == null ) return true;
+
+        BaseItem item = this.current.getItem();
+        if( item instanceof IListItem ) return true;
+
         MenuInflater inflater = getMenuInflater();
-        QuicklookFragment f = this.current;
-        if (!(f == null || f.getItem() instanceof IListItem)) {
-            inflater.inflate(R.menu.item_menu, menu);
-        }
+        inflater.inflate(R.menu.item_menu, menu);
+        if( ! item.isOpenable() ) menu.findItem(R.id.open_with).setVisible(false);
+
         return true;
     }
 
@@ -290,7 +294,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     public Uri saveItem(boolean inform) {
         BaseItem item = current.getItem();
-        String mime =getMime(item.getPath());
+        String mime = item.getMime();
         String newPath = item.copyItem(mime);
         Uri pathUri = Uri.parse("file://" + newPath);
         if (inform) showInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
@@ -302,6 +306,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     public void openItem() {
+        BaseItem item = current.getItem();
+        if( ! item.isOpenable() ) {
+            // TO-DO toast ?
+            return;
+        }
         Uri pathUri = saveItem(false);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         String mime = getMime(pathUri.getPath());
@@ -336,11 +345,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     public static String getMime(String path) {
         String type = MimeTypeMap.getSingleton()
                 .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(path));
-        if (type==null) {
-            return "text/plain";
-        } else {
-            return type;
-        }
+        return type == null ? "text/plain" : type;
     }
 
     /**
