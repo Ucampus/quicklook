@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.PixelFormat;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -13,10 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
@@ -28,12 +24,12 @@ import com.shockwave.pdfium.listener.OnZoomChangedListener;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import cl.uchile.ing.adi.quicklooklib.R;
 
-import static com.shockwave.pdfium.util.Constants.*;
+import static com.shockwave.pdfium.util.Constants.DEBUG_MODE;
+import static com.shockwave.pdfium.util.Constants.MAXIMUM_ZOOM;
+import static com.shockwave.pdfium.util.Constants.MINIMUM_ZOOM;
 
 
 
@@ -83,9 +79,22 @@ public class PdfView extends SurfaceView {
 
     ProgressDialog pd;
 
+    public PdfView(Context c) {
+        super(c);
+        init(c);
+    }
 
-    public PdfView(final Context c,AttributeSet set) {
+    public PdfView(Context c, AttributeSet set) {
         super(c,set);
+        init(c);
+    }
+
+    public PdfView(Context c, AttributeSet set, int def) {
+        super(c, set, def);
+        init(c);
+    }
+
+    public void init(final Context c) {
         this.c = c;
         mPdfCore = new PdfiumCore(c);
         dragPinchManager = new DragPinchManager(this);
