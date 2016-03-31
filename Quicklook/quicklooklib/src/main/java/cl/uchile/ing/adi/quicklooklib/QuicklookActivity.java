@@ -324,8 +324,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         Intent intent = new Intent(Intent.ACTION_SEND);
         File f = new File(pathUri.getPath());
         if (f.exists()) {
-            String mime = getMime(pathUri.getPath());
-            intent.setType(mime);
+            BaseItem item = current.getItem();
+            intent.setType(item.getMime());
             intent.putExtra(Intent.EXTRA_STREAM, pathUri);
             intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
             intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.item_share_text));
@@ -336,17 +336,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     //Helper (Static) Functions
-
-    /**
-     * Returns mime type of file, or "text/plain" if it isn't detected.
-     * @param path Path to file.
-     * @return Mime type.
-     */
-    public static String getMime(String path) {
-        String type = MimeTypeMap.getSingleton()
-                .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(path));
-        return type == null ? "text/plain" : type;
-    }
 
     /**
      * Registers a type to open.

@@ -49,14 +49,14 @@ code[class*="language-"]::selection, code[class*="language-"] ::selection {
 
 /* Code blocks */
 pre[class*="language-"] {
-	padding: 1em;
+	padding: .5em;
 	margin: .5em 0;
 	overflow: auto;
 }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-	background: #f5f2f0;
+	-chao-background: #f5f2f0;
 }
 
 /* Inline code */

@@ -68,14 +68,29 @@ public abstract class BaseItem {
 
         // check if openable
         this.mime = extra.getString("mime-type");
-        if(this.mime==null) this.mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(type);
+        if(this.mime == null) this.mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(type);
         if(this.mime == null) this.mime = "text/plain";
 
-        Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setDataAndType(Uri.parse(path), mime);
+        this.openable = false;
+
         PackageManager manager = getContext().getPackageManager();
-        List<ResolveInfo> infos = manager.queryIntentActivities(i, 0);
-        this.openable = (infos.size() > 0);
+
+        Intent i = new Intent( Intent.ACTION_VIEW );
+        i.setData(Uri.parse(path));
+        ResolveInfo r = manager.resolveActivity(i, 0);
+        if( r != null ) {
+            this.openable = true;
+        } else {
+            i.setType(mime);
+            r = manager.resolveActivity(i, 0);
+            if( r != null ) {
+                this.openable = true;
+            } else {
+                i = new Intent( Intent.ACTION_SEND );
+                r = manager.resolveActivity(i, 0);
+                if (r != null) this.openable = true;
+            }
+        }
     }
 
     /**

@@ -31,6 +31,7 @@ public class CodeFragment extends QuicklookFragment {
         ws.setJavaScriptEnabled(true);
         ws.setSupportZoom(true);
         ws.setDisplayZoomControls(false);
+        ws.setLoadWithOverviewMode(true);
         ws.setMinimumFontSize(8);
 
         String type = item.getType();
