@@ -37,16 +37,25 @@ public abstract class QuicklookFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState){
+        try {
+            return createItemView(inflater,container,savedInstanceState);
+        } catch (Exception e) {
+            mListener.fragmentFallback(item);
+            return null;
+        }
+    }
+
+    public abstract View createItemView(LayoutInflater inflater, ViewGroup container,
+                                        Bundle savedInstanceState);
+
     @Override
     public void onResume() {
         super.onResume();
         mListener.setFragment(item.getFragment());
         mListener.updateActionBar();
     }
-
-    @Override
-    public abstract View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState);
 
     @Override
     public void onAttach(Context context) {
@@ -114,6 +123,8 @@ public abstract class QuicklookFragment extends Fragment {
         void removeFromBackStack(QuicklookFragment frag);
 
         void makeTransition(BaseItem mItem);
+
+        void fragmentFallback(BaseItem mItem);
 
         boolean areTasksRunning();
     }

@@ -19,6 +19,7 @@ import java.util.List;
 
 import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.R;
+import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 
 /**
@@ -350,5 +351,9 @@ public abstract class BaseItem {
      */
     public String getMime() {
         return this.mime;
+    }
+
+    public void setFragment(DefaultFragment fragment) {
+        this.fragment = fragment;
     }
 }

@@ -31,7 +31,7 @@ public class ListFragment extends QuicklookFragment {
      * Defines the list view.
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View createItemView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fileitem_list, container, false);
 

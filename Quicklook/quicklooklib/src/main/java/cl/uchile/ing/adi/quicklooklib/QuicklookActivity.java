@@ -396,4 +396,12 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     public boolean areTasksRunning() {
         return (loadingTask != null && loadingTask.getStatus() == AsyncTask.Status.RUNNING);
     }
+
+    /** .
+     * Opens item with default fragment if anything goes wrong
+     * @param item
+     */
+    public void fragmentFallback(BaseItem item) {
+
+    }
 }
