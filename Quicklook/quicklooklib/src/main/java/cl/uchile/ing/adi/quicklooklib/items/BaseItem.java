@@ -67,8 +67,9 @@ public abstract class BaseItem {
         this.formattedName = getContext().getString(R.string.items_default_formatted_name);
 
         // check if openable
-        this.mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(type);
-        if( this.mime == null ) this.mime = "text/plain";
+        this.mime = extra.getString("mime-type");
+        if(this.mime==null) this.mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(type);
+        if(this.mime == null) this.mime = "text/plain";
 
         Intent i = new Intent( Intent.ACTION_VIEW );
         i.setDataAndType(Uri.parse(path), mime);

@@ -313,7 +313,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
         Uri pathUri = saveItem(false);
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        String mime = getMime(pathUri.getPath());
+        String mime = item.getMime();
         intent.setDataAndType(pathUri, mime);
         startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_open)));
     }
