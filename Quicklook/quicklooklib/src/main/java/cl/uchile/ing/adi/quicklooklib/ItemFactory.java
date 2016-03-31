@@ -6,6 +6,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
+import cl.uchile.ing.adi.quicklooklib.items.CodeItem;
 import cl.uchile.ing.adi.quicklooklib.items.ExcelItem;
 import cl.uchile.ing.adi.quicklooklib.items.FileItem;
 import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
@@ -44,13 +45,14 @@ public class ItemFactory {
         register(FileItem.class, DEFAULT_MIMETYPE, "mime:"+DEFAULT_MIMETYPE);
         register(PDFItem.class, "pdf");
         register(ZipItem.class, "zip");
-        register(PictureItem.class, "jpeg", "png", "gif", "jpg","mime:image");
-        register(TxtItem.class, "txt","php","html","mime:text","mime:application/json");
+        register(PictureItem.class, "jpeg", "png", "gif", "jpg", "mime:image");
+        register(CodeItem.class, "php", "html", "java", "css", "svg", "xml", "js", "json", "c", "h", "mime:application/json");
+        register(TxtItem.class, "txt", "mime:text");
         register(TarItem.class, "tar", "gz");
         register(RarItem.class, "rar");
         register(WordItem.class, "doc", "docx");
-        register(ExcelItem.class, "xls","xlsx");
-        register(PowerpointItem.class, "ppt","pptx");
+        register(ExcelItem.class, "xls", "xlsx");
+        register(PowerpointItem.class, "ppt", "pptx");
     }
 
     /**
@@ -73,29 +75,26 @@ public class ItemFactory {
     public BaseItem createItem(String path, String type, long size, Bundle extra) {
         type = type.toLowerCase();
         Class c = null;
-        BaseItem item = null;
-        String extraMime = extra.getString("mime-type");
-        if (extraMime!=null) {
-            String mime = "mime:"+extraMime;
-            if (dictionary.containsKey(mime)) {
-                //Mime exacto
-                c = dictionary.get(mime);
-            } else if(dictionary.containsKey(mime.split("/")[0])) {
-                //mime aproximado.
-                c = dictionary.get(mime.split("/")[0]);
+        if (c==null && dictionary.containsKey(type)) c = dictionary.get(type); // por extension
+        if( c == null ) {
+            String extraMime = extra.getString("mime-type");
+            if (extraMime!=null) {
+                String mime = "mime:" + extraMime;
+                if (dictionary.containsKey(mime)) {
+                    c = dictionary.get(mime); //Mime exacto
+                } else if (dictionary.containsKey(mime.split("/")[0])) {
+                    c = dictionary.get(mime.split("/")[0]); //mime aproximado.
+                }
             }
         }
-        if (c==null && dictionary.containsKey(type)) {
-            c = dictionary.get(type);
-        }
-        if(c==null) c = FileItem.class;
+        if(c==null) c = FileItem.class; // por defecto
         try {
             Constructor<?> constructor;
             constructor = c.getConstructor(String.class, String.class, long.class, Bundle.class);
-            item = (BaseItem)constructor.newInstance(path,type,size,extra);
+            return (BaseItem) constructor.newInstance(path,type,size,extra);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return item;
+        return null;
     }
 }
