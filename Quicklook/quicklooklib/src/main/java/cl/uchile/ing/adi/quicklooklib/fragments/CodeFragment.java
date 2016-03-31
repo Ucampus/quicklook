@@ -29,27 +29,25 @@ public class CodeFragment extends QuicklookFragment {
 
         ws.setBuiltInZoomControls(true);
         ws.setJavaScriptEnabled(true);
-        ws.setSupportZoom(true);
+        //ws.setLoadWithOverviewMode(true);
         ws.setDisplayZoomControls(false);
-        ws.setLoadWithOverviewMode(true);
         ws.setMinimumFontSize(8);
-
-        String type = item.getType();
-        if( type.equals( "js" ) ) type = "javascript";
 
         String content = "";
         content += "<html><head>";
-        content += "<link href=\"prism.css\" rel=\"stylesheet\" />";
+        content += "<link href=\"styles/default.css\" rel=\"stylesheet\" />";
+        content += "<style type=\"text/css\">code { width:100%; background-color: #fff }</style>";
+        content += "<script src=\"highlight.pack.js\"></script>";
+        content += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
         content += "</head><body>";
-        content += "<style type=\"text/css\">code { background-color: #fff }</style>";
-        content += "<script src=\"prism.js\"></script>";
 
         try {
             InputStream is = new FileInputStream( item.getPath() );
             String c = IOUtils.toString(is, "UTF-8");
             is.close();
-            content += "<pre><code class=\"language-"+type+"\">"+c.replace( "<", "&lt;" )+"</code></pre>";
+            content += "<pre><code>"+c.replace( "<", "&lt;" )+"</code></pre>";
         } catch (IOException ignored)  {}
+        content += "<script>hljs.initHighlightingOnLoad();</script>";
         content += "</body></html>";
 
         web.loadDataWithBaseURL("file:///android_asset/", content, "text/html", "UTF-8", null);
