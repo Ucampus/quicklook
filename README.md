@@ -20,9 +20,9 @@ Se define como contenedores virtuales todos los elementos que contienen archivos
 Es posible expandir la librería con tipos propios, sin necesidad de modificarla internamente. Existen dos tipos de expansión disponibles:
 
 ### Expansión para visualización de archivo
-Este caso corresponde a los visualizadores de documentos o archivos en específico. Es necesario crear dos archivos:
-* Archivo que debe extender la clase _QuicklookFragment_ y debe definir el método onCreateView (Igual que cualquier fragment), mostrando el elemento correspondiente (El cual existe en getItem).
-* Archivo que debe extender la clase _FileItem_ y representa abstractamente al documento a visualizar. Se necesita implementar el constructor por defecto de FileItem, llamando a super y posteriormente definiendo la propiedad _image_ como el ícono del elemento, la propiedad _formattedname_ como el nombre a mostrar del elemento y la propiedad _fragment_ como el fragmento asociado.
+Este caso corresponde a los visualizadores de documentos o archivos en específico. Es necesario crear dos clases:
+* Clase que debe extender a _QuicklookFragment_ y debe definir el método createItemView, el cual ejecuta una lógica similar a onCreateView en los fragment convencionales, mostrando el elemento correspondiente (El cual existe en getItem).
+* Clase que debe extender a _FileItem_ y representa abstractamente al documento a visualizar. Se necesita implementar el constructor por defecto de FileItem, llamando a super y posteriormente definiendo la propiedad _image_ como el ícono del elemento, la propiedad _formattedname_ como el nombre a mostrar del elemento y la propiedad _fragment_ como el fragmento asociado.
 
 ### Expansión para visualización de contenedor
 Este caso corresponde a los visualizadores de contenedores de varios archivos, como por ejemplo los archivos comprimidos o archivos de texto que representan contenedores. Es necesario implementar lo siguiente:
