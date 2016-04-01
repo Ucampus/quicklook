@@ -39,7 +39,7 @@ public class CodeFragment extends QuicklookFragment {
         content += "<style type=\"text/css\">code { width:100%; background-color: #fff }</style>";
         content += "<script src=\"highlight.pack.js\"></script>";
         content += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
-        content += "</head><body>";
+        content += "</head><body style=\"background: #f0f0f0\">";
 
         try {
             InputStream is = new FileInputStream( item.getPath() );
