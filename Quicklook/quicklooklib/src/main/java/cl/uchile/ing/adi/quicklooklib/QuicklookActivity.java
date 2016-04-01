@@ -25,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 
+import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
@@ -402,6 +403,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item
      */
     public void fragmentFallback(BaseItem item) {
-
+        item.setFragment(new DefaultFragment());
+        FragmentManager manager = getSupportFragmentManager();
+        manager.popBackStack();
+        changeFragment(item);
     }
 }
