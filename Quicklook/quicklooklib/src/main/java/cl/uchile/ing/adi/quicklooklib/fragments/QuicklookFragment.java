@@ -88,6 +88,7 @@ public abstract class QuicklookFragment extends Fragment {
 
     public void showError(String cause) {
         mListener.showInfo(cause);
+        mListener.reportError(getItem(),this,cause);
     }
 
     /**
@@ -119,6 +120,8 @@ public abstract class QuicklookFragment extends Fragment {
         void setFragment(QuicklookFragment fragment);
 
         void showInfo(String message);
+
+        void reportError(BaseItem item, QuicklookFragment fragment, String description);
 
         void removeFromBackStack(QuicklookFragment frag);
 

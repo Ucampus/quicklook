@@ -19,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 
 import org.apache.commons.io.FileUtils;
 
@@ -44,6 +43,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     AsyncTask loadingTask;
 
     private static String TAG = "QuickLookPermissions";
+    private static final String QUICKLOOK_ERROR = "cl.uchile.ing.adi.quicklook.QUICKLOOK_ERROR";
+
     private static int WRITE_PERMISSIONS = 155;
 
 
@@ -73,6 +74,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         super.onNewIntent(intent);
         //Set url of start item
         if (pd!=null) pd.dismiss();
+        BaseItem item = null;
         boolean backstack = false;
         try {
             this.path = intent.getStringExtra("localurl");
@@ -89,10 +91,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             } else {
                 extra = new Bundle();
             }
-            BaseItem item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
+            item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
             checkPermissionsAndChangeFragment(item, backstack);
         } catch(Exception e) {
-            showInfo(getResources().getString(R.string.quicklook_bad_configuration));
+            String info = getResources().getString(R.string.quicklook_bad_configuration);
+            showInfo(info);
+            QuicklookFragment qf = null;
+            if (item!=null) {
+                qf = item.getFragment();
+            }
+            reportError(item, qf, info);
         }
     }
 
@@ -412,7 +420,39 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             changeFragment(item);
         } else {
             manager.popBackStack();
-            showInfo(getResources().getString(R.string.quicklook_item_error));
+            String info = getResources().getString(R.string.quicklook_item_error);
+            showInfo(info);
+            QuicklookFragment qf = null;
+            if (item!=null) {
+                qf = item.getFragment();
+            }
+            reportError(item,qf, info);
         }
+    }
+
+    /**
+     * Allows to report an error via broadcast.
+     * @param item current item
+     * @param fragment current fragment
+     * @param description current description
+     */
+    public void reportError(BaseItem item, QuicklookFragment fragment, String description) {
+        Intent intent = new Intent();
+        String itemname = item==null? "Null item" : item.getName();
+        String itempath = item==null? "Null item" : item.getPath();
+        String itemtype = item==null? "Null item" : item.getType();
+        long itemsize = item==null? -1313 : item.getSize();
+        String fragname = fragment == null ? "Null Fragment" : fragment.getClass().getName();
+        intent.setAction(QUICKLOOK_ERROR);
+        String error = "{" +
+                        "'description': '"+ description + "'," +
+                        "'itemname': '"+ itemname + "'," +
+                        "'itempath': '"+ itempath + "'," +
+                        "'itemmime': '"+ itemtype + "'," +
+                        "'itemsize': '"+ itemsize + "'," +
+                        "'fragment': '"+ fragname + "'"+
+                "}";
+        intent.putExtra("error",error);
+        sendBroadcast(intent);
     }
 }
