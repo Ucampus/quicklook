@@ -25,4 +25,5 @@
     <string name="quicklook_save">Guardar</string>
     <string name="quicklook_open">Abrir con...</string>
     <string name="quicklook_share">Compartir</string>
+    <string name="quicklook_item_error">No se pudo mostrar el documento. Inténtalo de nuevo, por favor.</string>
 </resources>

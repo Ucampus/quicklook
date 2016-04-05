@@ -74,22 +74,26 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         //Set url of start item
         if (pd!=null) pd.dismiss();
         boolean backstack = false;
-        this.path = intent.getStringExtra("localurl");
-        generateFolders();
-        if (getIntent()!=intent) {
-            backstack=true;
+        try {
+            this.path = intent.getStringExtra("localurl");
+            generateFolders();
+            if (getIntent() != intent) {
+                backstack = true;
+            }
+            setIntent(intent);
+            long size = BaseItem.getSizeFromPath(this.path);
+            String type = FileItem.loadFileType(new File(this.path));
+            Bundle extra;
+            if (getIntent().hasExtra(BaseItem.ITEM_EXTRA)) {
+                extra = getIntent().getBundleExtra(BaseItem.ITEM_EXTRA);
+            } else {
+                extra = new Bundle();
+            }
+            BaseItem item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
+            checkPermissionsAndChangeFragment(item, backstack);
+        } catch(Exception e) {
+            showInfo(getResources().getString(R.string.quicklook_bad_configuration));
         }
-        setIntent(intent);
-        long size = BaseItem.getSizeFromPath(this.path);
-        String type = FileItem.loadFileType(new File(this.path));
-        Bundle extra;
-        if (getIntent().hasExtra(BaseItem.ITEM_EXTRA)) {
-            extra = getIntent().getBundleExtra(BaseItem.ITEM_EXTRA);
-        } else {
-            extra = new Bundle();
-        }
-        BaseItem item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
-        checkPermissionsAndChangeFragment(item, backstack);
     }
 
     @Override
@@ -331,8 +335,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
             intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.item_share_text));
             startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_share)));
-        } else {
-
         }
     }
 
@@ -403,9 +405,14 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item
      */
     public void fragmentFallback(BaseItem item) {
-        item.setFragment(new DefaultFragment());
         FragmentManager manager = getSupportFragmentManager();
-        manager.popBackStack();
-        changeFragment(item);
+        if (item!=null) {
+            item.setFragment(new DefaultFragment());
+            manager.popBackStack();
+            changeFragment(item);
+        } else {
+            manager.popBackStack();
+            showInfo(getResources().getString(R.string.quicklook_item_error));
+        }
     }
 }
