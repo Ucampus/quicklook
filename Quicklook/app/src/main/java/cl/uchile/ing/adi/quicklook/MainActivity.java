@@ -100,7 +100,7 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
             Bundle b = new Bundle();
             b.putString("mime-type",mimetype);
             i.putExtra("extra",b);
-        }Fragment
+        }
         String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         QuicklookActivity.registerType(QLItem.class, "ql");
         QuicklookActivity.setDownloadPath(s+"/hola/");
