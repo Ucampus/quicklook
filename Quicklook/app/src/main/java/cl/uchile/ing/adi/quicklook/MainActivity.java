@@ -95,15 +95,15 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
 
     public void openIntent(String urlForAsset,String mimetype) {
         Intent i = new Intent(this, QuicklookActivity.class);
-        //i.putExtra("localurl", urlForAsset);
+        i.putExtra("localurl", urlForAsset);
         if (mimetype!=null) {
             Bundle b = new Bundle();
             b.putString("mime-type",mimetype);
-            //i.putExtra("extra",b);
-        }
+            i.putExtra("extra",b);
+        }Fragment
         String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-        //QuicklookActivity.registerType(QLItem.class, "ql");
-        //QuicklookActivity.setDownloadPath(s+"/hola/");
+        QuicklookActivity.registerType(QLItem.class, "ql");
+        QuicklookActivity.setDownloadPath(s+"/hola/");
         startActivity(i);
     }
 
