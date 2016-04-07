@@ -111,7 +111,6 @@ public abstract class BaseItem {
         b.putString(ITEM_TYPE, this.getType());
         b.putBundle(ITEM_EXTRA,this.getExtra());
         fragment.setArguments(b);
-        fragment.setItem(this);
     }
 
     /**
