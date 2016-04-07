@@ -32,6 +32,6 @@
     <string name="quicklook_open">Open with...</string>
     <string name="quicklook_share">Share</string>
     <string name="quicklook_item_error">Error showing the item. Try opening it again.</string>
-    <string name="quicklook_bad_configuration">Quicklook is not configured correctly. Check the documentation.</string>
+    <string name="quicklook_bad_configuration">Something happened, please retry or contact us</string>
 
 </resources>

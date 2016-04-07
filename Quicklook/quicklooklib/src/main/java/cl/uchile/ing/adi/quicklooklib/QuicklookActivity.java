@@ -43,7 +43,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     AsyncTask loadingTask;
 
     private static String TAG = "QuickLookPermissions";
-    private static final String QUICKLOOK_ERROR = "cl.uchile.ing.adi.quicklook.QUICKLOOK_ERROR";
+    public static final String QUICKLOOK_ERROR = "cl.uchile.ing.adi.quicklook.QUICKLOOK_ERROR";
 
     private static int WRITE_PERMISSIONS = 155;
 
