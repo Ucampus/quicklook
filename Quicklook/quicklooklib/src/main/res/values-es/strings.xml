@@ -17,6 +17,7 @@
     <string name="items_rar_formatted_name">Archivo Comprimido RAR</string>
     <string name="items_tar_formatted_name">Archivo Comprimido TAR</string>
     <string name="items_text_formatted_name">Archivo de Texto</string>
+    <string name="items_code_formatted_name">Código Fuente</string>
     <string name="items_word_formatted_name">Documento de Word</string>
     <string name="items_zip_formatted_name">Archivo Comprimido ZIP</string>
     <string name="quicklook_permission_error">Error de permisos. No se pueden mostrar archivos.</string>
@@ -24,4 +25,5 @@
     <string name="quicklook_save">Guardar</string>
     <string name="quicklook_open">Abrir con...</string>
     <string name="quicklook_share">Compartir</string>
+    <string name="quicklook_item_error">No se pudo mostrar el documento. Inténtalo de nuevo, por favor.</string>
 </resources>

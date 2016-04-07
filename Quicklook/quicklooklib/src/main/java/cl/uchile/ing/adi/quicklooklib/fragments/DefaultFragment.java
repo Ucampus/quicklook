@@ -23,7 +23,7 @@ public class DefaultFragment extends QuicklookFragment {
      * Shows basic data about the file, and an "Open with" button.
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View createItemView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_default, container, false);
         ImageView fileimage = (ImageView) v.findViewById(R.id.icon);

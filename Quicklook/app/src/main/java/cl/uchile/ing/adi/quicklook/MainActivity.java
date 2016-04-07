@@ -29,6 +29,9 @@ import cl.uchile.ing.adi.quicklook.customItems.QLItem;
 
 public class  MainActivity extends AppCompatActivity implements DemoAssetFragment.OnDemoAssetFragmentListener, ActivityCompat.OnRequestPermissionsResultCallback {
     private static String FILES_ASSETS_DIR = "files/";
+
+    private static final String QUICKLOOK_ERROR = "cl.uchile.ing.adi.quicklook.QUICKLOOK_ERROR";
+
     Runnable r;
     private static int REQUEST_FILE_PERMISSIONS = 121;
     BroadcastReceiver br;
@@ -50,6 +53,15 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
             }
         };
         registerReceiver(br, new IntentFilter(QLItem.QL_BROADCAST));
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("MainActivity", "Oh, un broadcast de error");
+                Log.d("MainActivity", intent.getStringExtra("error"));
+            }
+        };
+        registerReceiver(br, new IntentFilter(QUICKLOOK_ERROR));
+
     }
 
     @Override public void onAssetSelected(final String item) {
@@ -99,11 +111,11 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
         if (mimetype!=null) {
             Bundle b = new Bundle();
             b.putString("mime-type",mimetype);
-            i.putExtra("extra",b);
+            i.putExtra("extra", b);
         }
         String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         QuicklookActivity.registerType(QLItem.class, "ql");
-        QuicklookActivity.setDownloadPath(s+"/hola/");
+        QuicklookActivity.setDownloadPath(s + "/hola/");
         startActivity(i);
     }
 

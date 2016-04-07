@@ -19,12 +19,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 
+import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
@@ -43,6 +43,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     AsyncTask loadingTask;
 
     private static String TAG = "QuickLookPermissions";
+    private static final String QUICKLOOK_ERROR = "cl.uchile.ing.adi.quicklook.QUICKLOOK_ERROR";
+
     private static int WRITE_PERMISSIONS = 155;
 
 
@@ -72,23 +74,34 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         super.onNewIntent(intent);
         //Set url of start item
         if (pd!=null) pd.dismiss();
+        BaseItem item = null;
         boolean backstack = false;
-        this.path = intent.getStringExtra("localurl");
-        generateFolders();
-        if (getIntent()!=intent) {
-            backstack=true;
+        try {
+            this.path = intent.getStringExtra("localurl");
+            generateFolders();
+            if (getIntent() != intent) {
+                backstack = true;
+            }
+            setIntent(intent);
+            long size = BaseItem.getSizeFromPath(this.path);
+            String type = FileItem.loadFileType(new File(this.path));
+            Bundle extra;
+            if (getIntent().hasExtra(BaseItem.ITEM_EXTRA)) {
+                extra = getIntent().getBundleExtra(BaseItem.ITEM_EXTRA);
+            } else {
+                extra = new Bundle();
+            }
+            item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
+            checkPermissionsAndChangeFragment(item, backstack);
+        } catch(Exception e) {
+            String info = getResources().getString(R.string.quicklook_bad_configuration);
+            showInfo(info);
+            QuicklookFragment qf = null;
+            if (item!=null) {
+                qf = item.getFragment();
+            }
+            reportError(item, qf, info);
         }
-        setIntent(intent);
-        long size = BaseItem.getSizeFromPath(this.path);
-        String type = FileItem.loadFileType(new File(this.path));
-        Bundle extra;
-        if (getIntent().hasExtra(BaseItem.ITEM_EXTRA)) {
-            extra = getIntent().getBundleExtra(BaseItem.ITEM_EXTRA);
-        } else {
-            extra = new Bundle();
-        }
-        BaseItem item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
-        checkPermissionsAndChangeFragment(item, backstack);
     }
 
     @Override
@@ -324,29 +337,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         Intent intent = new Intent(Intent.ACTION_SEND);
         File f = new File(pathUri.getPath());
         if (f.exists()) {
-            String mime = getMime(pathUri.getPath());
-            intent.setType(mime);
+            BaseItem item = current.getItem();
+            intent.setType(item.getMime());
             intent.putExtra(Intent.EXTRA_STREAM, pathUri);
             intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
             intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.item_share_text));
             startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_share)));
-        } else {
-
         }
     }
 
     //Helper (Static) Functions
-
-    /**
-     * Returns mime type of file, or "text/plain" if it isn't detected.
-     * @param path Path to file.
-     * @return Mime type.
-     */
-    public static String getMime(String path) {
-        String type = MimeTypeMap.getSingleton()
-                .getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(path));
-        return type == null ? "text/plain" : type;
-    }
 
     /**
      * Registers a type to open.
@@ -406,5 +406,53 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     public boolean areTasksRunning() {
         return (loadingTask != null && loadingTask.getStatus() == AsyncTask.Status.RUNNING);
+    }
+
+    /** .
+     * Opens item with default fragment if anything goes wrong
+     * @param item
+     */
+    public void fragmentFallback(BaseItem item) {
+        FragmentManager manager = getSupportFragmentManager();
+        if (item!=null) {
+            item.setFragment(new DefaultFragment());
+            manager.popBackStack();
+            changeFragment(item);
+        } else {
+            manager.popBackStack();
+            String info = getResources().getString(R.string.quicklook_item_error);
+            showInfo(info);
+            QuicklookFragment qf = null;
+            if (item!=null) {
+                qf = item.getFragment();
+            }
+            reportError(item,qf, info);
+        }
+    }
+
+    /**
+     * Allows to report an error via broadcast.
+     * @param item current item
+     * @param fragment current fragment
+     * @param description current description
+     */
+    public void reportError(BaseItem item, QuicklookFragment fragment, String description) {
+        Intent intent = new Intent();
+        String itemname = item==null? "Null item" : item.getName();
+        String itempath = item==null? "Null item" : item.getPath();
+        String itemtype = item==null? "Null item" : item.getType();
+        long itemsize = item==null? -1313 : item.getSize();
+        String fragname = fragment == null ? "Null Fragment" : fragment.getClass().getName();
+        intent.setAction(QUICKLOOK_ERROR);
+        String error = "{" +
+                        "'description': '"+ description + "'," +
+                        "'itemname': '"+ itemname + "'," +
+                        "'itempath': '"+ itempath + "'," +
+                        "'itemmime': '"+ itemtype + "'," +
+                        "'itemsize': '"+ itemsize + "'," +
+                        "'fragment': '"+ fragname + "'"+
+                "}";
+        intent.putExtra("error",error);
+        sendBroadcast(intent);
     }
 }

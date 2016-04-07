@@ -43,17 +43,17 @@ public class PdfFragment extends QuicklookFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View createItemView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        v=  inflater.inflate(R.layout.fragment_pdf, container, false);
+        v = inflater.inflate(R.layout.fragment_pdf, container, false);
         pages = (TextView) v.findViewById(R.id.pdf_pages);
         pdfView = (PdfView) v.findViewById(R.id.pdfview);
         final Handler h = new Handler();
-        final Runnable hideCounter = new Runnable(){
+        final Runnable hideCounter = new Runnable() {
             @Override
             public void run() {
-                AlphaAnimation fadeOut = new AlphaAnimation( 1.0f , 0.0f ) ;
+                AlphaAnimation fadeOut = new AlphaAnimation(1.0f, 0.0f);
                 pages.setAnimation(fadeOut);
                 pages.startAnimation(fadeOut);
                 pages.setVisibility(View.GONE);
@@ -72,8 +72,8 @@ public class PdfFragment extends QuicklookFragment {
                     sb.setProgress(page - 1);
                     pages.setVisibility(View.VISIBLE);
                     int progress = sb.getProgress();
-                    showPageCounter(sb,progress);
-                    h.postDelayed(hideCounter,2000);
+                    showPageCounter(sb, progress);
+                    h.postDelayed(hideCounter, 2000);
                 }
             }
         }).onZoomChanged(new OnZoomChangedListener() {
@@ -113,7 +113,7 @@ public class PdfFragment extends QuicklookFragment {
         });
         sb.setProgress(pdfView.getCurrentPage() - 1);
 
-        if (pdfView.getPageCount()==1) sb.setVisibility(View.GONE);
+        if (pdfView.getPageCount() == 1) sb.setVisibility(View.GONE);
         return v;
     }
 

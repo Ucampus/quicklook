@@ -17,7 +17,7 @@ import cl.uchile.ing.adi.quicklooklib.items.PictureItem;
 public class WebFragment extends QuicklookFragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View createItemView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_web, container, false);
         WebView web = (WebView) v.findViewById(R.id.web_fragment);
