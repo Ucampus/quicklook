@@ -38,7 +38,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     private String path;
     private Runnable r;
     private View coordinator;
-    private QuicklookFragment current;
+    private QuicklookFragment currentFragment;
     ProgressDialog pd;
     AsyncTask loadingTask;
 
@@ -156,9 +156,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        if( this.current == null ) return true;
+        if( this.currentFragment == null ) return true;
 
-        BaseItem item = this.current.getItem();
+        BaseItem item = this.currentFragment.getItem();
         if( item instanceof IListItem ) return true;
 
         MenuInflater inflater = getMenuInflater();
@@ -241,7 +241,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             setFragment(item.getFragment());
             FragmentTransaction t = getSupportFragmentManager().beginTransaction();
             t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            t.replace(R.id.quicklook_fragment, current, "QuickLook");
+            t.replace(R.id.quicklook_fragment, currentFragment, "QuickLook");
             if (backstack) {
                 t.addToBackStack(null);
             }
@@ -292,21 +292,21 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
    // Getters/Setters
 
     public QuicklookFragment getFragment() {
-        return current;
+        return currentFragment;
     }
     
     public BaseItem getItem() {
-        return current.getItem();
+        return currentFragment.getItem();
     }
 
     public void setFragment(QuicklookFragment fragment) {
-        current = fragment;
+        currentFragment = fragment;
     }
 
     // Button item functions
 
     public Uri saveItem(boolean inform) {
-        BaseItem item = current.getItem();
+        BaseItem item = currentFragment.getItem();
         String mime = item.getMime();
         String newPath = item.copyItem(mime);
         Uri pathUri = Uri.parse("file://" + newPath);
@@ -319,7 +319,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     public void openItem() {
-        BaseItem item = current.getItem();
+        BaseItem item = currentFragment.getItem();
         if( ! item.isOpenable() ) {
             // TO-DO toast ?
             return;
@@ -337,7 +337,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         Intent intent = new Intent(Intent.ACTION_SEND);
         File f = new File(pathUri.getPath());
         if (f.exists()) {
-            BaseItem item = current.getItem();
+            BaseItem item = currentFragment.getItem();
             intent.setType(item.getMime());
             intent.putExtra(Intent.EXTRA_STREAM, pathUri);
             intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
