@@ -137,7 +137,7 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
      * @param item
      */
     public BaseItem onClick(QuicklookFragment.OnListFragmentInteractionListener mListener, BaseItem item) {
-        VirtualItem parentItem = (VirtualItem)mListener.getFragment().getItem();
+        VirtualItem parentItem = (VirtualItem)mListener.getItem();
         BaseItem newItem;
         if (item instanceof FolderItem) {
             String path = item.getPath();

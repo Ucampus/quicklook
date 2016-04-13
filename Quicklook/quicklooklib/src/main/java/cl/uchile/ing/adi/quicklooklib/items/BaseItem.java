@@ -125,9 +125,8 @@ public abstract class BaseItem {
         Bundle b = new Bundle();
         b.putString(ITEM_PATH,this.getPath());
         b.putString(ITEM_TYPE, this.getType());
-        b.putBundle(ITEM_EXTRA,this.getExtra());
+        b.putBundle(ITEM_EXTRA, this.getExtra());
         fragment.setArguments(b);
-        fragment.setItem(this);
     }
 
     /**

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
@@ -74,21 +75,13 @@ public abstract class QuicklookFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * Defines the item related to the fragment.
-     * @param item Item related to fragment.
-     */
-    public void setItem(BaseItem item) {
-        this.item = item;
-    }
-
     public BaseItem getItem() {
-        return this.item;
+        return ((QuicklookActivity)getActivity()).getItem();
     }
 
     public void showError(String cause) {
         mListener.showInfo(cause);
-        mListener.reportError(getItem(),this,cause);
+        if(isAdded()) mListener.reportError(getItem(),this,cause);
     }
 
     /**
@@ -111,6 +104,7 @@ public abstract class QuicklookFragment extends Fragment {
         Uri saveItem();
         void openItem();
         void shareItem();
+        BaseItem getItem();
 
         /**
          * Retrieves the current fragment.
