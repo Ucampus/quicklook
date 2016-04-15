@@ -417,8 +417,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         FragmentManager manager = getSupportFragmentManager();
         if (item!=null) {
             item.setFragment(new DefaultFragment());
-            manager.popBackStack();
-            changeFragment(item);
+            changeFragment(item, false);
         } else {
             manager.popBackStack();
             String info = getResources().getString(R.string.quicklook_item_error);
