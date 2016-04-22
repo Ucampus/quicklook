@@ -23,6 +23,7 @@ import android.view.View;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.util.Stack;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
@@ -39,6 +40,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     private Runnable r;
     private View coordinator;
     private QuicklookFragment currentFragment;
+    private Stack<BaseItem> itemStack = new Stack<>();
     private BaseItem currentItem;
     ProgressDialog pd;
     AsyncTask loadingTask;
@@ -95,6 +97,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
             checkPermissionsAndChangeFragment(item, backstack);
         } catch(Exception e) {
+            e.printStackTrace();
             String info = getResources().getString(R.string.quicklook_bad_configuration);
             showInfo(info);
             QuicklookFragment qf = null;
@@ -132,6 +135,15 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         File cacheFolder = new File(cachePath);
         if (!cacheFolder.exists()) cacheFolder.mkdirs();
         BaseItem.setCachePath(cachePath);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (!itemStack.empty()) {
+            currentItem = itemStack.pop();
+        }
     }
 
     @Override
@@ -239,14 +251,15 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      */
     public void changeFragment(BaseItem item, boolean backstack){
         if (item!=null) {
-            currentItem = item;
-            setFragment(item.getFragment());
             FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-            t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            t.replace(R.id.quicklook_fragment, currentFragment, "QuickLook");
             if (backstack) {
                 t.addToBackStack(null);
+                itemStack.add(currentItem);
             }
+            currentItem = item;
+            setFragment(item.getFragment());
+            t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            t.replace(R.id.quicklook_fragment, currentFragment, "QuickLook");
             t.commitAllowingStateLoss();
             updateActionBar();
         }
@@ -259,17 +272,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     public void updateActionBar() {
         getSupportActionBar().setTitle(this.getItem().getTitle());
         getSupportActionBar().setSubtitle(this.getItem().getSubTitle());
-    }
-
-    //Listeners
-
-    /**
-     * Method called by fragment when item is clicked on list view.
-     * @param item the item which is going to be displayed.
-     */
-
-    public BaseItem onListFragmentInteraction(BaseItem item) {
-        return item;
     }
 
     /**
@@ -368,9 +370,10 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         BaseItem.setDownloadPath(path);
     }
 
-    public void removeFromBackStack(QuicklookFragment frag) {
+    public void removeFromBackStack() {
         FragmentManager f = getSupportFragmentManager();
         f.popBackStack();
+        currentItem =  itemStack.pop();
     }
 
     @Override
@@ -414,20 +417,19 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * @param item
      */
     public void fragmentFallback(BaseItem item) {
-        FragmentManager manager = getSupportFragmentManager();
+        String info = getResources().getString(R.string.quicklook_item_error);
         if (item!=null) {
             item.setFragment(new DefaultFragment());
             changeFragment(item, false);
         } else {
-            manager.popBackStack();
-            String info = getResources().getString(R.string.quicklook_item_error);
+            removeFromBackStack();
             showInfo(info);
-            QuicklookFragment qf = null;
-            if (item!=null) {
-                qf = item.getFragment();
-            }
-            reportError(item,qf, info);
         }
+        QuicklookFragment qf=null;
+        if (item!=null) {
+            qf = item.getFragment();
+        }
+        reportError(item, qf, info);
     }
 
     /**

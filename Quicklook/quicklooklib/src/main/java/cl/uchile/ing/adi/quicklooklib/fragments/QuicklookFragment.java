@@ -117,7 +117,7 @@ public abstract class QuicklookFragment extends Fragment {
 
         void reportError(BaseItem item, QuicklookFragment fragment, String description);
 
-        void removeFromBackStack(QuicklookFragment frag);
+        void removeFromBackStack();
 
         void makeTransition(BaseItem mItem);
 

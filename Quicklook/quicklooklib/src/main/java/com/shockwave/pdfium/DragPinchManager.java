@@ -90,6 +90,8 @@ class DragPinchManager implements OnDragListener, OnPinchListener, OnDoubleTapLi
         if (isLongMove(distance,(x-startDragX)) && (closerBorder == startBorder) && isPageChange(distance)) {
             pdfView.goToPage((pdfView.getCurrentPage() - 1) + diff, closerBorder);
             if (DEBUG_MODE) Log.d("DragPinchManager","Changing page by flicking...");
+        } else {
+            pdfView.render();
         }
     }
 

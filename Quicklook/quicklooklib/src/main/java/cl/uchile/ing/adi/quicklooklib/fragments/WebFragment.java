@@ -28,7 +28,9 @@ public class WebFragment extends QuicklookFragment {
             web.getSettings().setUseWideViewPort(true);
             web.getSettings().setLoadWithOverviewMode(true);
         }
-        web.getSettings().setDisplayZoomControls(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            web.getSettings().setDisplayZoomControls(false);
+        }
         web.getSettings().setMinimumFontSize(13);
         return v;
     }
