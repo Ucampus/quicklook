@@ -44,15 +44,14 @@ public class ListFragment extends QuicklookFragment {
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
                     ArrayList<BaseItem> elements = item.getElements();
                     //If there is only one folder, enter to it automatically.
-                    /**if (elements.size() == 1 && (elements.get(0) instanceof FolderItem)) {
+                    if (elements.size() == 1 && (elements.get(0) instanceof FolderItem)) {
                         if (!visited) {
                             BaseItem nextItem = elements.get(0);
-                            mListener.removeFromBackStack();
                             visited = true;
-                            mListener.makeTransition(nextItem);
+                            mListener.makeTransition(nextItem,false);
                             return view;
                         }
-                    }**/
+                    }
                     RecyclerView.Adapter adapter = item.getAdapter(mListener, elements);
                     recyclerView.setAdapter(adapter);
                 }

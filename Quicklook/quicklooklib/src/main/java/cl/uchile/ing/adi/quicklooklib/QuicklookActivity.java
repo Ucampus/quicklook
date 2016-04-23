@@ -377,7 +377,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     @Override
-    public void makeTransition(final BaseItem mItem) {
+    public void makeTransition(final BaseItem mItem, final boolean backstack) {
         final IListItem originalItem = (IListItem) (getItem());
         if (!areTasksRunning()) {
             loadingTask = new AsyncTask<Object, Object, BaseItem>() {
@@ -399,6 +399,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 protected void onPostExecute(BaseItem result) {
                     super.onPostExecute(result);
                     if (result!=null) {
+                        if (!backstack) {
+                            removeFromBackStack();
+                        }
                         changeFragment(result);
                         pd.dismiss();
                     }

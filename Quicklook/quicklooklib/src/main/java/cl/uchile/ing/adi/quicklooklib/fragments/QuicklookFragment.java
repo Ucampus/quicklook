@@ -119,7 +119,7 @@ public abstract class QuicklookFragment extends Fragment {
 
         void removeFromBackStack();
 
-        void makeTransition(BaseItem mItem);
+        void makeTransition(BaseItem mItem, boolean backstack);
 
         void fragmentFallback(BaseItem mItem);
 
