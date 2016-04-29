@@ -379,40 +379,22 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     @Override
     public void makeTransition(final BaseItem mItem, final boolean backstack) {
         final IListItem originalItem = (IListItem) (getItem());
-        if (!areTasksRunning()) {
-            loadingTask = new AsyncTask<Object, Object, BaseItem>() {
-
+            runOnUiThread(new Runnable() {
                 @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
+                public void run() {
                     pd = ProgressDialog.show(QuicklookActivity.this,
                             getString(R.string.quicklook_loading_file),
                             mItem.getTitle());
-                }
-
-                @Override
-                protected BaseItem doInBackground(Object... params) {
-                    return originalItem.onClick(QuicklookActivity.this, mItem);
-                }
-
-                @Override
-                protected void onPostExecute(BaseItem result) {
-                    super.onPostExecute(result);
-                    if (result!=null) {
-                        if (!backstack) {
+                    BaseItem result = originalItem.onClick(QuicklookActivity.this, mItem);
+                    if (result != null) {
+                        if (backstack) {
                             removeFromBackStack();
                         }
                         changeFragment(result);
                         pd.dismiss();
                     }
                 }
-            };
-            loadingTask.execute();
-        }
-    }
-
-    public boolean areTasksRunning() {
-        return (loadingTask != null && loadingTask.getStatus() == AsyncTask.Status.RUNNING);
+            });
     }
 
     /** .
