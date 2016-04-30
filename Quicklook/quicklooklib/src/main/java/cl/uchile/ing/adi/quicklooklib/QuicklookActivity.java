@@ -371,9 +371,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     public void removeFromBackStack() {
-        FragmentManager f = getSupportFragmentManager();
-        f.popBackStack();
-        currentItem =  itemStack.pop();
+        if (!itemStack.isEmpty()) {
+            FragmentManager f = getSupportFragmentManager();
+            f.popBackStack();
+            currentItem = itemStack.pop();
+        }
     }
 
     @Override
@@ -405,7 +407,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         String info = getResources().getString(R.string.quicklook_item_error);
         if (item!=null) {
             item.setFragment(new DefaultFragment());
-            changeFragment(item, false);
+            removeFromBackStack();
+            changeFragment(item, true);
         } else {
             removeFromBackStack();
             showInfo(info);

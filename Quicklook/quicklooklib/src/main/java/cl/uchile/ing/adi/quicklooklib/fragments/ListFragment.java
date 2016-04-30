@@ -48,7 +48,7 @@ public class ListFragment extends QuicklookFragment {
                         if (!visited) {
                             BaseItem nextItem = elements.get(0);
                             visited = true;
-                            mListener.makeTransition(nextItem,false);
+                            mListener.makeTransition(nextItem,true);
                             return view;
                         }
                     }
