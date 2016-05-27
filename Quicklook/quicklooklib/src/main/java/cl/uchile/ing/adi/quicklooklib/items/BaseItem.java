@@ -355,4 +355,14 @@ public abstract class BaseItem {
     public void setFragment(DefaultFragment fragment) {
         this.fragment = fragment;
     }
+
+    /**
+     * Default behaviour allows QuicklookActivity to show a generic Progress dialog between
+     * transitions. Override if you do not want automatic Progress dialogs or you want to
+     * show one of your own.
+     *
+     * @return true if you want to avoid automatic Progress dialog. false to allow Quicklook to
+     * show one.
+     */
+    public boolean willShowOwnProgress(){return false;}
 }

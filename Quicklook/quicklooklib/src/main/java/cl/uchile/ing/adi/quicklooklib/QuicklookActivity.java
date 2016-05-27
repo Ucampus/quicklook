@@ -43,8 +43,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     private Stack<BaseItem> itemStack = new Stack<>();
     private BaseItem currentItem;
     ProgressDialog pd;
-    AsyncTask loadingTask;
-
+    private static QuicklookConfigurator CONFIGURATOR = null;
     private static String TAG = "QuickLookPermissions";
     public static final String QUICKLOOK_ERROR = "cl.uchile.ing.adi.quicklook.QUICKLOOK_ERROR";
 
@@ -71,6 +70,31 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        String innerPath = BaseItem.getCachePath();
+        File f = new File(innerPath);
+        try {
+            FileUtils.deleteDirectory(f);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(CONFIGURATOR!=null) CONFIGURATOR.registerBroadcasts(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(CONFIGURATOR!=null) CONFIGURATOR.unregisterBroadcasts(this);
+    }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -179,18 +203,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         if( ! item.isOpenable() ) menu.findItem(R.id.open_with).setVisible(false);
 
         return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        String innerPath = BaseItem.getCachePath();
-        File f = new File(innerPath);
-        try {
-            FileUtils.deleteDirectory(f);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -362,6 +374,12 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
     }
 
+    public static void registerConfigurator(QuicklookConfigurator configurator){
+        CONFIGURATOR = configurator;
+    }
+
+
+
     /**
      * Sets the download path.
      * @param path
@@ -381,19 +399,22 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     @Override
     public void makeTransition(final BaseItem mItem, final boolean backstack) {
         final IListItem originalItem = (IListItem) (getItem());
+        final boolean showProgress = !getItem().willShowOwnProgress();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    pd = ProgressDialog.show(QuicklookActivity.this,
-                            getString(R.string.quicklook_loading_file),
-                            mItem.getTitle());
+                    if(showProgress) {
+                        pd = ProgressDialog.show(QuicklookActivity.this,
+                                getString(R.string.quicklook_loading_file),
+                                mItem.getTitle());
+                    }
                     BaseItem result = originalItem.onClick(QuicklookActivity.this, mItem);
                     if (result != null) {
                         if (backstack) {
                             removeFromBackStack();
                         }
                         changeFragment(result);
-                        pd.dismiss();
+                        if(pd!=null){pd.dismiss();pd=null;}
                     }
                 }
             });
