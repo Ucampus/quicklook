@@ -3,12 +3,15 @@ package cl.uchile.ing.adi.quicklook.customItems;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.JsonReader;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.nio.Buffer;
 import java.util.ArrayList;
 
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
@@ -28,24 +31,43 @@ public class QLItem extends VirtualItem {
     public ArrayList<BaseItem> getItemList() {
         ArrayList<BaseItem> itemList = new ArrayList<>();
         try {
-            String s="";
-            BufferedReader br = new BufferedReader(new FileReader(getPath()));
-            String line;
-            while ((line=br.readLine())!=null) {
-                s+=line;
-            }
-            JSONArray list = new JSONArray(s);
-            for (int i=0;i<list.length();i++) {
-                JSONObject actual = list.getJSONObject(i);
-                String path = actual.getString("name");
-                String type = loadQLType(actual.getString("mime"), path);
-                long size = actual.getLong("size");
+            JsonReader reader = new JsonReader(new FileReader(getPath()));
+            reader.beginArray();
+            while (reader.hasNext()) {
+                String mime = "" ,path = "" ,name = "";
+                long size = 0L;
+                reader.beginObject();
+                while(reader.hasNext()){
+                    String key = reader.nextName();
+                    switch (key) {
+                        case "name":
+                            name = reader.nextString();
+                            break;
+                        case "size":
+                            size = reader.nextLong();
+                            break;
+                        case "mime":
+                            mime = reader.nextString();
+                            break;
+                        case "path":
+                            path = reader.nextString();
+                            break;
+                        default:
+                            reader.skipValue();
+                            break;
+                    }
+                }
+                reader.endObject();
+                String type = loadQLType(mime,path);
                 Bundle itemExtra = new Bundle();
-                itemExtra.putString("webPath",actual.getString("path"));
-                itemExtra.putString("webMimetype",actual.getString("mime"));
-                BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size,itemExtra);
+                itemExtra.putString("webPath",path);
+                itemExtra.putString("webMimetype",mime);
+                BaseItem newItem = ItemFactory.getInstance().createItem(name, type, size,itemExtra);
+                Log.d("QL",""+newItem);
                 itemList.add(newItem);
             }
+            reader.endArray();
+            reader.close();
         } catch (Exception e) {
             e.printStackTrace();
         }

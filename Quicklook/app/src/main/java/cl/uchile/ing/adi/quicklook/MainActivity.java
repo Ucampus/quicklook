@@ -34,7 +34,7 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
 
     Runnable r;
     private static int REQUEST_FILE_PERMISSIONS = 121;
-    BroadcastReceiver br;
+    BroadcastReceiver br, as;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +53,14 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
             }
         };
         registerReceiver(br, new IntentFilter(QLItem.QL_BROADCAST));
-        br = new BroadcastReceiver() {
+        as = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d("MainActivity", "Oh, un broadcast de error");
                 Log.d("MainActivity", intent.getStringExtra("error"));
             }
         };
-        registerReceiver(br, new IntentFilter(QUICKLOOK_ERROR));
+        registerReceiver(as, new IntentFilter(QUICKLOOK_ERROR));
 
     }
 
@@ -163,11 +163,11 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Camera permission has been granted, preview can be displayed
                 Log.i("quicklook66", "WRITE_EXTERNAL permission has now been granted. Showing preview.");
-                Toast.makeText(this, "Permisos concedidos :D",Toast.LENGTH_LONG);
+                Toast.makeText(this, "Permisos concedidos :D",Toast.LENGTH_LONG).show();
                 r.run();
             } else {
                 Log.i("quicklook66", "WRITE_EXTERNAL permission was NOT granted.");
-                Toast.makeText(this, "Permisos no concedidos :(",Toast.LENGTH_LONG);
+                Toast.makeText(this, "Permisos no concedidos :(",Toast.LENGTH_LONG).show();
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -178,5 +178,6 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(br);
+        unregisterReceiver(as);
     }
 }
