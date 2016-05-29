@@ -410,7 +410,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                     }
                     BaseItem result = originalItem.onClick(QuicklookActivity.this, mItem);
                     if (result != null) {
-                        if (backstack) {
+                        if (!backstack) {
                             removeFromBackStack();
                         }
                         changeFragment(result);

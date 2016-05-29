@@ -58,12 +58,11 @@ public class QLItem extends VirtualItem {
                     }
                 }
                 reader.endObject();
-                String type = loadQLType(mime,path);
+                String type = loadQLType(mime,name);
                 Bundle itemExtra = new Bundle();
                 itemExtra.putString("webPath",path);
                 itemExtra.putString("webMimetype",mime);
                 BaseItem newItem = ItemFactory.getInstance().createItem(name, type, size,itemExtra);
-                Log.d("QL",""+newItem);
                 itemList.add(newItem);
             }
             reader.endArray();
