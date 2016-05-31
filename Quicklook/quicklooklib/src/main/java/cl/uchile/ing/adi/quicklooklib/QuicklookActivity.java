@@ -30,6 +30,7 @@ import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.items.FileItem;
+import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.items.IListItem;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
@@ -196,7 +197,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         if( this.currentFragment == null ) return true;
 
         BaseItem item = this.getItem();
-        if( item instanceof IListItem ) return true;
+        // If it's a folder, don't show save as button.
+        if(!item.willShowOptionsMenu()) return true;
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.item_menu, menu);
@@ -321,12 +323,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     // Button item functions
 
     public Uri saveItem(boolean inform) {
-        BaseItem item = getItem();
-        String mime = item.getMime();
-        String newPath = item.copyItem(mime);
-        Uri pathUri = Uri.parse("file://" + newPath);
+        Uri itemUri =  getItem().save();
         if (inform) showInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
-        return pathUri;
+        return itemUri;
     }
 
     public Uri saveItem() {

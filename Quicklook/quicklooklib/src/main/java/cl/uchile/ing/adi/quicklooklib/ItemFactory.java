@@ -45,8 +45,8 @@ public class ItemFactory {
         register(FileItem.class, DEFAULT_MIMETYPE, "mime:"+DEFAULT_MIMETYPE);
         register(PDFItem.class, "pdf");
         register(ZipItem.class, "zip");
-        register(PictureItem.class, "jpeg", "png", "gif", "jpg", "mime:image");
-        register(CodeItem.class, "php", "html", "java", "css", "svg", "xml", "js", "json", "c", "h", "mime:application/json");
+        register(PictureItem.class, "jpeg", "png", "gif", "jpg", "svg", "mime:image");
+        register(CodeItem.class, "php", "html", "java", "css", "xml", "js", "py", "json", "c", "h", "mime:application/json");
         register(TxtItem.class, "txt", "mime:text");
         register(TarItem.class, "tar", "gz");
         register(RarItem.class, "rar");

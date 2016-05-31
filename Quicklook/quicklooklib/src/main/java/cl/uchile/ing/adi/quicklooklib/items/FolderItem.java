@@ -70,4 +70,9 @@ public class FolderItem extends BaseItem implements IListItem {
     public BaseItem createForList(String path, String type, long size, Bundle extra) {
         return ItemFactory.getInstance().createItem(path, type, size,extra);
     }
+
+    @Override
+    public boolean willShowOptionsMenu() {
+        return false;
+    }
 }

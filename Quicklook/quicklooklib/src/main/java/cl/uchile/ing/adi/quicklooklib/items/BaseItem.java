@@ -365,4 +365,15 @@ public abstract class BaseItem {
      * show one.
      */
     public boolean willShowOwnProgress(){return false;}
+
+    public boolean willShowOptionsMenu(){return true;}
+
+    // Button item functions
+
+    public Uri save() {
+        String mime = this.getMime();
+        String newPath = this.copyItem(mime);
+        Uri pathUri = Uri.parse("file://" + newPath);
+        return pathUri;
+    }
 }
