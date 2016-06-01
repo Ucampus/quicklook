@@ -177,6 +177,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         if (!itemStack.empty()) {
             currentItem = itemStack.pop();
         }
+        updateActionBar();
     }
 
     @Override
