@@ -339,24 +339,28 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             return;
         }
         Uri pathUri = saveItem(false);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        String mime = item.getMime();
-        intent.setDataAndType(pathUri, mime);
-        startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_open)));
+        if (pathUri!=null) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            String mime = item.getMime();
+            intent.setDataAndType(pathUri, mime);
+            startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_open)));
+        }
     }
 
 
     public void shareItem() {
         Uri pathUri = saveItem(false);
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        File f = new File(pathUri.getPath());
-        if (f.exists()) {
-            BaseItem item = getItem();
-            intent.setType(item.getMime());
-            intent.putExtra(Intent.EXTRA_STREAM, pathUri);
-            intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
-            intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.item_share_text));
-            startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_share)));
+        if (pathUri!=null) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            File f = new File(pathUri.getPath());
+            if (f.exists()) {
+                BaseItem item = getItem();
+                intent.setType(item.getMime());
+                intent.putExtra(Intent.EXTRA_STREAM, pathUri);
+                intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
+                intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.item_share_text));
+                startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_share)));
+            }
         }
     }
 
