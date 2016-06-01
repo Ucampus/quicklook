@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
-import cl.uchile.ing.adi.quicklook.customItems.QLItem;
-
 public class  MainActivity extends AppCompatActivity implements DemoAssetFragment.OnDemoAssetFragmentListener, ActivityCompat.OnRequestPermissionsResultCallback {
     private static String FILES_ASSETS_DIR = "files/";
 

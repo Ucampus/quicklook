@@ -50,6 +50,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     private static int WRITE_PERMISSIONS = 155;
 
+    boolean isOpeningFiles = true;
+
 
     // Activity Config.
 
@@ -99,37 +101,39 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        //Set url of start item
-        if (pd!=null) pd.dismiss();
-        BaseItem item = null;
-        boolean backstack = false;
-        try {
-            this.path = intent.getStringExtra("localurl");
-            generateFolders();
-            if (getIntent() != intent) {
-                backstack = true;
+        if (isOpeningFiles) {
+            super.onNewIntent(intent);
+            //Set url of start item
+            if (pd != null) pd.dismiss();
+            BaseItem item = null;
+            boolean backstack = false;
+            try {
+                this.path = intent.getStringExtra("localurl");
+                generateFolders();
+                if (getIntent() != intent) {
+                    backstack = true;
+                }
+                setIntent(intent);
+                long size = BaseItem.getSizeFromPath(this.path);
+                String type = FileItem.loadFileType(new File(this.path));
+                Bundle extra;
+                if (getIntent().hasExtra(BaseItem.ITEM_EXTRA)) {
+                    extra = getIntent().getBundleExtra(BaseItem.ITEM_EXTRA);
+                } else {
+                    extra = new Bundle();
+                }
+                item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
+                checkPermissionsAndChangeFragment(item, backstack);
+            } catch (Exception e) {
+                e.printStackTrace();
+                String info = getResources().getString(R.string.quicklook_bad_configuration);
+                showInfo(info);
+                QuicklookFragment qf = null;
+                if (item != null) {
+                    qf = item.getFragment();
+                }
+                reportError(item, qf, info);
             }
-            setIntent(intent);
-            long size = BaseItem.getSizeFromPath(this.path);
-            String type = FileItem.loadFileType(new File(this.path));
-            Bundle extra;
-            if (getIntent().hasExtra(BaseItem.ITEM_EXTRA)) {
-                extra = getIntent().getBundleExtra(BaseItem.ITEM_EXTRA);
-            } else {
-                extra = new Bundle();
-            }
-            item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
-            checkPermissionsAndChangeFragment(item, backstack);
-        } catch(Exception e) {
-            e.printStackTrace();
-            String info = getResources().getString(R.string.quicklook_bad_configuration);
-            showInfo(info);
-            QuicklookFragment qf = null;
-            if (item!=null) {
-                qf = item.getFragment();
-            }
-            reportError(item, qf, info);
         }
     }
 
@@ -324,6 +328,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     public Uri saveItem(boolean inform) {
         Uri itemUri =  getItem().save();
+        if (itemUri!=null) {
         if (inform) showInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
         return itemUri;
     }
@@ -469,4 +474,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         intent.putExtra("error",error);
         sendBroadcast(intent);
     }
+
+    public void setOpeningFiles(boolean state) {
+        isOpeningFiles = state;
+    }
+}
 }
