@@ -45,8 +45,10 @@ public class TarItem extends VirtualItem {
                 long size = tae.getSize();
                 String type = this.loadTarGzType(tae);
                 Bundle extra = this.getExtra();
-                BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
-                itemList.add(newItem);
+                if (this.startsWith(path,getVirtualPath())) {
+                    BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size, extra);
+                    itemList.add(newItem);
+                }
             }
         } catch (Exception e) { e.printStackTrace();}
         return itemList;

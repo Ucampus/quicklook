@@ -49,8 +49,7 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
         }
         ArrayList<BaseItem> approvedElements = new ArrayList<>();
         for (BaseItem elem:itemList) {
-            if (startsWith(elem.getPath(), this.getVirtualPath()) &&
-                    !isBannedWord(elem.getName())) {
+            if (!isBannedWord(elem.getName())) {
                 approvedElements.add(createForList(elem));
             }
         }
