@@ -333,6 +333,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         if (itemUri!=null) {
             if (inform)
                 showInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
+        } else {
+            setOpeningFiles(false);
         }
         return itemUri;
     }
