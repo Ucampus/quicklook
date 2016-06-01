@@ -134,6 +134,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 }
                 reportError(item, qf, info);
             }
+        } else {
+            setOpeningFiles(true);
         }
     }
 
@@ -329,7 +331,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     public Uri saveItem(boolean inform) {
         Uri itemUri =  getItem().save();
         if (itemUri!=null) {
-        if (inform) showInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
+            if (inform)
+                showInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
+        }
         return itemUri;
     }
 
@@ -478,5 +482,4 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     public void setOpeningFiles(boolean state) {
         isOpeningFiles = state;
     }
-}
 }
