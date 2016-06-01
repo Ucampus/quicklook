@@ -135,7 +135,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 reportError(item, qf, info);
             }
         } else {
+            // We don't want to open the file, only we need to alert it's downloaded.
             setOpeningFiles(true);
+            showInfo(String.format(getResources().getString(R.string.info_document_saved), BaseItem.getDownloadPath()));
         }
     }
 

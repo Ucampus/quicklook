@@ -50,7 +50,6 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
                 openIntent(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(),null);
             }
         };
-        registerReceiver(br, new IntentFilter(QLItem.QL_BROADCAST));
         as = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -112,7 +111,6 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
             i.putExtra("extra", b);
         }
         String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-        QuicklookActivity.registerType(QLItem.class, "ql");
         QuicklookActivity.setDownloadPath(s + "/hola/");
         startActivity(i);
     }
@@ -121,7 +119,6 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
         Intent i = new Intent(this, QuicklookActivity.class);
         String s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         i.putExtra("localurl", s);
-        QuicklookActivity.registerType(QLItem.class, "ql");
         QuicklookActivity.setDownloadPath(s+"/hola/");
         startActivity(i);
     }
