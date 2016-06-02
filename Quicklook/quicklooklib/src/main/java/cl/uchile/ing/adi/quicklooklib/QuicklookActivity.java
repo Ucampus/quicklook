@@ -176,8 +176,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         super.onBackPressed();
         if (!itemStack.empty()) {
             currentItem = itemStack.pop();
+            updateActionBar();
         }
-        updateActionBar();
     }
 
     @Override
@@ -279,12 +279,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 t.addToBackStack(null);
                 itemStack.add(currentItem);
             }
-            currentItem = item;
-            setFragment(item.getFragment());
-            t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            t.replace(R.id.quicklook_fragment, currentFragment, "QuickLook");
-            t.commitAllowingStateLoss();
-            updateActionBar();
+            setCurrentItem(item);
+            if (item.openAsDefault() || !item.isOpenable()) {
+                setCurrentFragment(item.getFragment());
+                t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                t.replace(R.id.quicklook_fragment, currentFragment, "QuickLook");
+                t.commitAllowingStateLoss();
+                updateActionBar();
+            } else {
+                openItem();
+            }
         }
     }
 
@@ -325,8 +329,12 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         return currentItem;
     }
 
-    public void setFragment(QuicklookFragment fragment) {
+    public void setCurrentFragment(QuicklookFragment fragment) {
         currentFragment = fragment;
+    }
+
+    public void setCurrentItem(BaseItem item) {
+        currentItem = item;
     }
 
     // Button item functions

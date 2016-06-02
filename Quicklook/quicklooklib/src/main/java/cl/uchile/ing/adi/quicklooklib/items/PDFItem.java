@@ -16,4 +16,9 @@ public class PDFItem extends FileItem {
         formattedName = getContext().getString(R.string.items_pdf_formatted_name);
         fragment = new PdfFragment();
     }
+
+    @Override
+    public boolean openAsDefault() {
+        return false;
+    }
 }

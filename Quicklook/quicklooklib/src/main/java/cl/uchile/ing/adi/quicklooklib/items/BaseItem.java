@@ -352,9 +352,10 @@ public abstract class BaseItem {
         return this.mime;
     }
 
-    public void setFragment(DefaultFragment fragment) {
+    public void setFragment(QuicklookFragment fragment) {
         this.fragment = fragment;
     }
+
 
     /**
      * Default behaviour allows QuicklookActivity to show a generic Progress dialog between
@@ -366,7 +367,18 @@ public abstract class BaseItem {
      */
     public boolean willShowOwnProgress(){return false;}
 
+    /**
+     * This allows Quicklook to show or hide options menu with "Open", "share" and "save" options.
+     * @return true if you want to show options menu
+     */
     public boolean willShowOptionsMenu(){return true;}
+
+    /**
+     * this allows Quicklook to open with its own logic some elements.
+     * Return false if you want to show a chooser instead
+     * @return true if you want to show the element with quicklook fragments.
+     */
+    public boolean openAsDefault(){return true;}
 
     // Button item functions
 

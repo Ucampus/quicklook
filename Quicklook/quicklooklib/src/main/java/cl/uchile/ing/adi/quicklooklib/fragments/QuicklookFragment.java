@@ -54,7 +54,8 @@ public abstract class QuicklookFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mListener.setFragment(item.getFragment());
+        mListener.setCurrentFragment(item.getFragment());
+        mListener.setCurrentItem(item);
         mListener.updateActionBar();
     }
 
@@ -111,7 +112,9 @@ public abstract class QuicklookFragment extends Fragment {
          */
         QuicklookFragment getFragment();
 
-        void setFragment(QuicklookFragment fragment);
+        void setCurrentFragment(QuicklookFragment fragment);
+
+        void setCurrentItem(BaseItem item);
 
         void showInfo(String message);
 
