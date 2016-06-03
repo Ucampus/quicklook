@@ -72,6 +72,7 @@ public class ZipItem extends VirtualItem {
 
     public ArrayList<BaseItem> getItemList() {
         ArrayList<BaseItem> itemList = new ArrayList<>();
+        ArrayList<String> itemNames = new ArrayList<>();
         try {
             ZipFile zipfile = new ZipFile(this.path);
             for (Enumeration<? extends ZipEntry> e = zipfile.entries();
@@ -85,6 +86,12 @@ public class ZipItem extends VirtualItem {
                     BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size, extra);
                     itemList.add(newItem);
                 }
+                itemNames.add(path);
+            }
+            //Allows to go into a folder automatically if it (zip fix)
+            if (getVirtualPath().equals("") && itemList.size()==0 && itemNames.size() > 0) {
+                setVirtualPath(itemNames.get(0).split("/")[0]);
+                return getItemList();
             }
         } catch (Exception e) {
             e.printStackTrace();

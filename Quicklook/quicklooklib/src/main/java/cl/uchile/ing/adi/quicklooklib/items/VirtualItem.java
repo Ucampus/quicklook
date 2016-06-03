@@ -53,11 +53,6 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
                 approvedElements.add(createForList(elem));
             }
         }
-        //Allows to go into a folder automatically if it (zip fix)
-        if (getVirtualPath().equals("") && approvedElements.size()==0 && itemList.size() >0) {
-            setVirtualPath(itemList.get(0).getPath().split("/")[0]);
-            return getElements();
-        }
         return approvedElements;
     }
 
