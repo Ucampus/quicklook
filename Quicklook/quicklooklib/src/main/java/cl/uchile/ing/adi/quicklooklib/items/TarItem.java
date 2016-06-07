@@ -30,7 +30,8 @@ public class TarItem extends VirtualItem {
 
     @Override
     public ArrayList<BaseItem> getItemList() {
-        ArrayList<BaseItem>itemList = new ArrayList<>();
+        ArrayList<BaseItem> itemList = new ArrayList<>();
+        ArrayList<String> itemNames = new ArrayList<>();
         try {
             FileInputStream fis = new FileInputStream(getPath());
             InputStream bis = new BufferedInputStream(fis);
@@ -49,6 +50,12 @@ public class TarItem extends VirtualItem {
                     BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size, extra);
                     itemList.add(newItem);
                 }
+                itemNames.add(path);
+            }
+            //Allows to go into a folder automatically if it (zip fix)
+            if (getVirtualPath().equals("") && itemList.size()==0 && itemNames.size() > 0) {
+                setVirtualPath(itemNames.get(0).split("/")[0]);
+                return getItemList();
             }
         } catch (Exception e) { e.printStackTrace();}
         return itemList;

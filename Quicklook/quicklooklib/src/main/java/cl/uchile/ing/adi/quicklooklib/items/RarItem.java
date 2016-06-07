@@ -2,6 +2,7 @@ package cl.uchile.ing.adi.quicklooklib.items;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.github.junrar.Archive;
 import com.github.junrar.impl.FileVolumeManager;
@@ -28,6 +29,7 @@ public class RarItem extends VirtualItem {
     @Override
     public ArrayList<BaseItem> getItemList() {
         ArrayList<BaseItem> itemList = new ArrayList<>();
+        ArrayList<String> itemNames = new ArrayList<>();
         Archive a;
         try {
             a = new Archive(new FileVolumeManager(new File(getPath())));
@@ -44,11 +46,19 @@ public class RarItem extends VirtualItem {
                 String type = loadRarType(fh);
                 long size = fh.getFullPackSize();
                 Bundle extra = this.getExtra();
+                Log.d("Adderou",""+path);
                 if (this.startsWith(path,getVirtualPath())) {
                     BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size, extra);
                     itemList.add(newItem);
+                    Log.d("Adderou",""+newItem);
                 }
+                itemNames.add(path);
                 fh = a.nextFileHeader();
+            }
+            //Allows to go into a folder automatically if it (zip fix)
+            if (getVirtualPath().equals("") && itemList.size()==0 && itemNames.size() > 0) {
+                setVirtualPath(itemNames.get(0).split("/")[0]);
+                return getItemList();
             }
         }
         return itemList;
