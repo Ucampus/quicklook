@@ -32,7 +32,6 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
 
     Runnable r;
     private static int REQUEST_FILE_PERMISSIONS = 121;
-    BroadcastReceiver br, as;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,22 +41,6 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.main_activity_fragment, fragment, "MainQuickLook");
         t.commit();
-        br = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d("MainActivity", "Oh, un broadcast... abrire quicklook de nuevo");
-                Log.d("MainActivity", intent.getStringExtra("path"));
-                openIntent(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(),null);
-            }
-        };
-        as = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.d("MainActivity", "Oh, un broadcast de error");
-                Log.d("MainActivity", intent.getStringExtra("error"));
-            }
-        };
-        registerReceiver(as, new IntentFilter(QUICKLOOK_ERROR));
 
     }
 
@@ -76,9 +59,6 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
                     }
                 }
                 HashMap<String,String> extensions = new HashMap<>();
-                extensions.put("c","text/c");
-                extensions.put("zxc","image/zxc");
-                //extensions.put("json","application/json");
                 String[] extsplit = urlForAsset.split("\\.");
                 String ext = extsplit[extsplit.length-1];
                 if (extensions.containsKey(ext)) {
@@ -172,7 +152,5 @@ public class  MainActivity extends AppCompatActivity implements DemoAssetFragmen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(br);
-        unregisterReceiver(as);
     }
 }

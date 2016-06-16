@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -108,7 +110,13 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             BaseItem item = null;
             boolean backstack = false;
             try {
+                // First place where look for the url: Quicklook intent.
                 this.path = intent.getStringExtra("localurl");
+                // Second place where look for the url: VIEW intent
+                if (path==null) {
+                    this.path = getPathFromUri(intent.getData());
+                    Log.d("Adderou",this.path);
+                }
                 generateFolders();
                 if (getIntent() != intent) {
                     backstack = true;
@@ -496,5 +504,19 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     public void setOpeningFiles(boolean state) {
         isOpeningFiles = state;
+    }
+
+
+    public String getPathFromUri(Uri contentUri) {
+        String filePath = null;
+        if (contentUri != null && "content".equals(contentUri.getScheme())) {
+            Cursor cursor = getContentResolver().query(contentUri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
+            cursor.moveToFirst();
+            filePath = cursor.getString(0);
+            cursor.close();
+        } else {
+            filePath = contentUri.getPath();
+        }
+        return filePath;
     }
 }
