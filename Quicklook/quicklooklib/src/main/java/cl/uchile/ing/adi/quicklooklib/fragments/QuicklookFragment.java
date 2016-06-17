@@ -125,5 +125,7 @@ public abstract class QuicklookFragment extends Fragment {
         void makeTransition(BaseItem mItem, boolean backstack);
 
         void fragmentFallback(BaseItem mItem);
+
+        void changeFragment(BaseItem mItem, boolean backstack);
     }
 }
