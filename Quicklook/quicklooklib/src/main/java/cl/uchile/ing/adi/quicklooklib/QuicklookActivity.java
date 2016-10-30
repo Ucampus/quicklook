@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -39,6 +40,7 @@ import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 public class QuicklookActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
 
+    public static final String ACTION_EVENT = "cl.uchile.ing.adi.QUICKLOOK_EVENT";
     private String path;
     private Runnable r;
     private View coordinator;
@@ -115,7 +117,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 // Second place where look for the url: VIEW intent
                 if (path==null) {
                     this.path = getPathFromUri(intent.getData());
-                    Log.d("Adderou",this.path);
                 }
                 generateFolders();
                 if (getIntent() != intent) {
@@ -282,6 +283,13 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      */
     public void changeFragment(BaseItem item, boolean backstack){
         if (item!=null) {
+            //Notify about the new fragment shown, for statistics purposes ;)
+            Intent startedIntent = new Intent();
+            startedIntent.setAction(ACTION_EVENT);
+            startedIntent.putExtra("action", "showFragment");
+            startedIntent.putExtra("label", item.getFragment().getClass().getCanonicalName());
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(startedIntent);
+
             FragmentTransaction t = getSupportFragmentManager().beginTransaction();
             if (backstack) {
                 t.addToBackStack(null);
