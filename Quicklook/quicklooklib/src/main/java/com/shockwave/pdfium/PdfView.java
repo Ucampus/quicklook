@@ -280,6 +280,9 @@ public class PdfView extends SurfaceView {
     }
 
     protected int closerBorder() {
+        if (mPdfSurfaceHolder == null || mPageRect == null) {
+            return NO_BORDER;
+        }
         if (mPageRect.top>=0 && mPageRect.bottom <= mPdfSurfaceHolder.getSurfaceFrame().height()) {
             return BOTH_BORDERS;
         } if (mPageRect.top>=0) {
