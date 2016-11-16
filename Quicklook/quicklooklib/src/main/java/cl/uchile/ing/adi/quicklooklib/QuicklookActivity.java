@@ -201,7 +201,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             saveItem();
             return true;
         }*/
-        
+
          else if (i == R.id.share) {
             shareItem();
             return true;
