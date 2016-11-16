@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
+    <!--<item
         android:id="@+id/save"
         android:orderInCategory="20"
         app:showAsAction="never"
         android:title="@string/quicklook_save">
-    </item>
+    </item>-->
     <item
         android:id="@+id/open_with"
         app:showAsAction="never"

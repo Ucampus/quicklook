@@ -75,14 +75,14 @@
                 android:scaleType="fitXY"
                 android:background="@drawable/quicklook_button"
                 />
-            <ImageButton
+           <!-- <ImageButton
                 android:id="@+id/save_item"
                 android:layout_margin="10dp"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/save_item"
                 android:scaleType="fitXY"
-                android:background="@drawable/quicklook_button"
+                android:background="@drawable/quicklook_button"-->
                 />
         </LinearLayout>
 

@@ -160,7 +160,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         //Generate download folder
         if (BaseItem.getDownloadPath() == null) {
             BaseItem.setDownloadPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                    .getAbsolutePath()+"/Quicklook/");
+                    .getAbsolutePath());
         }
         String downloadPath = BaseItem.getDownloadPath();
         //Create downloadPath folder if not exists.
@@ -197,10 +197,12 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             onBackPressed();
             return true;
         }
-        else if (i == R.id.save) {
+        /* else if (i == R.id.save) {
             saveItem();
             return true;
-        } else if (i == R.id.share) {
+        }*/
+        
+         else if (i == R.id.share) {
             shareItem();
             return true;
         } else if (i == R.id.open_with) {
@@ -342,7 +344,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     public QuicklookFragment getFragment() {
         return currentFragment;
     }
-    
+
     public BaseItem getItem() {
         return currentItem;
     }
@@ -527,4 +529,5 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
         return filePath;
     }
+
 }
