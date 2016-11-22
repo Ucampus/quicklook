@@ -297,17 +297,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 t.addToBackStack(null);
                 itemStack.add(currentItem);
             }
-            if (!(item.openAsDefault() || !item.isOpenable())) {
-                item.setFragment(new DefaultFragment());
-            }
             setCurrentItem(item);
             setCurrentFragment(item.getFragment());
             t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             t.replace(R.id.quicklook_fragment, currentFragment, "QuickLook");
             t.commitAllowingStateLoss();
-            if (!(item.openAsDefault() || !item.isOpenable())) {
-                openItem();
-            }
             updateActionBar();
         }
     }
