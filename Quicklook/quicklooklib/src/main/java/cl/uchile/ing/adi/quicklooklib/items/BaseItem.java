@@ -373,6 +373,12 @@ public abstract class BaseItem {
      */
     public boolean willShowOptionsMenu(){return true;}
 
+    /**
+     * this allows Quicklook to open with its own logic some elements.
+     * Return false if you want to show a chooser instead
+     * @return true if you want to show the element with quicklook fragments.
+     */
+    public boolean openAsDefault(){return true;}
 
     // Button item functions
 

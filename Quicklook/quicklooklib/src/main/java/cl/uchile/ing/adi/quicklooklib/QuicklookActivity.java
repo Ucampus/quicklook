@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -17,7 +16,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,7 +31,6 @@ import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.items.FileItem;
-import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.items.IListItem;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
@@ -297,11 +294,17 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 t.addToBackStack(null);
                 itemStack.add(currentItem);
             }
+            if (!(item.openAsDefault() || !item.isOpenable())) {
+                item.setFragment(new DefaultFragment());
+            }
             setCurrentItem(item);
             setCurrentFragment(item.getFragment());
             t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             t.replace(R.id.quicklook_fragment, currentFragment, "QuickLook");
             t.commitAllowingStateLoss();
+            if (!(item.openAsDefault() || !item.isOpenable())) {
+                openItem();
+            }
             updateActionBar();
         }
     }
@@ -379,7 +382,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             Intent intent = new Intent(Intent.ACTION_VIEW);
             String mime = item.getMime();
             intent.setDataAndType(pathUri, mime);
-            startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_open)));
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
     }
 

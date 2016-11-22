@@ -14,4 +14,9 @@ public class PDFItem extends FileItem {
         image = R.drawable.pdf;
         formattedName = getContext().getString(R.string.items_pdf_formatted_name);
     }
+
+    @Override
+    public boolean openAsDefault() {
+        return false;
+    }
 }
