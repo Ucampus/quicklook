@@ -7,8 +7,10 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -16,14 +18,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.Stack;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
@@ -31,8 +39,12 @@ import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.items.FileItem;
+import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.items.IListItem;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
+
+import static cl.uchile.ing.adi.quicklooklib.items.BaseItem.getCachePath;
+import static org.apache.commons.io.FileUtils.openOutputStream;
 
 public class QuicklookActivity extends AppCompatActivity implements ListFragment.OnListFragmentInteractionListener,
         ActivityCompat.OnRequestPermissionsResultCallback {
@@ -78,13 +90,14 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        String innerPath = BaseItem.getCachePath();
+        String innerPath = getCachePath();
         File f = new File(innerPath);
         try {
             FileUtils.deleteDirectory(f);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.d("Adderou","Temp directory deleted");
     }
 
     @Override
@@ -109,13 +122,14 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             BaseItem item = null;
             boolean backstack = false;
             try {
+                // Genero las carpetas
+                generateFolders();
                 // First place where look for the url: Quicklook intent.
                 this.path = intent.getStringExtra("localurl");
                 // Second place where look for the url: VIEW intent
                 if (path==null) {
                     this.path = getPathFromUri(intent.getData());
                 }
-                generateFolders();
                 if (getIntent() != intent) {
                     backstack = true;
                 }
@@ -166,11 +180,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         BaseItem.setDownloadPath(downloadPath);
 
         //Generate cache folder
-        if (BaseItem.getCachePath()==null) {
+        if (getCachePath()==null) {
             BaseItem.setCachePath(getFilesDir().getAbsolutePath() + "/quicklook/");
         }
         //Create cachePath folder if not exists.
-        String cachePath=BaseItem.getCachePath();
+        String cachePath= getCachePath();
         File cacheFolder = new File(cachePath);
         if (!cacheFolder.exists()) cacheFolder.mkdirs();
         BaseItem.setCachePath(cachePath);
@@ -294,17 +308,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 t.addToBackStack(null);
                 itemStack.add(currentItem);
             }
-            if (!(item.openAsDefault() || !item.isOpenable())) {
-                item.setFragment(new DefaultFragment());
-            }
             setCurrentItem(item);
             setCurrentFragment(item.getFragment());
             t.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             t.replace(R.id.quicklook_fragment, currentFragment, "QuickLook");
             t.commitAllowingStateLoss();
-            if (!(item.openAsDefault() || !item.isOpenable())) {
-                openItem();
-            }
             updateActionBar();
         }
     }
@@ -382,8 +390,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             Intent intent = new Intent(Intent.ACTION_VIEW);
             String mime = item.getMime();
             intent.setDataAndType(pathUri, mime);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_open)));
         }
     }
 
@@ -517,13 +524,35 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     public String getPathFromUri(Uri contentUri) {
         String filePath = null;
-        if (contentUri != null && "content".equals(contentUri.getScheme())) {
-            Cursor cursor = getContentResolver().query(contentUri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA }, null, null, null);
-            cursor.moveToFirst();
-            filePath = cursor.getString(0);
-            cursor.close();
+        if (contentUri != null) {
+            if ("content".equals(contentUri.getScheme())) {
+                Cursor cursor = null;
+                String name = null;
+                try {
+                    cursor = getContentResolver().query(contentUri, null, null, null, null);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        name = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    }
+                } finally {
+                    cursor.close();
+                }
+                try {
+                    InputStream in = getContentResolver().openInputStream(contentUri);
+                    String newName = getCachePath() + name;
+                    OutputStream out = openOutputStream(new File(newName));
+                    IOUtils.copy(in,out);
+                    in.close();
+                    out.close();
+                    return newName;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            } else {
+                filePath = contentUri.getPath();
+            }
         } else {
-            filePath = contentUri.getPath();
+            return null;
         }
         return filePath;
     }
