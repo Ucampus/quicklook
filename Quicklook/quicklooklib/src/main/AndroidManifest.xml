@@ -8,61 +8,6 @@
             android:launchMode="singleTop"
             android:configChanges="orientation|screenSize"
             >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:scheme="file"
-                    android:mimeType="application/zip"
-                    android:host="*" />
-                <data
-                    android:scheme="file"
-                    android:mimeType="application/x-rar-compressed"
-                    android:host="*" />
-                <data
-                    android:scheme="file"
-                    android:mimeType="application/x-gzip"
-                    android:host="*" />
-                <data
-                    android:scheme="file"
-                    android:mimeType="image/*"
-                    android:host="*" />
-                <data
-                    android:scheme="file"
-                    android:mimeType="text/*"
-                    android:host="*" />
-
-                <data
-                    android:scheme="content"
-                    android:mimeType="application/json"
-                    android:host="*" />
-                <data
-                    android:scheme="content"
-                    android:mimeType="application/zip"
-                    android:host="*" />
-                <data
-                    android:scheme="content"
-                    android:mimeType="application/x-rar-compressed"
-                    android:host="*" />
-                <data
-                    android:scheme="content"
-                    android:mimeType="application/x-gzip"
-                    android:host="*" />
-                <data
-                    android:scheme="content"
-                    android:mimeType="image/*"
-                    android:host="*" />
-                <data
-                    android:scheme="content"
-                    android:mimeType="text/*"
-                    android:host="*" />
-
-                <data
-                    android:scheme="content"
-                    android:mimeType="application/json"
-                    android:host="*" />
-            </intent-filter>
         </activity>
     </application>
 
