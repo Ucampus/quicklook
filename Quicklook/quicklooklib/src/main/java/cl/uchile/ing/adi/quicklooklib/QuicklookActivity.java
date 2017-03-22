@@ -91,8 +91,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     protected void onDestroy() {
         super.onDestroy();
         String innerPath = getCachePath();
-        File f = new File(innerPath);
         try {
+            File f = new File(innerPath);
             FileUtils.deleteDirectory(f);
         } catch (Exception e) {
             e.printStackTrace();
