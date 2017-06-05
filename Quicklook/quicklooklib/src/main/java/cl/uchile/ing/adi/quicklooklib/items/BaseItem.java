@@ -78,21 +78,21 @@ public abstract class BaseItem {
 
         Intent i = new Intent( Intent.ACTION_VIEW );
         i.setData(Uri.parse(path));
-        ResolveInfo r = manager.resolveActivity(i, 0);
+        ResolveInfo r = manager.resolveActivity(i, PackageManager.MATCH_DEFAULT_ONLY);
         if( r != null ) {
             this.openable = true;
         } else {
             i.setType(mime);
-            r = manager.resolveActivity(i, 0);
+            r = manager.resolveActivity(i, PackageManager.MATCH_DEFAULT_ONLY);
             if( r != null ) {
                 this.openable = true;
             } else {
                 i = new Intent( Intent.ACTION_SEND );
-                r = manager.resolveActivity(i, 0);
+                r = manager.resolveActivity(i, PackageManager.MATCH_DEFAULT_ONLY);
                 if (r != null) this.openable = true;
             }
         }
-    }
+        }
 
     /**
      * Helper class. Obtains the id of a file using the path.
