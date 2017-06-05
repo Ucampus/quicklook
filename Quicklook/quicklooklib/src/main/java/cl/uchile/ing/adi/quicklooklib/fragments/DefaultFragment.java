@@ -1,6 +1,8 @@
 package cl.uchile.ing.adi.quicklooklib.fragments;
 
 
+import android.app.DownloadManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.opengl.Visibility;
@@ -38,7 +40,7 @@ public class DefaultFragment extends QuicklookFragment {
         //Set listeners
         ImageButton openItem = (ImageButton) v.findViewById(R.id.open_item);
         ImageButton shareItem = (ImageButton) v.findViewById(R.id.share_item);
-        //ImageButton saveItem = (ImageButton) v.findViewById(R.id.save_item);
+        ImageButton openDownloads = (ImageButton) v.findViewById(R.id.open_downloads);
 
         if( item.isOpenable() ) {
             openItem.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +57,13 @@ public class DefaultFragment extends QuicklookFragment {
             public void onClick(View v) {
                 mListener.shareItem();
             }
+        });
+
+        openDownloads.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mListener.openDownloads();
+            }
+
         });
 
         /*saveItem.setOnClickListener(new View.OnClickListener() {

@@ -107,6 +107,8 @@ public abstract class QuicklookFragment extends Fragment {
         void shareItem();
         BaseItem getItem();
 
+        void openDownloads();
+
         /**
          * Retrieves the current fragment.
          */

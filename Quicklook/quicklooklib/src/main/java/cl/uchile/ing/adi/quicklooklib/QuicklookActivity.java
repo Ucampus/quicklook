@@ -1,6 +1,7 @@
 package cl.uchile.ing.adi.quicklooklib;
 
 import android.Manifest;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -213,11 +214,14 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             return true;
         }*/
 
-         else if (i == R.id.share) {
+        else if (i == R.id.share) {
             shareItem();
             return true;
         } else if (i == R.id.open_with) {
             openItem();
+            return true;
+        } else if (i == R.id.open_in_downloads) {
+            openDownloads();
             return true;
         } else {
             return super.onOptionsItemSelected(mItem);
@@ -377,6 +381,10 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     public Uri saveItem() {
         return saveItem(true);
+    }
+
+    public void openDownloads() {
+        startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
     }
 
     public void openItem() {

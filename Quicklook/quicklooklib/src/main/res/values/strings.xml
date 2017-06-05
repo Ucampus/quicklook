@@ -33,5 +33,6 @@
     <string name="quicklook_share">Share</string>
     <string name="quicklook_item_error">Error showing the item. Try opening it again.</string>
     <string name="quicklook_bad_configuration">Something happened, please retry or contact us</string>
+    <string name="quicklook_open_downloads">View in downloads</string>
 
 </resources>

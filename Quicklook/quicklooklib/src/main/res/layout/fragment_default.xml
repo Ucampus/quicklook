@@ -67,6 +67,16 @@
                 />
 
             <ImageButton
+                android:id="@+id/open_downloads"
+                android:layout_margin="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/downloads_folder"
+                android:scaleType="fitXY"
+                android:background="@drawable/quicklook_button"
+                />
+
+            <ImageButton
                 android:id="@+id/open_item"
                 android:layout_margin="10dp"
                 android:layout_width="50dp"

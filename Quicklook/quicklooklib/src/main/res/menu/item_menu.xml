@@ -8,6 +8,12 @@
         android:title="@string/quicklook_save">
     </item>-->
     <item
+        android:id="@+id/open_in_downloads"
+        app:showAsAction="never"
+        android:orderInCategory="9999"
+        android:title="@string/quicklook_open_downloads">
+    </item>
+    <item
         android:id="@+id/open_with"
         app:showAsAction="never"
         android:orderInCategory="9999"
