@@ -35,4 +35,6 @@
     <string name="quicklook_bad_configuration">Something happened, please retry or contact us</string>
     <string name="quicklook_open_downloads">View in downloads</string>
 
+    <string name="quicklook_error_opening">The file couln\'t be opened</string>
+
 </resources>

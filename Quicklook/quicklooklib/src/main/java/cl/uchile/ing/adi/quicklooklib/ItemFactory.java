@@ -95,6 +95,6 @@ public class ItemFactory {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return new FileItem(path, type, size, extra);//Last resort
     }
 }
