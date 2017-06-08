@@ -4,11 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextPaint;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import cl.uchile.ing.adi.quicklooklib.QuicklookActivity;
+import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
@@ -33,6 +37,11 @@ public abstract class QuicklookFragment extends Fragment {
             String type = b.getString(BaseItem.ITEM_TYPE);
             long size = BaseItem.getSizeFromPath(path);
             Bundle extra = b.getBundle(BaseItem.ITEM_EXTRA);
+            if(TextUtils.isEmpty(path) || TextUtils.isEmpty(type) || size<=0 || extra==null){
+                Toast.makeText(getContext(), R.string.quicklook_error_opening, Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+                return;
+            }
             item = ItemFactory.getInstance().createItem(path,type,size,extra);
         }
         setHasOptionsMenu(true);
