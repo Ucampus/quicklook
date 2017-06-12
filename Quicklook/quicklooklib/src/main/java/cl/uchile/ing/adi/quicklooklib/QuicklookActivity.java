@@ -73,7 +73,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set context to items (localization)
-        BaseItem.setContext(getApplicationContext());
+        BaseItem.setContext(this);
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
         //Only if fragment is not rendered
@@ -143,6 +143,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 } else {
                     extra = new Bundle();
                 }
+                if(BaseItem.getContext()==null) BaseItem.setContext(this);
                 item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
                 checkPermissionsAndChangeFragment(item, backstack);
             } catch (Exception e) {

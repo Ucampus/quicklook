@@ -333,6 +333,7 @@ public abstract class BaseItem {
     }
 
     public static void setContext(Context c) {
+        if(c==null) return;
         context = c;
     }
 
