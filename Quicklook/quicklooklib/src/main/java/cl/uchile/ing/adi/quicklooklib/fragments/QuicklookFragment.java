@@ -31,28 +31,30 @@ public abstract class QuicklookFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState){
+        if(!isAdded()) return null;
         Bundle b = getArguments();
         if (b!=null) {
             String path = b.getString(BaseItem.ITEM_PATH);
             String type = b.getString(BaseItem.ITEM_TYPE);
             long size = BaseItem.getSizeFromPath(path);
             Bundle extra = b.getBundle(BaseItem.ITEM_EXTRA);
-            if(TextUtils.isEmpty(path) || TextUtils.isEmpty(type) || size<=0 || extra==null){
+            if(TextUtils.isEmpty(path) || TextUtils.isEmpty(type) || size<0 || extra==null){
                 Toast.makeText(getContext(), R.string.quicklook_error_opening, Toast.LENGTH_SHORT).show();
                 getActivity().finish();
-                return;
+                return null;
             }
-            item = ItemFactory.getInstance().createItem(path,type,size,extra);
+            item = ItemFactory.getInstance().createItem(path,type,size,extra, getActivity());
         }
-        setHasOptionsMenu(true);
-    }
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState){
         try {
             return createItemView(inflater,container,savedInstanceState);
         } catch (Exception e) {
-            mListener.fragmentFallback(item);
+            if(mListener!=null) mListener.fragmentFallback(item);
             return null;
         }
     }
@@ -63,9 +65,11 @@ public abstract class QuicklookFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mListener.setCurrentFragment(item.getFragment());
-        mListener.setCurrentItem(item);
-        mListener.updateActionBar();
+        if(mListener!=null && item!=null) {
+            mListener.setCurrentFragment(item.getFragment());
+            mListener.setCurrentItem(item);
+            mListener.updateActionBar();
+        }
     }
 
     @Override

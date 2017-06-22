@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.OpenableColumns;
@@ -24,15 +23,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Stack;
 
 import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
@@ -40,7 +38,6 @@ import cl.uchile.ing.adi.quicklooklib.fragments.ListFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.items.FileItem;
-import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.items.IListItem;
 import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
@@ -72,8 +69,6 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set context to items (localization)
-        BaseItem.setContext(this);
         setContentView(R.layout.activity_quicklook);
         coordinator = findViewById(R.id.quicklook_coordinator);
         //Only if fragment is not rendered
@@ -143,8 +138,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 } else {
                     extra = new Bundle();
                 }
-                if(BaseItem.getContext()==null) BaseItem.setContext(this);
-                item = ItemFactory.getInstance().createItem(this.path, type, size, extra);
+                item = ItemFactory.getInstance().createItem(this.path, type, size, extra, this);
                 checkPermissionsAndChangeFragment(item, backstack);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -385,7 +379,12 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     }
 
     public void openDownloads() {
-        startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+        try {
+            startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+        }
+        catch (Exception e){
+            Toast.makeText(this, R.string.quicklook_error_open_downloads, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void openItem() {
@@ -457,8 +456,10 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     @Override
     public void makeTransition(final BaseItem mItem, final boolean backstack) {
-        final IListItem originalItem = (IListItem) (getItem());
-        final boolean showProgress = !getItem().willShowOwnProgress();
+        BaseItem origItem = getItem();
+        if(!(origItem instanceof IListItem)) return;
+        final IListItem originalItem = (IListItem)origItem;
+        final boolean showProgress = !origItem.willShowOwnProgress();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -467,7 +468,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                                 getString(R.string.quicklook_loading_file),
                                 mItem.getTitle());
                     }
-                    BaseItem result = originalItem.onClick(QuicklookActivity.this, mItem);
+                    BaseItem result = originalItem.doClick(QuicklookActivity.this, mItem);
                     if (result != null) {
                         if (!backstack) {
                             removeFromBackStack();

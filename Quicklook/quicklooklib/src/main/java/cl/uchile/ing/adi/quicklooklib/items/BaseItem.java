@@ -37,9 +37,7 @@ public abstract class BaseItem {
     public static String DOWNLOAD_PATH;
     public static String CACHE_PATH;
 
-    public static Context context;
-
-
+    protected Context context;
     protected String type;
     protected long size;
     protected String path;
@@ -57,7 +55,8 @@ public abstract class BaseItem {
      * @param size size of file
      * @param extra extras introduced by bundle.
      */
-    public BaseItem(String path, String type, long size, Bundle extra) {
+    public BaseItem(String path, String type, long size, Bundle extra, Context context) {
+        this.setContext(context);
         this.path = path;
         this.size = size;
         this.type = type;
@@ -332,12 +331,12 @@ public abstract class BaseItem {
         }
     }
 
-    public static void setContext(Context c) {
+    public void setContext(Context c) {
         if(c==null) return;
         context = c;
     }
 
-    public static Context getContext() {
+    public Context getContext() {
         return context;
     }
 

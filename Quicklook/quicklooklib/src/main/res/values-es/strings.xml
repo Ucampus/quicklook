@@ -30,6 +30,8 @@
     <string name="quicklook_open_downloads">Ver en descargas</string>
 
     <string name="quicklook_error_opening">No pudimos abrir el archivo</string>
+    <string name="quicklook_error_open_downloads">No pudimos abrir tu app de Descargas</string>
+
 
 
 </resources>

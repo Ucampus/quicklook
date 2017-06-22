@@ -81,7 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public void clickAction(ViewHolder holder) {
-        mListener.makeTransition(holder.mItem,true);
+        if(mListener!=null) mListener.makeTransition(holder.mItem,true);
     }
 
 }

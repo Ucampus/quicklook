@@ -68,7 +68,7 @@ public class DefaultFragment extends QuicklookFragment {
 
         /*saveItem.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void doClick(View v) {
                 mListener.saveItem();
             }
         });

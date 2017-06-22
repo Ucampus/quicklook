@@ -36,5 +36,6 @@
     <string name="quicklook_open_downloads">View in downloads</string>
 
     <string name="quicklook_error_opening">The file couln\'t be opened</string>
+    <string name="quicklook_error_open_downloads">We were unable to open your Download app</string>
 
 </resources>

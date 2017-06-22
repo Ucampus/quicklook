@@ -1,5 +1,6 @@
 package cl.uchile.ing.adi.quicklooklib;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import java.lang.reflect.Constructor;
@@ -72,7 +73,7 @@ public class ItemFactory {
      * @param type mimetype of the item.
      * @param size size of the item.
      */
-    public BaseItem createItem(String path, String type, long size, Bundle extra) {
+    public BaseItem createItem(String path, String type, long size, Bundle extra, Context context) {
         type = type.toLowerCase();
         Class c = null;
         if (c==null && dictionary.containsKey(type)) c = dictionary.get(type); // por extension
@@ -90,11 +91,11 @@ public class ItemFactory {
         if(c==null) c = FileItem.class; // por defecto
         try {
             Constructor<?> constructor;
-            constructor = c.getConstructor(String.class, String.class, long.class, Bundle.class);
-            return (BaseItem) constructor.newInstance(path,type,size,extra);
+            constructor = c.getConstructor(String.class, String.class, long.class, Bundle.class, Context.class);
+            return (BaseItem) constructor.newInstance(path,type,size,extra,context);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new FileItem(path, type, size, extra);//Last resort
+        return new FileItem(path, type, size, extra, context);//Last resort
     }
 }

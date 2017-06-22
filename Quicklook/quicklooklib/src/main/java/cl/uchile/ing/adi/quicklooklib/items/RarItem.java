@@ -20,8 +20,8 @@ import cl.uchile.ing.adi.quicklooklib.R;
  */
 public class RarItem extends VirtualItem {
 
-    public RarItem(String path, String mimetype, long size, Bundle extra) {
-        super(path,mimetype,size,extra);
+    public RarItem(String path, String mimetype, long size, Bundle extra, Context context) {
+        super(path,mimetype,size,extra, context);
         image = R.drawable.compressed;
         formattedName = getContext().getString(R.string.items_rar_formatted_name);
     }
@@ -48,7 +48,7 @@ public class RarItem extends VirtualItem {
                 Bundle extra = this.getExtra();
                 Log.d("Adderou",""+path);
                 if (this.startsWith(path,getVirtualPath())) {
-                    BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size, extra);
+                    BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size, extra, getContext());
                     itemList.add(newItem);
                     Log.d("Adderou",""+newItem);
                 }

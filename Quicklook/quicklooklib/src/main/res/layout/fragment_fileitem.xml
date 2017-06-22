@@ -23,6 +23,7 @@
             android:layout_height="30dp"
             android:textSize="15sp"
             android:lines="1"
+            android:singleLine="true"
             android:ellipsize="middle"
             android:textColor="#333333"
             android:textStyle="bold"
@@ -39,6 +40,7 @@
             android:textSize="12sp"
             android:lines="1"
             android:ellipsize="middle"
+            android:singleLine="true"
             android:gravity="center_vertical"
             android:textColor="#666666"
 

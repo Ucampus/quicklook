@@ -25,8 +25,8 @@ public class ZipItem extends VirtualItem {
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
      * @param size size of the virtual folder.
      */
-    public ZipItem(String path, String mimetype, long size, Bundle extra) {
-        super(path,mimetype,size, extra);
+    public ZipItem(String path, String mimetype, long size, Bundle extra, Context context) {
+        super(path,mimetype,size, extra, context);
         image = R.drawable.compressed;
         formattedName = getContext().getString(R.string.items_zip_formatted_name);
 
@@ -83,7 +83,7 @@ public class ZipItem extends VirtualItem {
                 String type = this.LoadZipType(ze);
                 Bundle extra = this.getExtra();
                 if (this.startsWith(path,getVirtualPath())) {
-                    BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size, extra);
+                    BaseItem newItem = ItemFactory.getInstance().createItem(path, type, size, extra, getContext());
                     itemList.add(newItem);
                 }
                 itemNames.add(path);

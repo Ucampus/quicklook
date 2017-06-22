@@ -33,8 +33,8 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
      * @param mimetype mimetype of the virtual folder. It can be changed, creating virtual items.
      * @param size size of the virtual folder.
      */
-    public VirtualItem(String path, String mimetype, long size, Bundle extra) {
-        super(splitVirtualPath(path)[0], mimetype, size, extra);
+    public VirtualItem(String path, String mimetype, long size, Bundle extra, Context context) {
+        super(splitVirtualPath(path)[0], mimetype, size, extra, context);
         this.virtualPath = splitVirtualPath(path)[1];
         fragment =  new ListFragment();
     }
@@ -131,7 +131,7 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
      * @param mListener
      * @param item
      */
-    public BaseItem onClick(QuicklookFragment.OnListFragmentInteractionListener mListener, BaseItem item) {
+    public BaseItem doClick(QuicklookFragment.OnListFragmentInteractionListener mListener, BaseItem item) {
         VirtualItem parentItem = (VirtualItem)mListener.getItem();
         BaseItem newItem;
         if (item instanceof FolderItem) {
@@ -139,7 +139,7 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
             long size = item.getSize();
             String type = parentItem.getType();
             Bundle extra = item.getExtra();
-            newItem = ItemFactory.getInstance().createItem(path, type, size,extra);
+            newItem = ItemFactory.getInstance().createItem(path, type, size,extra, getContext());
         } else {
             newItem = mListener.retrieveElement(item, parentItem);
         }
@@ -164,7 +164,7 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
     public BaseItem createForList(BaseItem preItem) {
         String newpath = this.path + SEP + preItem.path
                         + (preItem instanceof VirtualItem ? VirtualItem.SEP : "");
-        return ItemFactory.getInstance().createItem(newpath, preItem.type, preItem.size,preItem.extra);
+        return ItemFactory.getInstance().createItem(newpath, preItem.type, preItem.size,preItem.extra, getContext());
     }
     /**
      * Gets an specific item from the virtual object and copies it to main memory.
@@ -181,7 +181,7 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
             String type = toRetrieve.getType();
             long size = toRetrieve.getSize();
             Bundle extra = toRetrieve.getExtra();
-            return ItemFactory.getInstance().createItem(path, type, size, extra);
+            return ItemFactory.getInstance().createItem(path, type, size, extra, getContext());
         } else {
             return null;
         }
