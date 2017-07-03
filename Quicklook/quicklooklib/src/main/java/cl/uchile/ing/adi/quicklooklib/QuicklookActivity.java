@@ -524,7 +524,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                         "'fragment': '"+ fragname + "'"+
                 "}";
         intent.putExtra("error",error);
-        sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     public void setOpeningFiles(boolean state) {
