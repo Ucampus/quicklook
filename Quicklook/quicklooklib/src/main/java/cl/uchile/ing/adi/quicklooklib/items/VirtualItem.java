@@ -174,6 +174,7 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
      */
     public BaseItem retrieve(BaseItem toRetrieve, Context context) {
         String innerPath = getCachePath();
+        if(innerPath==null) return null;
         File folder = new File(innerPath);
         if (!folder.exists()) folder.mkdirs();
         String path = retrieveItem(splitVirtualPath(toRetrieve.path)[1], innerPath, context);

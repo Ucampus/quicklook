@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -321,8 +322,11 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      * Updates... the action bar!
      */
     public void updateActionBar() {
-        getSupportActionBar().setTitle(this.getItem().getTitle());
-        getSupportActionBar().setSubtitle(this.getItem().getSubTitle());
+        ActionBar bar = getSupportActionBar();
+        if(bar!=null) {
+            bar.setTitle(this.getItem().getTitle());
+            bar.setSubtitle(this.getItem().getSubTitle());
+        }
     }
 
     /**
