@@ -16,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -415,7 +416,12 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             if (f.exists()) {
                 BaseItem item = getItem();
                 intent.setType(item.getMime());
-                intent.putExtra(Intent.EXTRA_STREAM, pathUri);
+                intent.putExtra(Intent.EXTRA_STREAM,
+                        FileProvider.getUriForFile(
+                                QuicklookActivity.this,
+                                QuicklookActivity.this.getApplicationContext().getPackageName() + ".provider",
+                                f
+                        ));
                 intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
                 intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.item_share_text));
                 startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_share)));
