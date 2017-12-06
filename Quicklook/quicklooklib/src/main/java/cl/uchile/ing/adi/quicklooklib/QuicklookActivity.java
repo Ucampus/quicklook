@@ -400,10 +400,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
         Uri pathUri = saveItem(false);
         if (pathUri!=null) {
+            File f = new File(pathUri.getPath());
             Intent intent = new Intent(Intent.ACTION_VIEW);
             String mime = item.getMime();
-            intent.setDataAndType(pathUri, mime);
-            startActivity(Intent.createChooser(intent, getResources().getString(R.string.quicklook_open)));
+            intent.setDataAndType(FileProvider.getUriForFile(
+                    QuicklookActivity.this,
+                    QuicklookActivity.this.getApplicationContext().getPackageName() + ".provider",
+                    f
+            ), mime);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(Intent.createChooser(intent, "Open"));
         }
     }
 
