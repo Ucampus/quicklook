@@ -27,6 +27,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -82,6 +84,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
     }
 
@@ -94,6 +97,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             FileUtils.deleteDirectory(f);
         } catch (Exception e) {
             e.printStackTrace();
+            Crashlytics.logException(e);
         }
         Log.d("Adderou","Temp directory deleted");
     }
@@ -389,6 +393,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
         catch (Exception e){
             Toast.makeText(this, R.string.quicklook_error_open_downloads, Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(e);
         }
     }
 
@@ -399,17 +404,26 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             return;
         }
         Uri pathUri = saveItem(false);
-        if (pathUri!=null) {
+        if (pathUri!=null && !pathUri.equals("/")) {
             File f = new File(pathUri.getPath());
             Intent intent = new Intent(Intent.ACTION_VIEW);
             String mime = item.getMime();
-            intent.setDataAndType(FileProvider.getUriForFile(
-                    QuicklookActivity.this,
-                    QuicklookActivity.this.getApplicationContext().getPackageName() + ".provider",
-                    f
-            ), mime);
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(Intent.createChooser(intent, "Open"));
+            try {
+                intent.setDataAndType(FileProvider.getUriForFile(
+                        QuicklookActivity.this,
+                        QuicklookActivity.this.getApplicationContext().getPackageName() + ".provider",
+                        f
+                ), mime);
+            }
+            catch(Exception e){
+                Toast.makeText(this, R.string.quicklook_error_opening, Toast.LENGTH_SHORT).show();
+                Crashlytics.log(pathUri.getPath());
+                Crashlytics.logException(e);
+            }
+            finally {
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(intent, "Open"));
+            }
         }
     }
 
