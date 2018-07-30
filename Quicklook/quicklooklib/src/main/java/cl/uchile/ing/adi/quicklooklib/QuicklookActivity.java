@@ -328,7 +328,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      */
     public void updateActionBar() {
         ActionBar bar = getSupportActionBar();
-        if(bar!=null) {
+        if( bar != null && this.getItem() != null ) {
             bar.setTitle(this.getItem().getTitle());
             bar.setSubtitle(this.getItem().getSubTitle());
         }
