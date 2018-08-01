@@ -411,7 +411,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             try {
                 intent.setDataAndType(FileProvider.getUriForFile(
                         QuicklookActivity.this,
-                        QuicklookActivity.this.getApplicationContext().getPackageName() + ".provider",
+                        QuicklookActivity.this.getApplicationContext().getPackageName() + ".fileprovider",
                         f
                 ), mime);
             }
@@ -439,7 +439,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 intent.putExtra(Intent.EXTRA_STREAM,
                         FileProvider.getUriForFile(
                                 QuicklookActivity.this,
-                                QuicklookActivity.this.getApplicationContext().getPackageName() + ".provider",
+                                QuicklookActivity.this.getApplicationContext().getPackageName() + ".fileprovider",
                                 f
                         ));
                 intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.item_share_title));
