@@ -3,7 +3,6 @@ package cl.uchile.ing.adi.quicklooklib.items;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -218,5 +217,10 @@ public abstract class VirtualItem extends BaseItem implements IListItem {
     @Override
     public String getSubTitle() {
         return this.getVirtualPath();
+    }
+
+    @Override
+    public boolean openAsDefault() {
+        return true;
     }
 }

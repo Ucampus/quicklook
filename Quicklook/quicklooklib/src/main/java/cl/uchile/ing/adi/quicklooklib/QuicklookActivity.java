@@ -5,6 +5,7 @@ import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
@@ -219,7 +220,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             shareItem();
             return true;
         } else if (i == R.id.open_with) {
-            openItem();
+            openItemWith();
             return true;
         } else if (i == R.id.open_in_downloads) {
             openDownloads();
@@ -301,6 +302,13 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      */
     public void changeFragment(BaseItem item, boolean backstack){
         if (item!=null) {
+            if(item.isOpenable() && ! item.openAsDefault()){
+                //if item can and should be opened with external app, do so and finish this activity
+                setCurrentItem(item);
+                openItem();
+                if(itemStack.isEmpty()) finish();
+                return;
+            }
             //Notify about the new fragment shown, for statistics purposes ;)
             Intent startedIntent = new Intent();
             startedIntent.setAction(ACTION_EVENT);
@@ -403,30 +411,16 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             // TO-DO toast ?
             return;
         }
-        Uri pathUri = saveItem(false);
-        if (pathUri!=null && !pathUri.equals("/")) {
-            File f = new File(pathUri.getPath());
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            String mime = item.getMime();
-            try {
-                intent.setDataAndType(FileProvider.getUriForFile(
-                        QuicklookActivity.this,
-                        QuicklookActivity.this.getApplicationContext().getPackageName() + ".fileprovider",
-                        f
-                ), mime);
-            }
-            catch(Exception e){
-                Toast.makeText(this, R.string.quicklook_error_opening, Toast.LENGTH_SHORT).show();
-                Crashlytics.log(pathUri.getPath());
-                Crashlytics.logException(e);
-            }
-            finally {
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(intent, "Open"));
-            }
+        Intent intent = item.getItemIntent();
+        if (intent != null) {
+            startActivity(intent);
         }
     }
 
+    public void openItemWith(){
+        BaseItem item = getItem();
+        startActivity(Intent.createChooser(item.getItemIntent(), getResources().getText(R.string.quicklook_open)));
+    }
 
     public void shareItem() {
         Uri pathUri = saveItem(false);

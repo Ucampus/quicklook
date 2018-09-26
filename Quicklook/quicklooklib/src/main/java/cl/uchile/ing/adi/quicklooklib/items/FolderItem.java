@@ -76,4 +76,9 @@ public class FolderItem extends BaseItem implements IListItem {
     public boolean willShowOptionsMenu() {
         return false;
     }
+
+    @Override
+    public boolean openAsDefault() {
+        return true;
+    }
 }

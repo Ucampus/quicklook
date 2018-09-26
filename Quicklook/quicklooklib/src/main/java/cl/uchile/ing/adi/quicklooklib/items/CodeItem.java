@@ -17,5 +17,10 @@ public class CodeItem extends FileItem {
         formattedName = getContext().getString(R.string.items_code_formatted_name);
         fragment = new CodeFragment();
     }
+
+    @Override
+    public boolean openAsDefault() {
+        return true;
+    }
 }
 

@@ -17,5 +17,10 @@ public class TxtItem extends FileItem {
         formattedName = getContext().getString(R.string.items_text_formatted_name);
         fragment = new WebFragment();
     }
+
+    @Override
+    public boolean openAsDefault() {
+        return true;
+    }
 }
 

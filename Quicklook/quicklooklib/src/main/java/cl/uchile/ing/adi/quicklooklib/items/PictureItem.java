@@ -17,4 +17,9 @@ public class PictureItem extends FileItem {
         formattedName = getContext().getString(R.string.items_picture_formatted_name);
         fragment = new WebFragment();
     }
+
+    @Override
+    public boolean openAsDefault() {
+        return true;
+    }
 }

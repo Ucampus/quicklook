@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.webkit.MimeTypeMap;
 
 import org.apache.commons.io.IOUtils;
@@ -15,11 +16,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import cl.uchile.ing.adi.quicklooklib.ItemFactory;
 import cl.uchile.ing.adi.quicklooklib.R;
-import cl.uchile.ing.adi.quicklooklib.fragments.DefaultFragment;
 import cl.uchile.ing.adi.quicklooklib.fragments.QuicklookFragment;
 
 /**
@@ -46,6 +45,7 @@ public abstract class BaseItem {
     protected int image;
     protected String formattedName;
     private boolean openable;
+    protected Intent intent;
     private String mime;
 
     /**
@@ -71,27 +71,18 @@ public abstract class BaseItem {
         if(this.mime == null) this.mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(type);
         if(this.mime == null) this.mime = "text/plain";
 
-        this.openable = false;
-
         PackageManager manager = getContext().getPackageManager();
-
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setData(Uri.parse(path));
+        i.setDataAndType(FileProvider.getUriForFile(
+                context,
+                context.getApplicationContext().getPackageName() + ".fileprovider",
+                new File(this.path)
+        ), this.mime);
+        i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        this.setItemIntent(i);
         ResolveInfo r = manager.resolveActivity(i, PackageManager.MATCH_DEFAULT_ONLY);
-        if( r != null ) {
-            this.openable = true;
-        } else {
-            i.setType(mime);
-            r = manager.resolveActivity(i, PackageManager.MATCH_DEFAULT_ONLY);
-            if( r != null ) {
-                this.openable = true;
-            } else {
-                i = new Intent( Intent.ACTION_SEND );
-                r = manager.resolveActivity(i, PackageManager.MATCH_DEFAULT_ONLY);
-                if (r != null) this.openable = true;
-            }
-        }
-        }
+        this.openable = r != null;
+    }
 
     /**
      * Helper class. Obtains the id of a file using the path.
@@ -375,10 +366,10 @@ public abstract class BaseItem {
 
     /**
      * this allows Quicklook to open with its own logic some elements.
-     * Return false if you want to show a chooser instead
+     * Return false if you want to open with an external app instead
      * @return true if you want to show the element with quicklook fragments.
      */
-    public boolean openAsDefault(){return true;}
+    public boolean openAsDefault(){return false;}
 
     // Button item functions
 
@@ -388,4 +379,13 @@ public abstract class BaseItem {
         Uri pathUri = Uri.parse("file://" + newPath);
         return pathUri;
     }
+
+    public Intent getItemIntent() {
+        return intent;
+    }
+
+    public void setItemIntent(Intent intent) {
+        this.intent = intent;
+    }
+
 }
