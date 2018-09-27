@@ -232,8 +232,8 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
 
     public boolean onCreateOptionsMenu(Menu menu) {
         if( this.currentFragment == null ) return true;
-
         BaseItem item = this.getItem();
+        if(item == null) return true;
         // If it's a folder, don't show save as button.
         if(!item.willShowOptionsMenu()) return true;
 
