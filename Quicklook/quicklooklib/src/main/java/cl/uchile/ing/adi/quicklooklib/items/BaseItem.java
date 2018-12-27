@@ -73,11 +73,18 @@ public abstract class BaseItem {
 
         PackageManager manager = getContext().getPackageManager();
         Intent i = new Intent( Intent.ACTION_VIEW );
-        i.setDataAndType(FileProvider.getUriForFile(
-                context,
-                context.getApplicationContext().getPackageName() + ".fileprovider",
-                new File(this.path)
-        ), this.mime);
+
+        // workaround para apps nativas y archivos que no existen todavia
+        try {
+            i.setDataAndType(FileProvider.getUriForFile(
+                    context,
+                    context.getApplicationContext().getPackageName() + ".fileprovider",
+                    new File(path)
+            ), this.mime);
+        } catch( IllegalArgumentException e ) {
+            i.setDataAndType( Uri.parse( path ), this.mime );
+        }
+
         i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         this.setItemIntent(i);
         ResolveInfo r = manager.resolveActivity(i, PackageManager.MATCH_DEFAULT_ONLY);
