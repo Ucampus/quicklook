@@ -319,18 +319,20 @@ public abstract class BaseItem {
 
     public boolean isOpenable() {
         PackageManager manager = getContext().getPackageManager();
-        File itemFile = new File(path);
-        if (itemFile.exists()){
+        try {
             Intent i = new Intent( Intent.ACTION_VIEW );
             i.setDataAndType(
                     FileProvider.getUriForFile(
                             context,
                             context.getApplicationContext().getPackageName() + ".fileprovider",
-                            itemFile),
+                            new File(path)),
                     this.mime);
             i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             this.setItemIntent(i);
             return null != manager.resolveActivity(i, PackageManager.MATCH_DEFAULT_ONLY);
+        } catch (IllegalArgumentException e){
+            // IllegalArgumentException ocurre cuando el file provider no tiene permiso para
+            // el directorio donde se encuentra el archivo, si es así no lo puedo abrir
         }
         return false;
     }
