@@ -44,7 +44,6 @@ public abstract class BaseItem {
     protected QuicklookFragment fragment;
     protected int image;
     protected String formattedName;
-    private boolean openable;
     protected Intent intent;
     private String mime;
 
@@ -66,29 +65,9 @@ public abstract class BaseItem {
         //Formatted name for item
         this.formattedName = getContext().getString(R.string.items_default_formatted_name);
 
-        // check if openable
         this.mime = extra.getString("mime-type");
         if(this.mime == null) this.mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(type);
         if(this.mime == null) this.mime = "text/plain";
-
-        PackageManager manager = getContext().getPackageManager();
-        Intent i = new Intent( Intent.ACTION_VIEW );
-
-        // workaround para apps nativas y archivos que no existen todavia
-        try {
-            i.setDataAndType(FileProvider.getUriForFile(
-                    context,
-                    context.getApplicationContext().getPackageName() + ".fileprovider",
-                    new File(path)
-            ), this.mime);
-        } catch( IllegalArgumentException e ) {
-            i.setDataAndType( Uri.parse( path ), this.mime );
-        }
-
-        i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        this.setItemIntent(i);
-        ResolveInfo r = manager.resolveActivity(i, PackageManager.MATCH_DEFAULT_ONLY);
-        this.openable = r != null;
     }
 
     /**
@@ -339,7 +318,21 @@ public abstract class BaseItem {
     }
 
     public boolean isOpenable() {
-        return this.openable;
+        PackageManager manager = getContext().getPackageManager();
+        File itemFile = new File(path);
+        if (itemFile.exists()){
+            Intent i = new Intent( Intent.ACTION_VIEW );
+            i.setDataAndType(
+                    FileProvider.getUriForFile(
+                            context,
+                            context.getApplicationContext().getPackageName() + ".fileprovider",
+                            itemFile),
+                    this.mime);
+            i.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            this.setItemIntent(i);
+            return null != manager.resolveActivity(i, PackageManager.MATCH_DEFAULT_ONLY);
+        }
+        return false;
     }
 
     /**
