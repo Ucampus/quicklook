@@ -2,9 +2,9 @@ package cl.uchile.ing.adi.quicklooklib.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,6 @@ import cl.uchile.ing.adi.quicklooklib.R;
 import cl.uchile.ing.adi.quicklooklib.items.BaseItem;
 import cl.uchile.ing.adi.quicklooklib.items.FolderItem;
 import cl.uchile.ing.adi.quicklooklib.items.IListItem;
-import cl.uchile.ing.adi.quicklooklib.items.VirtualItem;
 
 /**
  * Opens folders and lists the items inside them. There are extensions of this

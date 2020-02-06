@@ -3,10 +3,9 @@ package cl.uchile.ing.adi.quicklooklib.items;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 import android.webkit.MimeTypeMap;
 
 import org.apache.commons.io.IOUtils;
