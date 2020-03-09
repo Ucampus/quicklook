@@ -32,17 +32,16 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.1.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.annotation:annotation:1.0.0'
 
     implementation 'commons-io:commons-io:2.4'
     implementation 'org.apache.commons:commons-compress:1.12'
 
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'com.google.firebase:firebase-core:17.2.2'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
 
     testImplementation 'junit:junit:4.12'
 }
