@@ -21,6 +21,7 @@ public class WebFragment extends QuicklookFragment {
                              Bundle savedInstanceState) {
         View v =  inflater.inflate(R.layout.fragment_web, container, false);
         WebView web = (WebView) v.findViewById(R.id.web_fragment);
+        web.getSettings().setAllowFileAccess(true);
         web.loadUrl("file://" + getItem().getPath());
         web.getSettings().setBuiltInZoomControls(true);
         if (item instanceof PictureItem) {
