@@ -172,8 +172,9 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
     private void generateFolders() {
         //Generate download folder
         if (BaseItem.getDownloadPath() == null) {
-            BaseItem.setDownloadPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                    .getAbsolutePath()+"/");
+            BaseItem.setDownloadPath(
+                    getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath()
+            );
         }
         String downloadPath = BaseItem.getDownloadPath();
         //Create downloadPath folder if not exists.
