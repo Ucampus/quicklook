@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.OpenableColumns;
 import androidx.annotation.NonNull;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
@@ -27,7 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -84,7 +86,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } catch (Exception e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
         }
     }
 
@@ -97,7 +99,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
             FileUtils.deleteDirectory(f);
         } catch (Exception e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
         }
         Log.d("Adderou","Temp directory deleted");
     }
@@ -257,7 +259,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
                 r.run();
             } else {
                 Snackbar.make(coordinator, getResources().getString(R.string.quicklook_permission_error),
-                        Snackbar.LENGTH_SHORT).show();
+                        BaseTransientBottomBar.LENGTH_SHORT).show();
 
             }
         } else {
@@ -348,7 +350,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
      */
     public void showInfo(String info) {
         Snackbar.make(coordinator, info,
-                Snackbar.LENGTH_LONG).show();
+                BaseTransientBottomBar.LENGTH_LONG).show();
     }
 
     /**
@@ -401,7 +403,7 @@ public class QuicklookActivity extends AppCompatActivity implements ListFragment
         }
         catch (Exception e){
             Toast.makeText(this, R.string.quicklook_error_open_downloads, Toast.LENGTH_SHORT).show();
-            Crashlytics.logException(e);
+            FirebaseCrashlytics.getInstance().recordException(e);
         }
     }
 
